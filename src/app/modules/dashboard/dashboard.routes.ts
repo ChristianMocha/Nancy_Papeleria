@@ -29,6 +29,13 @@ const DashboardRoute: Routes = [
             (m) => m.SellComponent
           ),
       },
+      {
+        path: 'employees',
+        loadComponent: () =>
+          import('./modules/employees/employees.component').then(
+            (m) => m.EmployeesComponent
+          ),
+      },
       
       {
         path: '**',
