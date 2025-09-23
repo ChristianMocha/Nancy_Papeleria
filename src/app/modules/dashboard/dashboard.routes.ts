@@ -22,13 +22,13 @@ const DashboardRoute: Routes = [
             (m) => m.InventoryComponent
           ),
       },
-      // {
-      //   path: 'forbidden',
-      //   loadComponent: () =>
-      //     import('./modules/common/forbidden/forbidden-page.component').then(
-      //       (m) => m.ForbiddenComponent
-      //     ),
-      // },
+      {
+        path: 'sell',
+        loadComponent: () =>
+          import('./modules/sell/sell.component').then(
+            (m) => m.SellComponent
+          ),
+      },
       
       {
         path: '**',
