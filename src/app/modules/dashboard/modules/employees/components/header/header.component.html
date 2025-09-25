@@ -1,14 +1,15 @@
-<div class="bg-white shadow rounded-2xl p-4 flex items-center justify-between">
-  <!-- Título con ícono -->
-  <h2 class="text-2xl font-bold flex items-center gap-2">
-    <span class="text-yellow-500"></span> Empleados
-  </h2>
+<div class="flex items-center justify-between border-b border-green-600 pb-2">
+  <!-- Título con ícono dentro de círculo -->
+  <div class="flex items-center gap-3">
+    <h2 class="text-xl font-bold text-gray-900">Empleados</h2>
+  </div>
 
   <!-- Botón -->
   <button
-    class="bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-gray-800 transition"
+    class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition"
     (click)="onCrearCliente()"
   >
-    Crear cliente
+    <i class="fas fa-plus"></i>
+    Crear empleado
   </button>
 </div>

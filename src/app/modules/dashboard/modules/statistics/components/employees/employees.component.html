@@ -1,0 +1,61 @@
+<div class="p-6 space-y-6">
+  <!-- Filtros -->
+  <div class="flex items-center gap-4">
+    <select class="border rounded-lg px-3 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500">
+      <option>Diario</option>
+      <option>Semanal</option>
+      <option>Mensual</option>
+    </select>
+
+    <div class="flex items-center gap-2 border rounded-lg px-3 py-2 cursor-pointer">
+      <span>{{ fecha }}</span>
+      <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0
+          00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Promedio ventas -->
+  <div class="border rounded-lg p-4 bg-white shadow-lg flex items-center justify-between w-1/2">
+  <div>
+    <h2 class="text-gray-500 text-sm font-medium">Promedio de ventas por empleado</h2>
+    <p class="text-3xl font-bold text-gray-800">{{ promedio }}</p>
+  </div>
+  <button class="text-gray-400 hover:text-gray-600">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0
+         100 20 10 10 0 000-20z" />
+    </svg>
+  </button>
+</div>
+
+
+  <!-- Tabla detalle -->
+  <div class="border rounded-lg overflow-hidden bg-white shadow-sm">
+    <div class="border-b px-4 py-3 bg-gray-50 text-gray-600 font-medium">
+      Detalle de ventas por empleado
+    </div>
+
+    <table class="w-full text-left text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2">Empleado</th>
+          <th class="px-4 py-2">Total ventas</th>
+          <th class="px-4 py-2">Total de productos vendidos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let venta of ventas" class="border-t">
+          <td class="px-4 py-3">{{ venta.empleado }}</td>
+          <td class="px-4 py-3">{{ venta.totalVentas }}</td>
+          <td class="px-4 py-3">{{ venta.productosVendidos }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

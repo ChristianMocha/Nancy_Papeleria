@@ -1,0 +1,71 @@
+<!-- Filtros -->
+<div class="flex items-center gap-4 mb-6">
+  <select class="border rounded-lg px-3 py-2">
+    <option>Diario</option>
+    <option>Semanal</option>
+    <option>Mensual</option>
+  </select>
+
+  <input
+    type="date"
+    class="border rounded-lg px-3 py-2"
+    [value]="'2025-09-23'"
+  />
+</div>
+
+<!-- Métricas -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <div class="border rounded-lg p-4 shadow-lg hover:shadow-md transition">
+    <h3 class="font-semibold text-gray-800">Total ventas</h3>
+    <p class="text-2xl font-bold text-green-700">$779</p>
+    <p class="text-sm text-gray-500">Comparado con el martes de la semana anterior</p>
+  </div>
+
+  <div class="border rounded-lg p-4 shadow-lg hover:shadow-md transition">
+    <h3 class="font-semibold text-gray-800">Ganancia de las ventas</h3>
+    <p class="text-2xl font-bold text-green-700">$1,000</p>
+    <p class="text-sm text-gray-500">Comparado con el martes de la semana anterior</p>
+  </div>
+</div>
+
+<!-- Detalle de ventas (gráfica) -->
+<div class="border rounded-lg p-4 mb-6 shadow-lg">
+  <h3 class="font-semibold text-gray-800 mb-4">Detalle de ventas</h3>
+  <div class="h-64">
+   <div class="h-64">
+        <canvas baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [type]="'bar'">
+        </canvas>
+    </div>
+
+  </div>
+</div>
+
+<!-- Detalle de productos vendidos (tabla) -->
+<div class="border rounded-lg p-4 shadow">
+  <h3 class="font-semibold text-gray-800 mb-4">Detalle de productos vendidos</h3>
+  <table class="w-full border-collapse">
+    <thead>
+      <tr class="text-left text-gray-600 border-b">
+        <th class="pb-2">Producto</th>
+        <th class="pb-2">Total ventas</th>
+        <th class="pb-2">Total de productos vendidos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products" class="border-b last:border-none">
+        <td class="py-2 flex items-center gap-2">
+          <span class="font-medium">{{ p.nombre }}</span>
+          <span *ngIf="p.estrella"
+                class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+            ⭐ Producto estrella
+          </span>
+        </td>
+        <td class="py-2">${{ p.totalVentas }}</td>
+        <td class="py-2">{{ p.vendidos }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

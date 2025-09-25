@@ -1,0 +1,123 @@
+<div class="flex items-center border-b border-green-600 pb-2">
+  <!-- Botón regresar -->
+  <button
+    class="p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+    onclick="window.history.back()"
+  >
+    <!-- Icono flecha (Heroicons) -->
+    <svg
+      class="w-5 h-5 text-gray-700"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <!-- Título -->
+  <h2 class="text-xl font-bold text-gray-900 ml-2">Crear producto</h2>
+</div>
+
+
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6 h-[90vh]">
+  <!-- Columna izquierda -->
+  <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Datos del producto</h2>
+
+    <!-- Subir imagen -->
+    <div class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5">
+      <p class="text-sm text-gray-600">
+        <span class="font-semibold">Cargar imagen</span>  
+        <br />Recomendamos: 500x500 px, PNG, máximo 2MB
+      </p>
+      <button class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-500">
+        Subir imagen
+      </button>
+    </div>
+
+    <!-- Código -->
+    <label class="block text-sm font-medium text-gray-700 mb-1">Código</label>
+    <input
+      type="text"
+      placeholder="Escanea o escribe el código"
+      class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    />
+
+    <!-- Nombre del producto -->
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Nombre del producto <span class="text-red-600">*</span>
+    </label>
+    <input
+      type="text"
+      placeholder="Camiseta, perfume, aretes..."
+      class="w-full mb-1 px-4 py-2 border-2 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:outline-none border-red-500"
+    />
+    <p class="text-xs text-red-500 mb-4">El campo es requerido</p>
+
+    <!-- Cantidad -->
+    <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad disponible</label>
+    <input
+      type="number"
+      value="0"
+      class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    />
+
+    <!-- Precio -->
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Precio de venta <span class="text-red-600">*</span>
+    </label>
+    <input
+      type="number"
+      placeholder="$0"
+      class="w-full mb-4 px-4 py-2 border-2 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:outline-none border-red-500"
+    />
+
+    <!-- Costo -->
+    <label class="block text-sm font-medium text-gray-700 mb-1">Costo de compra</label>
+    <input
+      type="number"
+      placeholder="$0"
+      class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    />
+  </div>
+
+  <!-- Columna derecha -->
+<div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col h-full">
+  <h2 class="text-lg font-semibold text-gray-800 mb-4">Información adicional</h2>
+
+  <!-- Categoría -->
+  <label class="block text-sm font-medium text-gray-700 mb-1">
+    Categoría <span class="text-red-500">*</span>
+  </label>
+  <select
+    class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+  >
+    <option>Selecciona una categoría</option>
+    <option>Ropa</option>
+    <option>Perfumes</option>
+    <option>Accesorios</option>
+  </select>
+
+
+  <!-- Descripción -->
+  <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+  <textarea
+    rows="4"
+    placeholder="Añade una descripción..."
+    class="w-full mb-6 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+  ></textarea>
+
+  <!-- Botón crear siempre al final -->
+  <div class="mt-auto">
+    <button
+      class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold shadow hover:bg-green-500 transition"
+    >
+      Crear producto
+    </button>
+  </div>
+</div>
+
+</div>

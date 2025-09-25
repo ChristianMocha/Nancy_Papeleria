@@ -1,107 +1,53 @@
-<app-nav-bar></app-nav-bar>
-
-<div class="pt-6 bg-gray-50 ">
- 
-
-  <!-- ROW 1: Buscador y acciones -->
-<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-<div class="relative w-full">
-  <!-- Icono -->
-  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-    <i class="fas fa-search"></i>
-  </div>
-
-  <!-- Input -->
-  <input
-    type="text"
-    placeholder="Buscar por nombre"
-    class="block w-full pl-10 pr-3 py-5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-  />
+<app-nav-bar (emitModal)="showModalCategories()"></app-nav-bar>
+<div class="bg-white shadow-lg rounded-[10px] p-4 mt-6 h-[90vh]">
+    <app-content></app-content>
 </div>
 
 
-  <button class="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50">
-    <i class="fas fa-list"></i>
-    Ver todas las categorías
-  </button>
 
-  <button class="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50">
-    <i class="fas fa-qrcode"></i>
-    Catálogo virtual
-  </button>
+<!-- Fondo oscuro -->
+<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50" *ngIf="showModal">
+  <!-- Contenido del modal -->
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+    
+    <!-- Botón de cerrar -->
+    <button
+      type="button"
+      (click)="onClose()"
+      class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+    >
+      ✕
+    </button>
 
-  <button class="flex items-center gap-2 px-4 py-2 bg-[rgb(29,39,49)] hover:bg-blue-700 rounded-lg text-sm text-white">
-    <i class="fas fa-shopping-cart"></i>
-    Registrar compras
-  </button>
+    <!-- Título -->
+    <h2 class="text-lg font-bold text-gray-800 mb-4">
+      Nombre de la categoría <span class="text-red-600">*</span>
+    </h2>
 
-  <button class="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm text-gray-700 hover:bg-gray-50">
-    <i class="fas fa-chart-line"></i>
-    Estadísticas
-  </button>
-</div>
+    <!-- Input -->
+    <input
+      type="text"
+      [(ngModel)]="categoryName"
+      placeholder="Celulares, Audífonos, Cables, Accesorios..."
+      class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
+    />
 
-
-  <!-- ROW 2: Totales -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div class="bg-white px-4 py-5 rounded-lg shadow text-center">
-      <p class="text-lg font-bold text-gray-700">2</p>
-      <p class="text-xs text-gray-400">Total de referencias</p>
-    </div>
-    <div class="bg-white px-4 py-5 rounded-lg shadow text-center">
-      <p class="text-lg font-bold text-gray-700">$26,109</p>
-      <p class="text-xs text-gray-400">Costo total de inventario</p>
+    <!-- Botones -->
+    <div class="flex justify-end gap-2">
+      <button
+        (click)="onClose()"
+        class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="onSave()"
+        class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500"
+      >
+        <span *ngIf="!loading">Guardar</span>
+        <app-loading *ngIf="loading"></app-loading>
+      </button>
     </div>
   </div>
-
-  <!-- ROW 3: Tabla -->
-  <div class="bg-white rounded-xl shadow overflow-hidden">
-    <table class="w-full text-left">
-      <thead class="bg-gray-100 text-sm text-gray-600">
-        <tr>
-          <th class="p-3">Producto</th>
-          <th class="p-3">Precio</th>
-          <th class="p-3">Costo</th>
-          <th class="p-3">Cantidad disponible</th>
-          <th class="p-3">Ganancia</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-t hover:bg-gray-50 text-sm">
-          <td class="flex items-center gap-3 p-3">
-            <img src="assets/airpods.jpg" class="w-10 h-10 rounded" />
-            <span class="text-blue-600 font-medium hover:underline cursor-pointer">
-              AirPods 4
-            </span>
-          </td>
-          <td class="p-3">$20</td>
-          <td class="p-3">$10.9</td>
-          <td class="p-3">10</td>
-          <td class="p-3 flex items-center gap-2">
-            <span>$9.1</span>
-            <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">
-              45%
-            </span>
-          </td>
-        </tr>
-        <tr class="border-t hover:bg-gray-50 text-sm">
-          <td class="flex items-center gap-3 p-3">
-            <img src="assets/iphone17.jpg" class="w-10 h-10 rounded" />
-            <span class="text-blue-600 font-medium hover:underline cursor-pointer">
-              iPhone 17 Pro Max
-            </span>
-          </td>
-          <td class="p-3">$1,400</td>
-          <td class="p-3">$1,300</td>
-          <td class="p-3">20</td>
-          <td class="p-3 flex items-center gap-2">
-            <span>$100</span>
-            <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded-full">
-              7%
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </div>
+
