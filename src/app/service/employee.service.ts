@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData, deleteDoc, doc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, docData, deleteDoc, doc, Query, setDoc, updateDoc} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { docData } from 'rxfire/firestore';
-import { updateDoc } from 'firebase/firestore';
+import { Employees } from '../modules/shared/models/employe';
 
 @Injectable({
   providedIn: 'root'
@@ -15,23 +14,28 @@ export class EmployeeService {
 
 
   addEmployee(employee: any) {
-    const employeesRef = collection(this.firestore, this.collectionName);
-    return addDoc(employeesRef, employee);
+    console.log(employee);
+    const employeesRef = doc(collection(this.firestore, this.collectionName));
+      employee.emp_id = employeesRef.id;
+    return setDoc(employeesRef, employee);
   }
+
+
 
   updateEmployee(id: string, data: Partial<any>) {
     const employeeRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return updateDoc(employeeRef, data);
   }
-
-  getEmployees(): Observable<any[]> {
-    const employeesRef = collection(this.firestore, this.collectionName);
-    return collectionData(employeesRef, { idField: 'id' }) as Observable<any[]>;
+  
+  getEmployees(): Observable<Employees[]> {
+    const employeesRef = collection(this.firestore, 'employees');
+    return collectionData(employeesRef, { idField: 'emp_id' }) as Observable<Employees[]>;
   }
 
-  getEmployeeById(id: string): Observable<any | undefined> {
+
+  getEmployeeById(id: string): Observable<Employees | undefined> {
     const employeeRef = doc(this.firestore, `${this.collectionName}/${id}`);
-    return docData(employeeRef, { idField: 'id' }) as Observable<any | undefined>;
+    return docData(employeeRef, { idField: 'emp_id' }) as Observable<Employees | undefined>;
   }
 
   deleteEmployee(id: string) {

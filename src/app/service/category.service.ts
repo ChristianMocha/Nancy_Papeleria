@@ -20,10 +20,10 @@ export class CategoryService {
   return setDoc(newDocRef, category);
   }
 
-getCategories(): Observable<Category[]> {
-  const catsRef = collection(this.firestore, 'category') as Query<Category>;
-  return collectionData(catsRef, { idField: 'cat_id' }) as Observable<Category[]>;
-}
+  getCategories(): Observable<Category[]> {
+    const catsRef = collection(this.firestore, 'category') as Query<Category>;
+    return collectionData(catsRef, { idField: 'cat_id' }) as Observable<Category[]>;
+  }
 
 
   deleteCategory(idCategory: string) {

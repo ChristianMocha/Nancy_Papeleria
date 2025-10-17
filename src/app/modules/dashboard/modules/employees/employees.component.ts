@@ -3,6 +3,7 @@ import { TableComponent } from './components/table/table.component';
 import { HeaderComponent } from './components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EmployeeService } from '../../../../service/employee.service';
 
 @Component({
   selector: 'app-employees',
@@ -16,6 +17,7 @@ export class EmployeesComponent {
   public categoryName: string = '';
   private readonly formBuilder = inject(FormBuilder);
   public settingForm: FormGroup = this.formBuilder.group({});
+  private readonly employeeService = inject(EmployeeService);
 
   roles = [
   { id: 1, nombre: 'Administrador' },
@@ -27,9 +29,10 @@ export class EmployeesComponent {
 
 
   public employeeForm: FormGroup = this.formBuilder.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      celular: ['', [Validators.required, Validators.pattern(/^[0-9]{9,15}$/)]],
-      rol: ['', Validators.required]
+      emp_nombre: ['', [Validators.required, Validators.minLength(3)]],
+      emp_celular: ['', [Validators.required, Validators.pattern(/^[0-9]{9,15}$/)]],
+      emp_rol: ['', Validators.required],
+      emp_status: [true]
   });
   
   ngOnInit() {
@@ -44,7 +47,11 @@ export class EmployeesComponent {
     this.openModal = false;
     }
 
-  onSubmit(){
+  async onSubmit(){
+    console.log(this.employeeForm.value);
+
+        const docRef = await this.employeeService.addEmployee(this.employeeForm.value);
+        console.log(docRef);
 
   }
 

@@ -10,10 +10,7 @@ import { routes } from './app.routes';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
-      // Inicializar Firebase con environment
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-
-    // Habilitar Firestore
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
   ]
 };
