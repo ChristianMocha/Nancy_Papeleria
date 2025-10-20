@@ -14,6 +14,8 @@ export class ProductService {
   addProductToCategory(categoryId: string, product: any) {
     const productRef = doc(collection(this.firestore, `category/${categoryId}/products`));
     product.prod_id = productRef.id;
+    product.prod_status = true;
+    product.prod_start_date = new Date();
     return setDoc(productRef, product);
   }
 
@@ -22,8 +24,9 @@ export class ProductService {
     return collectionData(productsRef, { idField: 'prod_id' });
   }
 
-  updateProduct(categoryId: string, productId: string, data: Partial<any>) {
+  updateProduct(categoryId: string, productId: string, data: any) {
     const productRef = doc(this.firestore, `category/${categoryId}/products/${productId}`);
+    data.prod_update_date = new Date();
     return updateDoc(productRef, data);
   }
 
@@ -32,18 +35,25 @@ export class ProductService {
     return deleteDoc(docRef);
   }
 
-  async getAllProductsCostTotal(): Promise<number> {
-    const productsRef = collectionGroup(this.firestore, 'products');
-    const snapshot = await getDocs(productsRef);
+async getAllProductsCostTotal(): Promise<number> {
+  const productsRef = collectionGroup(this.firestore, 'products');
+  const snapshot = await getDocs(productsRef);
 
-    let totalCost = 0;
-    snapshot.forEach((doc) => {
-      const data: any = doc.data();
-      totalCost += data.prod_purchase_cost || 0;
-    });
+  let totalCost = 0;
+  snapshot.forEach((doc) => {
+    const data: any = doc.data();
 
-    return totalCost;
-  }
+    // sacar valores con fallback y convertir a número
+    const unitCost = Number(data.prod_purchase_cost) || 0;
+    const qty = Number(data.prod_quantity_available) || 0;
+
+    // sumar costo * cantidad
+    totalCost += unitCost * qty;
+  });
+
+  return totalCost;
+}
+
 
   getProductsByCategory(categoryId: string) {
     const productsRef = collection(this.firestore,'products') as CollectionReference;
