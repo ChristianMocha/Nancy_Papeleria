@@ -79,7 +79,7 @@ const DashboardRoute: Routes = [
           ),
       },
       {
-        path: 'product/edit/:id',
+        path: 'product/edit/:idCategory/:idProduct',
         loadComponent: () =>
           import('./modules/inventory/components/product/product.component').then(
             (m) => m.ProductComponent

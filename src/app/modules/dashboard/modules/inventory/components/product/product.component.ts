@@ -9,6 +9,7 @@ import { toast } from 'ngx-sonner';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { UploadService } from '../../../../../../service/upload.service';
 import { LoadingComponent } from '../../../../../shared/loading/loading.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -24,12 +25,16 @@ export class ProductComponent {
   public readonly categoryService = inject(CategoryService);
   public readonly productService = inject(ProductService);
   public readonly uploadService = inject(UploadService);
+  private readonly route = inject(ActivatedRoute);
+  public router = inject(Router);
 
-  public files: File[] = [];
   public imgPoduct: string = '';
   public loading: boolean = false;
-
-
+  public idProduct!: string;
+  public idCategory!: string;
+  
+  
+  public files: File[] = [];
   public categories: Category[] = [];
 
   ngOnInit() { 
@@ -43,9 +48,15 @@ export class ProductComponent {
       prod_description: [''],
       prod_image: ['']
     });
-
+    this.idCategory = this.route.snapshot.paramMap.get('idCategory')!;
+    this.idProduct = this.route.snapshot.paramMap.get('idProduct')!;
+    console.log('ID obtenido:', this.idCategory);
+    console.log('ID obtenido:', this.idProduct);
 
     this.getCategories();
+    if (this.idCategory && this.idProduct) {
+      this.getProductById();
+    }
   }
 
 
@@ -61,46 +72,60 @@ export class ProductComponent {
 
 
   async onSubmit(){
-    console.log(this.formProd.value);
 
     this.loading = true;
     if (!this.formProd.valid) {
         toast.error('Los campos son obligatorios');
     }
 
-    await this.uploadService
-          .uploadImage(this.files[0])
-          .then(async (result: any) => {
-            this.imgPoduct = result;
-            console.log(this.imgPoduct);
-            if (!this.imgPoduct) {
+    if (this.idCategory && this.idProduct) {
+      try {
+        const data = await this.productService.updateProduct(this.idCategory, this.idProduct, this.formProd.value);
+        console.log(data);
+        this.loading = false;
+  
+        toast.success('Producto editado');
+      } catch (error) {
+        this.loading = false;
+        toast.error('Error al editar producto');
+        console.error('Error al cargar empleados:', error);
+      }
+    }else{
+      await this.uploadService
+            .uploadImage(this.files[0])
+            .then(async (result: any) => {
+              this.imgPoduct = result;
+              console.log(this.imgPoduct);
+              if (!this.imgPoduct) {
+                this.loading = false;
+                toast.error('Error al subir imagen');
+  
+                return;
+              }
+  
+              try {
+                this.formProd.value.prod_image = this.imgPoduct;
+  
+                const data = await this.productService.addProductToCategory( this.formProd.value.prod_category_id, this.formProd.value);
+                console.log(data);
+                this.loading = false;
+          
+                toast.success('Producto creado');
+                console.log('Empleados:', this.categories);
+                this.formProd.reset();
+                this.files = [];
+              } catch (error) {
+                this.loading = false;
+                toast.error('Error al crear producto');
+                console.error('Error al cargar empleados:', error);
+              }
+            })
+            .catch((err) => {
               this.loading = false;
-              toast.error('Error al subir imagen');
+              console.error('Error al cargar empleados:', err);
+            }); 
+    }
 
-              return;
-            }
-
-            try {
-              this.formProd.value.prod_image = this.imgPoduct;
-
-              const data = await this.productService.addProductToCategory( this.formProd.value.prod_category_id, this.formProd.value);
-              console.log(data);
-              this.loading = false;
-        
-              toast.success('Producto creado');
-              console.log('Empleados:', this.categories);
-              this.formProd.reset();
-              this.files = [];
-            } catch (error) {
-              this.loading = false;
-              toast.error('Error al crear producto');
-              console.error('Error al cargar empleados:', error);
-            }
-          })
-          .catch((err) => {
-            this.loading = false;
-            console.error('Error al cargar empleados:', err);
-          }); 
 
     
 
@@ -112,6 +137,18 @@ export class ProductComponent {
 
   onRemove(event: any) {
     this.files.splice(this.files.indexOf(event), 1);
+  }
+
+  getProductById(){
+    if (!this.idProduct || !this.idCategory) return;
+
+    this.productService.getProductById(this.idCategory, this.idProduct).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.formProd.patchValue(res);
+      },
+      error: (err) => console.error('❌ Error:', err),
+    });
   }
 
 }

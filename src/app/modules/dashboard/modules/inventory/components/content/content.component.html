@@ -46,7 +46,7 @@
 
 
   <!-- ROW 2: Totales -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center">
       <p class="text-lg font-bold text-gray-700">2</p>
       <p class="text-xs text-gray-400">Total de referencias</p>
@@ -54,6 +54,10 @@
     <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center">
       <p class="text-lg font-bold text-gray-700">{{totalInventoryCost | currency}}</p>
       <p class="text-xs text-gray-400">Costo total de inventario</p>
+    </div>
+    <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center">
+      <p class="text-lg font-bold text-gray-700">{{totalInventoryCostClient | currency}}</p>
+      <p class="text-xs text-gray-400">Costo total de ventas</p>
     </div>
   </div>
 
@@ -75,8 +79,8 @@
     <thead class="bg-gray-100 text-sm text-gray-600">
       <tr>
         <th class="p-3">Producto</th>
-        <th class="p-3">Codigo</th>
-        <th class="p-3">Precio</th>
+        <th class="p-3">Código</th>
+        <th class="p-3">Precio Cliente</th>
         <th class="p-3">Costo</th>
         <th class="p-3">Cantidad disponible</th>
         <th class="p-3">Ganancia</th>
@@ -103,7 +107,7 @@
         </td>
 
         <td class="p-3">{{ prod.prod_code }}</td>
-        <td class="p-3">${{ prod.prod_sale_price }}</td>
+        <td class="p-3 text-[#eb2f96]">${{ prod.prod_sale_price }}</td>
         <td class="p-3">${{ prod.prod_purchase_cost }}</td>
         <td class="p-3">{{ prod.prod_quantity_available }}</td>
 

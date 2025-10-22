@@ -6,6 +6,8 @@ import { ProductService } from '../../../../../../service/product.service';
 import { Category } from '../../../../../shared/models/category';
 import { FormsModule } from '@angular/forms';
 import { SearchPipe } from '../../../../../shared/pipe/search.pipe';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-content',
@@ -17,10 +19,12 @@ export class ContentComponent {
 
   private readonly categoryService = inject(CategoryService);
   public readonly productService = inject(ProductService);
+  public router = inject(Router);
 
   public lstCategories: Category[] = [];
   public lstProducts: any[] = [];
   public totalInventoryCost: number = 0
+  public totalInventoryCostClient: number = 0
 
   public searchTerm: string = '';
   public currentPage: number = 1;
@@ -34,6 +38,7 @@ export class ContentComponent {
     this.getAllCategories();
     this.getAllPorducts();
     this.getAllProductsCostTotal();
+    this.getAllProductsCostTotalClient();
 
   }
   
@@ -77,6 +82,19 @@ export class ContentComponent {
     });
   }
 
+  async getAllProductsCostTotalClient() {
+
+    
+    this.productService.getAllProductsCostTotalClient().then((res) => {
+      console.log(res);
+      this.totalInventoryCostClient = res
+      
+    }).catch((err) => {
+      console.error(err);
+      
+    });
+  }
+
   async onCategoryChange(event: any){
     const selectedCategoryId = (event.target as HTMLSelectElement).value;
       console.log('Categoría seleccionada:', selectedCategoryId);
@@ -101,7 +119,8 @@ export class ContentComponent {
     if (!this.searchTerm) return this.lstProducts;
     const term = this.searchTerm.toLowerCase();
     return this.lstProducts.filter(p =>
-      p.prod_name.toLowerCase().includes(term)
+      p.prod_name.toLowerCase().includes(term) ||
+      p.prod_code.toLowerCase().includes(term)
     );
   }
   
@@ -135,20 +154,38 @@ export class ContentComponent {
 
   editProduct(prod: any) {
     console.log('Editar', prod);
-    // abrir modal o navegar a formulario de edición
-    // this.router.navigate(['/productos', prod.id, 'edit']);
+    this.router.navigate(['/product/edit', prod.prod_category_id, prod.prod_id]);
   }
 
   // confirmación antes de eliminar
   confirmDelete(prod: any) {
-    const ok = confirm(`¿Eliminar ${prod.prod_name}?`);
-    if (ok) this.deleteProduct(prod);
+    Swal.fire({
+      title: '¿Estás seguro de eliminar?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 🔥 Aquí va tu lógica para eliminar
+        // por ejemplo: this.service.deleteItem(id).subscribe(...)
+        this.deleteProduct(prod)
+        
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('Cancelado', 'El registro sigue intacto.', 'info');
+      }
+    });
+
   }
   
   deleteProduct(prod: any) {
-    console.log('Eliminar', prod);
-    // llamar al servicio para eliminar y luego actualizar lista/paginación
-    // this.productService.deleteProduct(prod.id).then(() => this.getAllPorducts());
+    this.productService.deleteProduct(prod.prod_category_id, prod.prod_id).then((res) => {
+      console.log(res);
+      Swal.fire('Eliminado', 'El registro fue eliminado correctamente.', 'success');
+    })
   }
 
   openImageModal(imageUrl: string | undefined) {

@@ -24,6 +24,11 @@ export class ProductService {
     return collectionData(productsRef, { idField: 'prod_id' });
   }
 
+  getProductById(categoryId: string, productId: string): Observable<any> {
+    const productRef = doc(this.firestore, `category/${categoryId}/products/${productId}`);
+    return docData(productRef, { idField: 'id' });
+  }
+
   updateProduct(categoryId: string, productId: string, data: any) {
     const productRef = doc(this.firestore, `category/${categoryId}/products/${productId}`);
     data.prod_update_date = new Date();
@@ -45,6 +50,24 @@ async getAllProductsCostTotal(): Promise<number> {
 
     // sacar valores con fallback y convertir a número
     const unitCost = Number(data.prod_purchase_cost) || 0;
+    const qty = Number(data.prod_quantity_available) || 0;
+
+    // sumar costo * cantidad
+    totalCost += unitCost * qty;
+  });
+
+  return totalCost;
+}
+async getAllProductsCostTotalClient(): Promise<number> {
+  const productsRef = collectionGroup(this.firestore, 'products');
+  const snapshot = await getDocs(productsRef);
+
+  let totalCost = 0;
+  snapshot.forEach((doc) => {
+    const data: any = doc.data();
+
+    // sacar valores con fallback y convertir a número
+    const unitCost = Number(data.prod_sale_price) || 0;
     const qty = Number(data.prod_quantity_available) || 0;
 
     // sumar costo * cantidad

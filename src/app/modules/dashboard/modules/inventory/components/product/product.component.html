@@ -28,7 +28,7 @@
     <h2 class="text-lg font-semibold text-gray-800 mb-4">Datos del producto</h2>
 
     <!-- Subir imagen -->
-    <div class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5">
+    <div class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5" *ngIf="!this.idCategory && !this.idProduct">
        <div class="custom-dropzonee" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
             <ngx-dropzone-label>
                 <div>
@@ -39,6 +39,10 @@
                 [file]="f" [removable]="true" (removed)="onRemove(f)">
             </ngx-dropzone-image-preview>
         </div>
+    </div>
+
+    <div class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5 w-[40%]" *ngIf="this.idCategory && this.idProduct">
+       <img [src]="formProd.value.prod_image" alt="">
     </div>
 
     <!-- Código -->
@@ -133,7 +137,7 @@
       >
       <app-loading *ngIf="loading"></app-loading>
       <span *ngIf="!loading">
-        Crear producto
+        Guardar producto
       </span>
       </button>
     </div>
