@@ -36,27 +36,17 @@ export class ShoppingCartService {
   }
 
   async getPurchasesByDate(date: string) {
-    console.log(date);
-    // 🔸 Convertir la fecha a rango de inicio y fin del día
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    // 🔹 Crear la consulta
     const purchasesRef = collection(this.firestore, 'purchases');
     const q = query(
       purchasesRef,
-      where('shop_crea_date', '>=', Timestamp.fromDate(startOfDay)),
-      where('shop_crea_date', '<=', Timestamp.fromDate(endOfDay))
+      where('shop_date', '>=', date),
+      where('shop_date', '<=', date)
     );
-
-    // 🔹 Ejecutar la consulta
+  
     const snapshot = await getDocs(q);
-    const purchases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-    return purchases;
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   }
+
+
 
 }

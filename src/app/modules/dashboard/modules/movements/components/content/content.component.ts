@@ -19,6 +19,10 @@ export class ContentComponent {
   public lstPurchases: any[] = [];
 
   public searchShopping: string = '';
+  public totalSales: number = 0;
+  public totalEarnings: number = 0;
+
+  public isLoading: boolean = false;
   
 
   ngOnInit() {
@@ -27,9 +31,13 @@ export class ContentComponent {
 
 
   getPurchasesByDate() {
+    this.isLoading = true;
     this.shoppingCartService.getPurchasesByDate(this.selectedDate).then((res) => {
       console.log(res);
       this.lstPurchases = res
+      this.getTotalPrice();
+      this.getTotalEarnings();
+      this.isLoading = false;
     });
   }
 
@@ -37,5 +45,14 @@ export class ContentComponent {
     console.log(this.selectedDate);
     this.getPurchasesByDate()
   }
+
+  getTotalPrice() {
+    this.totalSales =  this.lstPurchases.reduce((acc, purchase) => acc + (purchase.shop_total || 0), 0);
+  }
+
+  getTotalEarnings() {
+    this.totalEarnings =  this.lstPurchases.reduce((acc, purchase) => acc + (purchase.total_earnings || 0), 0);
+  }
+
 
 }

@@ -304,6 +304,11 @@ export class ContentComponent {
   savePurchase(data: any){
 
     const shopConcept = this.selectedProducts.map(p => `(${p.pod_selectedQty}) ${p.prod_name}`).join(', ');
+    const totalEarnings = this.selectedProducts.reduce((acc, p) => {
+      const salePrice = p.prod_discount_price ?? p.prod_sale_price;
+      const profitPerUnit = salePrice - p.prod_purchase_cost;
+      return acc + profitPerUnit * p.pod_selectedQty;
+    }, 0);
 
     console.log(data);
     let formattedData = {
@@ -312,6 +317,7 @@ export class ContentComponent {
       shop_payment: data.payment,
       shop_total: this.getTotalPrice(),
       shop_concept: shopConcept,
+      total_earnings: totalEarnings,
       shop_products: this.selectedProducts.map(p => ({
         shop_prod_description: p.prod_description,
         shop_prod_quantity_available: p.prod_quantity_available,
@@ -323,7 +329,8 @@ export class ContentComponent {
         shop_prod_category_id: p.prod_category_id,
         shop_prod_image: p.prod_image,
         shop_pod_selectedQty: p.pod_selectedQty,
-        shop_pro_price_unit: p.pro_price_unit
+        shop_pro_price_unit: p.pro_price_unit,
+        shop_prod_discount_price: p.prod_discount_price ?? 0
       }))
     };
 
