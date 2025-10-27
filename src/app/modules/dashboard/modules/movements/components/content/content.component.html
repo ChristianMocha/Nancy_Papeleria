@@ -22,12 +22,12 @@
     </div>
 
     <div class="flex items-center border border-gray-300 rounded-lg px-4 py-2">
-      <input type="date" class="outline-none" value="2025-09-23" />
+        <input type="date" [(ngModel)]="selectedDate" (change)="filterByDate()" class="flex-1 outline-none bg-transparent text-gray-700"/>
     </div>
 
     <div class="flex items-center border border-gray-300 rounded-lg px-4 py-2 flex-1 max-w-sm">
       <i class="fas fa-search text-gray-400 mr-2"></i>
-      <input type="text" placeholder="Buscar concepto..." class="flex-1 outline-none" />
+       <input type="text" [(ngModel)]="searchShopping" class="flex-1 outline-none bg-transparent text-gray-700" placeholder="Buscar concepto..."/>
     </div>
   </div>
 
@@ -77,12 +77,61 @@
   </div>
 
   <!-- Estado vacío -->
-  <div class="flex flex-col items-center justify-center py-10 text-center space-y-4">
+  <div class="flex flex-col items-center justify-center py-10 text-center space-y-4" *ngIf="lstPurchases.length <= 0">
     <i class="fas fa-wallet text-5xl text-gray-400"></i>
     <p class="text-gray-600">Aún no tienes registros creados en esta fecha.</p>
     <button class="px-6 py-2 bg-gray-900 text-white rounded-lg shadow hover:bg-gray-800">
       Crear un movimiento
     </button>
   </div>
+
+
+ <div class=" min-h-screen" *ngIf="lstPurchases.length > 0">
+    <div class="overflow-x-auto bg-white ">
+      <table class="min-w-full text-sm text-gray-700 border">
+        <thead class="bg-gray-100 border-b border-gray-300">
+          <tr>
+            <th class="py-3 px-4 text-left font-semibold">Concepto</th>
+            <th class="py-3 px-4 text-left font-semibold">Valor</th>
+            <th class="py-3 px-4 text-left font-semibold">Medio de pago</th>
+            <th class="py-3 px-4 text-left font-semibold">Fecha y hora</th>
+            <th class="py-3 px-4 text-left font-semibold">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let purchase of lstPurchases"
+            class="border-b hover:bg-gray-50 transition-all"
+          >
+            <td class="py-3 px-4 font-medium text-gray-800">
+              {{ purchase.shop_concept }}
+            </td>
+            <td class="py-3 px-4 font-semibold text-green-600">
+              {{ purchase.shop_total | currency:'USD' }}
+            </td>
+            <td class="py-3 px-4">
+              {{ purchase.shop_payment_method || 'Efectivo' }}
+            </td>
+            <td class="py-3 px-4">
+              {{ purchase.shop_date | date:'dd/MMM/yyyy | hh:mm a' }}
+            </td>
+            <td class="py-3 px-4">
+              <span
+                class="px-2 py-1 text-xs font-semibold rounded-lg"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': purchase.shop_payment,
+                  'bg-yellow-100 text-yellow-700': !purchase.shop_payment
+                }" 
+              >
+                {{ purchase.shop_payment ? 'Pagada' : 'Pendiente' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
 
 </div>

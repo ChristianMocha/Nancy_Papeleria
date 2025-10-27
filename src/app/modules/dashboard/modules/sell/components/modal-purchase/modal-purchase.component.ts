@@ -1,0 +1,44 @@
+import { CommonModule } from '@angular/common';
+import { Component, input, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { LoadingComponent } from '../../../../../shared/loading/loading.component';
+
+@Component({
+  selector: 'app-modal-purchase',
+  imports: [CommonModule, FormsModule, LoadingComponent],
+  templateUrl: './modal-purchase.component.html',
+  styleUrl: './modal-purchase.component.scss'
+})
+export class ModalPurchaseComponent {
+
+  public totalSale = input<number>(0);
+  public close = output<any>();
+  public confirmSale = output<any>();
+
+  public customerPayment: number = 0;
+  public changeAmount: number = 0;
+  public loading: boolean = false;
+
+  calculateChange() {
+    this.changeAmount = Math.max(this.customerPayment - this.totalSale(), 0);
+  }
+
+  handleClose() {
+    this.close.emit(true);
+  }
+
+  handleConfirm() {
+    this.loading = true;
+    if(this.customerPayment < 0 || this.customerPayment < this.totalSale() ) {
+      console.log('entrando al if');
+      this.loading = false;
+      return;
+    };
+
+    this.confirmSale.emit({
+      payment: this.customerPayment,
+      change: this.changeAmount
+    });
+  }
+
+}

@@ -1,0 +1,62 @@
+<!-- Dark semi-transparent overlay -->
+<div
+  class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+  (click)="handleClose()"
+>
+  <!-- Main container -->
+  <div
+    class="bg-white rounded-3xl shadow-2xl w-[90%] max-w-md p-6 relative animate-fadeIn"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Close button -->
+    <button
+      (click)="handleClose()"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+    >
+      ✕
+    </button>
+
+    <!-- Title -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+      💰 Calcula el cambio de tu venta
+    </h2>
+
+    <!-- Sale value -->
+    <div class="mb-4">
+      <label class="text-gray-600 font-medium">Valor de la venta</label>
+      <input
+        type="text"
+        class="w-full mt-1 p-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 font-semibold text-center"
+        [value]="totalSale() | currency:'USD'"
+        disabled
+      />
+    </div>
+
+    <!-- Customer payment -->
+    <div class="mb-4">
+      <label class="text-gray-600 font-medium">¿Con cuánto paga tu cliente?</label>
+      <input
+        type="number"
+        [(ngModel)]="customerPayment"
+        (input)="calculateChange()"
+        class="w-full mt-1 p-3 border border-gray-300 rounded-xl text-center focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+        placeholder="$0.00"
+        min="0"
+      />
+    </div>
+
+    <!-- Change value -->
+    <div class="flex justify-between items-center mb-6">
+      <span class="text-gray-600 font-medium">Valor a devolver:</span>
+      <span class="text-2xl font-bold text-green-600">
+        {{ changeAmount | currency:'USD' }}
+      </span>
+    </div>
+
+    <!-- Confirm button -->
+    <button [disabled]="loading" (click)="handleConfirm()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:opacity-90 transition-all">
+        <app-loading *ngIf="loading"></app-loading>
+        <span *ngIf="!loading">Guardar</span>
+    </button>
+  </div>
+</div>
