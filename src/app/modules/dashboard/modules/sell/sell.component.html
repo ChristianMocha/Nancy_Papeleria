@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header (searchTermEmmit)="searchTermEmmit($event)"></app-header>
 <div class="  mt-6 h-[90vh]">
-  <app-content></app-content>
+  <app-content [searchTerm]="searchTerm"></app-content>
 </div>

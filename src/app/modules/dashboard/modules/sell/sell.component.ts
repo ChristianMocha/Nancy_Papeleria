@@ -10,4 +10,11 @@ import { ContentComponent } from "./components/content/content.component";
 })
 export class SellComponent {
 
+  public searchTerm: string = '';
+
+  searchTermEmmit(data: string){
+    this.searchTerm = data
+
+  }
+
 }
