@@ -22,7 +22,7 @@
     </div>
 
     <div class="flex items-center border border-gray-300 rounded-lg px-4 py-2">
-        <input type="date" [(ngModel)]="selectedDate" (change)="filterByDate()" class="flex-1 outline-none bg-transparent text-gray-700"/>
+        <input type="date" [(ngModel)]="selectedDate" class="flex-1 outline-none bg-transparent text-gray-700"/>
     </div>
 
     <div class="flex items-center border border-gray-300 rounded-lg px-4 py-2 flex-1 max-w-sm">
@@ -41,7 +41,7 @@
       </div>
       <div>
         <p class="text-sm text-gray-500">Balance</p>
-        <p class="text-lg font-semibold text-gray-900">$0</p>
+        <p class="text-lg font-semibold text-gray-900">{{balanceAmount | currency}}</p>
       </div>
     </div>
 
@@ -74,110 +74,42 @@
       </div>
       <div>
         <p class="text-sm text-gray-500">Gastos totales</p>
-        <p class="text-lg font-semibold text-red-600">$0</p>
+        <p class="text-lg font-semibold text-red-600">{{billsAmount | currency}}</p>
       </div>
     </div>
   </div>
 
   <!-- Tabs secundarios -->
+ <div class="w-full">
+  <!-- Tabs -->
   <div class="grid grid-cols-4 text-center text-gray-600 font-medium">
-    <div class="border-b-2 border-gray-900 py-2">Ingresos</div>
-    <div class="py-2">Egresos</div>
-    <div class="py-2">Por cobrar</div>
-    <div class="py-2">Por pagar</div>
-  </div>
-
-  <!-- Estado vacío -->
-  <div class="flex flex-col items-center justify-center py-10 text-center space-y-4" *ngIf="lstPurchases.length <= 0">
-    <i class="fas fa-wallet text-5xl text-gray-400"></i>
-    <p class="text-gray-600">Aún no tienes registros creados en esta fecha.</p>
-    <button class="px-6 py-2 bg-gray-900 text-white rounded-lg shadow hover:bg-gray-800">
-      Crear un movimiento
-    </button>
-  </div>
-
-
- <div class=" min-h-screen" *ngIf="lstPurchases.length > 0">
-    <div class="overflow-x-auto bg-white ">
-      <table class="min-w-full text-sm text-gray-700 border">
-        <thead class="bg-gray-100 border-b border-gray-300">
-          <tr>
-            <th class="py-3 px-4 text-left font-semibold">Concepto</th>
-            <th class="py-3 px-4 text-left font-semibold">Valor</th>
-            <th class="py-3 px-4 text-left font-semibold">Ganancias</th>
-            <th class="py-3 px-4 text-left font-semibold">Medio de pago</th>
-            <th class="py-3 px-4 text-left font-semibold">Fecha de la comprada</th>
-            <th class="py-3 px-4 text-left font-semibold">Fecha creada de la compra</th>
-            <th class="py-3 px-4 text-left font-semibold">Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let purchase of lstPurchases"
-            class="border-b hover:bg-gray-50 transition-all"
-          >
-            <td class="py-3 px-4 font-medium text-gray-800">
-              {{ purchase.shop_concept }}
-            </td>
-            <td class="py-3 px-4 font-semibold text-green-600">
-              {{ purchase.shop_total | currency:'USD' }}
-            </td>
-            <td class="py-3 px-4 font-semibold text-pink-600">
-              {{ purchase.total_earnings | currency:'USD' }}
-            </td>
-            <td class="py-3 px-4">
-              {{ purchase.shop_payment_method || 'Efectivo' }}
-            </td>
-            <td class="py-3 px-4">
-              {{ purchase.shop_date}}
-            </td>
-            <td class="py-3 px-4">
-              {{ purchase.shop_crea_date.toDate() | date:'dd/MMM/yyyy | hh:mm a' }}
-            </td>
-            <td class="py-3 px-4">
-              <span
-                class="px-2 py-1 text-xs font-semibold rounded-lg"
-                [ngClass]="{
-                  'bg-green-100 text-green-700': purchase.shop_payment,
-                  'bg-yellow-100 text-yellow-700': !purchase.shop_payment
-                }" 
-              >
-                {{ purchase.shop_payment ? 'Pagada' : 'Pendiente' }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div
-        *ngIf="isLoading"
-        class="absolute inset-0 flex flex-col justify-center items-center bg-white/70 backdrop-blur-sm"
-      >
-        <svg
-          class="animate-spin h-8 w-8 text-blue-500 mb-2"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v8z"
-          ></path>
-        </svg>
-        <p class="text-gray-700 text-sm font-medium">Cargando datos...</p>
-      </div>
-
+    <div
+      class="py-2 cursor-pointer border-b-2"
+      [ngClass]="selectedTab === 'ingresos' ? 'border-gray-900 text-gray-900' : 'border-transparent hover:text-gray-800'"
+      (click)="selectTab('ingresos')"
+    >
+      Ingresos
+    </div>
+    <div
+      class="py-2 cursor-pointer border-b-2"
+      [ngClass]="selectedTab === 'egresos' ? 'border-gray-900 text-gray-900' : 'border-transparent hover:text-gray-800'"
+      (click)="selectTab('egresos')"
+    >
+      Egresos
     </div>
   </div>
+
+  <!-- Contenido de cada tab -->
+  <div >
+    <div *ngIf="selectedTab === 'ingresos'">
+      <app-income (totalEarningsEmit)="totalEarningsEmit($event)" (totalSalesEmit)="totalSalesEmit($event)" [selectedDate]="selectedDate" (billsAmountEmit)="billsAmountEmit($event)"></app-income>
+    </div>
+
+    <div *ngIf="selectedTab === 'egresos'">
+      <app-bills [selectedDate]="selectedDate"></app-bills>
+    </div>
+  </div>
+</div>
 
 
 

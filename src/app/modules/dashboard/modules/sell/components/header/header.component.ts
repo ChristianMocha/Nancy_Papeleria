@@ -16,6 +16,7 @@ export class HeaderComponent {
 
   private readonly fb = inject(FormBuilder);
   public form: FormGroup = this.fb.group({});
+  public formBills: FormGroup = this.fb.group({});
 
   public readonly shoppingCartService = inject(ShoppingCartService);
 
@@ -24,6 +25,7 @@ export class HeaderComponent {
   public searchTerm: string = '';
 
   public isOpen: boolean = false;
+  public isOpenBills: boolean = false;
   public loading: boolean = false;
 
   public changeAmount: number = 0;
@@ -44,6 +46,23 @@ export class HeaderComponent {
       const change = payment - total;
   
       this.form.patchValue({ shop_change: change > 0 ? change : 0 }, { emitEvent: false });
+    });
+
+    this.formBills = this.fb.group({
+      bills_date: [new Date().toISOString().split('T')[0], Validators.required],
+      bills_total: ['', Validators.required],
+      bills_concept: ['', Validators.required],
+      bills_total_earnings: ['',],
+      bills_change: [0],
+      bills_payment: [0],
+    });
+
+    this.formBills.valueChanges.subscribe(val => {
+      const total = Number(val.bills_total) || 0;
+      const payment = Number(val.bills_payment) || 0;
+      const change = payment - total;
+  
+      this.formBills.patchValue({ bills_change: change > 0 ? change : 0 }, { emitEvent: false });
     });
   }
 
@@ -79,5 +98,34 @@ export class HeaderComponent {
       this.loading = false;
     });
   }
+
+  submitBills() {
+    this.loading = true;
+    console.log(this.formBills.value);
+    if (!this.formBills.valid) {
+      console.log('Ingrese todos los campos bills');
+      return; 
+    }
+
+    this.formBills.get('bills_total_earnings')?.setValue(this.formBills.get('bills_total')?.value);
+
+    console.log(this.formBills.value);
+    this.shoppingCartService.saveBills(this.formBills.value).then((res) => {
+      console.log(res);
+       this.formBills.reset();
+      this.closeDrawerNewBills();
+      this.loading = false;
+    });
+  }
+
+  openDrawerNewBills() {
+    this.isOpenBills = true;
+  }
+
+  closeDrawerNewBills(){
+    this.isOpenBills = false;
+  }
+
+
 
 }

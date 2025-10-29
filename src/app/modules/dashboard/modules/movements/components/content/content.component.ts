@@ -3,55 +3,46 @@ import { ShoppingCartService } from '../../../../../../service/shopping-cart.ser
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IncomeComponent } from '../income/income.component';
+import { BillsComponent } from "../bills/bills.component";
 
 @Component({
   selector: 'app-content',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IncomeComponent, BillsComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
 export class ContentComponent {
 
-  public readonly shoppingCartService = inject(ShoppingCartService);
+  public selectedTab: string = 'ingresos';
+  public totalEarnings: number = 0;
+  public totalSales: number = 0;
+  public billsAmount: number = 0;  
+  public balanceAmount: number = 0;  
 
   public selectedDate: string = new Date().toISOString().substring(0, 10);
-
-  public lstPurchases: any[] = [];
-
   public searchShopping: string = '';
-  public totalSales: number = 0;
-  public totalEarnings: number = 0;
-
-  public isLoading: boolean = false;
   
-
-  ngOnInit() {
-    this.getPurchasesByDate();
+  selectTab(tab: string) {
+    this.selectedTab = tab;
   }
 
-
-  getPurchasesByDate() {
-    this.isLoading = true;
-    this.shoppingCartService.getPurchasesByDate(this.selectedDate).then((res) => {
-      console.log(res);
-      this.lstPurchases = res
-      this.getTotalPrice();
-      this.getTotalEarnings();
-      this.isLoading = false;
-    });
+  totalEarningsEmit(data: any){
+    this.totalEarnings = data
   }
 
-  filterByDate() {
-    console.log(this.selectedDate);
-    this.getPurchasesByDate()
+  totalSalesEmit(data: any){
+    this.totalSales = data
+    this.calculateBalance();
   }
 
-  getTotalPrice() {
-    this.totalSales =  this.lstPurchases.reduce((acc, purchase) => acc + (purchase.shop_total || 0), 0);
+  billsAmountEmit(data: any){
+    this.billsAmount = data;
+    this.calculateBalance();
   }
 
-  getTotalEarnings() {
-    this.totalEarnings =  this.lstPurchases.reduce((acc, purchase) => acc + (purchase.total_earnings || 0), 0);
+  calculateBalance(){
+    this.balanceAmount = this.totalSales - this.billsAmount
   }
 
 
