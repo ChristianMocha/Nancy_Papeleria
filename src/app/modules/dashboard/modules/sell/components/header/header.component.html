@@ -18,11 +18,112 @@
 
 
     <!-- Otros botones -->
-    <button class="flex-1 md:flex-none bg-green-600 text-white px-5 py-2 rounded-xl shadow hover:bg-green-500 transition">
+    <button class="flex-1 md:flex-none bg-green-600 text-white px-5 py-2 rounded-xl shadow hover:bg-green-500 transition" (click)="openDrawer()">
       Nueva venta libre
     </button>
     <button class="flex-1 md:flex-none bg-red-600 text-white px-5 py-2 rounded-xl shadow hover:bg-red-500 transition">
       Nuevo gasto
     </button>
   </div>
+</div>
+
+
+
+
+
+
+<div *ngIf="isOpen" 
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+     (click)="closeDrawer()">
+</div>
+
+<!-- Drawer lateral -->
+<div
+  class="fixed top-0 right-0 h-full w-[380px] bg-white shadow-lg z-50 p-6 transition-transform duration-300"
+  [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
+  (click)="$event.stopPropagation()"
+>
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-bold">Crear Venta</h2>
+    <button (click)="closeDrawer()" class="text-gray-600 hover:text-black">
+      ✕
+    </button>
+  </div>
+
+<hr class="border border-gray-200 my-4" />
+
+
+<form [formGroup]="form" class="space-y-5 flex flex-col h-full" (ngSubmit)="submit()">
+
+
+  <!-- Fecha -->
+  <div class="space-y-1">
+    <label class="text-sm font-medium">Fecha de la venta *</label>
+    <input type="date" formControlName="shop_date"
+      class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+    
+    <p *ngIf="form.get('shop_date')?.touched && form.get('shop_date')?.invalid"
+       class="text-red-600 text-sm">
+      La fecha es obligatoria.
+    </p>
+  </div>
+
+  <!-- Valor -->
+  <div class="space-y-1">
+    <label class="text-sm font-medium">Valor *</label>
+    <input type="number" formControlName="shop_total"
+      class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+
+    <p *ngIf="form.get('shop_total')?.touched && form.get('shop_total')?.invalid"
+       class="text-red-600 text-sm">
+      El valor es obligatorio.
+    </p>
+  </div>
+
+  <!-- Valor -->
+  <div class="space-y-1">
+    <label class="text-sm font-medium">¿Con cuánto paga tu cliente? *</label>
+    <input type="number" formControlName="shop_payment"
+      class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+
+    <p *ngIf="form.get('shop_payment')?.touched && form.get('shop_payment')?.invalid"
+       class="text-red-600 text-sm">
+      El valor es obligatorio.
+    </p>
+
+    <div class="flex justify-between items-center mb-6">
+      <span class="text-gray-600 font-medium">Valor a devolver:</span>
+      <span class="text-2xl font-bold text-green-600">
+        {{ form.get('shop_change')?.value | currency:'USD' }}
+      </span>
+
+    </div>
+  </div>
+
+  <!-- Concepto -->
+  <div class="space-y-1">
+    <label class="text-sm font-medium">Concepto de la venta *</label>
+    <input type="text" formControlName="shop_concept"
+      placeholder="Ej: Venta de celular"
+      class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+
+    <p *ngIf="form.get('shop_concept')?.touched && form.get('shop_concept')?.invalid"
+       class="text-red-600 text-sm">
+      El concepto es obligatorio.
+    </p>
+  </div>
+
+  <!-- Submit -->
+  <button
+    type="submit"
+    [disabled]="form.invalid"
+    class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition">
+    <app-loading *ngIf="loading"></app-loading>
+    <span *ngIf="!loading">
+      Crear Venta
+    </span>
+  </button>
+
+</form>
+
 </div>
