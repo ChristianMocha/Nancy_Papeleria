@@ -29,10 +29,16 @@ export class HeaderComponent {
   public loading: boolean = false;
 
   public changeAmount: number = 0;
+  public shopDate: string = '';
 
   ngOnInit() {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+    this.shopDate = now.toISOString().slice(0, 16);
+
     this.form = this.fb.group({
-      shop_date: [new Date().toISOString().split('T')[0], Validators.required],
+      shop_date: [this.shopDate, Validators.required],
       shop_total: ['', Validators.required],
       shop_concept: ['', Validators.required],
       total_earnings: ['',],
@@ -49,7 +55,7 @@ export class HeaderComponent {
     });
 
     this.formBills = this.fb.group({
-      bills_date: [new Date().toISOString().split('T')[0], Validators.required],
+      bills_date: [this.shopDate, Validators.required],
       bills_total: ['', Validators.required],
       bills_concept: ['', Validators.required],
       bills_total_earnings: ['',],

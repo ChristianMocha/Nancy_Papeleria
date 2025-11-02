@@ -4,7 +4,6 @@ import {
   doc,
   collection,
   setDoc,
-  serverTimestamp,
   writeBatch,
   where,
   query,
@@ -14,18 +13,20 @@ import {
   DocumentData,
   Query,
 } from 'firebase/firestore';
+import { DateService } from './date.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShoppingCartService {
   public firestore = inject(Firestore);
+  public readonly dateService = inject(DateService);
 
   async savePurchase(purchaseData: any) {
     const purchaseCollection = collection(this.firestore, 'purchases');
     const newPurchaseRef = doc(purchaseCollection);
     purchaseData.shop_id = newPurchaseRef.id;
-    (purchaseData.shop_crea_date = serverTimestamp()),
+    (purchaseData.shop_crea_date = this.dateService.getDate()),
       await setDoc(newPurchaseRef, purchaseData);
 
     return purchaseData;
@@ -35,7 +36,7 @@ export class ShoppingCartService {
     const billsCollection = collection(this.firestore, 'bills');
     const newBillsRef = doc(billsCollection);
     billsData.bills_id = newBillsRef.id;
-    (billsData.bills_crea_date = serverTimestamp()),
+    (billsData.bills_crea_date = this.dateService.getDate()),
       await setDoc(newBillsRef, billsData);
 
     return billsData;

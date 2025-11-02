@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, collectionData, deleteDoc, doc, collectionGroup, updateDoc, setDoc, getDocs } from '@angular/fire/firestore';
 import { from, map, Observable } from 'rxjs';
 import { docData } from 'rxfire/firestore';
 import { CollectionReference, query, where } from 'firebase/firestore';
+import { DateService } from './date.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+    public readonly dateService = inject(DateService);
 
  constructor(private firestore: Firestore) {}
 
@@ -15,7 +17,7 @@ export class ProductService {
     const productRef = doc(collection(this.firestore, `category/${categoryId}/products`));
     product.prod_id = productRef.id;
     product.prod_status = true;
-    product.prod_start_date = new Date();
+    product.prod_start_date = this.dateService.getDate();
     return setDoc(productRef, product);
   }
 
@@ -31,7 +33,7 @@ export class ProductService {
 
   updateProduct(categoryId: string, productId: string, data: any) {
     const productRef = doc(this.firestore, `category/${categoryId}/products/${productId}`);
-    data.prod_update_date = new Date();
+    data.prod_update_date = this.dateService.getDate();
     return updateDoc(productRef, data);
   }
 
