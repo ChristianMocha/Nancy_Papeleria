@@ -15,8 +15,12 @@ export class IncomeComponent {
   public totalEarningsEmit = output<number>();
   public totalSalesEmit = output<number>();
   public billsAmountEmit = output<number>();
-  public selectedDate = input<string>( new Date().toISOString().substring(0, 10));
+  public selectedDate = input<string>(
+    new Date().toISOString().substring(0, 10)
+  );
+  public inputType = input<any>();
 
+  public inputTypeIn: any;
 
   public isLoading: boolean = false;
 
@@ -26,39 +30,57 @@ export class IncomeComponent {
   public totalEarnings: number = 0;
   public billsAmount: number = 0;
 
-
-
   public itemsPerPage = 6;
   public currentPage = 1;
   public totalPages = 1;
 
-
   ngOnInit() {
+    console.log(this.inputType());
+    this.inputTypeIn = this.inputType();
+    if (this.inputType() === 'date') {
+           console.log('entrando 1');
+      this.inputTypeIn = 'day';
+    }
+
+    if (this.inputType() === 'number') {
+            console.log('entrando 2');
+      this.inputTypeIn = 'year';
+    }
     this.getPurchasesByDate();
     this.getTotalBillsAmount();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.inputTypeIn = this.inputType();
+     console.log(this.inputType());
+    if (this.inputType() === 'date') {
+      console.log('entrando 1');
+      this.inputTypeIn = 'day';
+    }
+
+    if (this.inputType() === 'number') {
+      console.log('entrando 2');
+      this.inputTypeIn = 'year';
+    }
+
     if (changes['selectedDate']) {
       this.getPurchasesByDate();
       this.getTotalBillsAmount();
-
     }
   }
 
-
-
   getPurchasesByDate() {
+    console.log(this.inputTypeIn);
     this.isLoading = true;
     this.shoppingCartService
-      .getPurchasesByDate(this.selectedDate())
+      .getData(this.selectedDate(), this.inputTypeIn)
       .then((res) => {
         console.log(res);
         this.lstPurchases = res;
         this.getTotalPrice();
         this.getTotalEarnings();
         this.isLoading = false;
-         this.updatePagination();
+        this.updatePagination();
       });
   }
 
@@ -88,7 +110,6 @@ export class IncomeComponent {
       0
     );
     this.totalEarningsEmit.emit(this.totalEarnings);
-
   }
 
   updatePagination() {

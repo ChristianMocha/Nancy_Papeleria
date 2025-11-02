@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, input, output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ShoppingCartService } from '../../../../../../service/shopping-cart.service';
+import { DateService } from '../../../../../../service/date.service';
 
 @Component({
   selector: 'app-bills',
@@ -16,6 +17,7 @@ public readonly shoppingCartService = inject(ShoppingCartService);
   public totalEarningsEmit = output<number>();
   public totalSalesEmit = output<number>();
   public selectedDate = input<string>( new Date().toISOString().substring(0, 10));
+  public inputType = input<any>();
 
 
   public isLoading: boolean = false;
