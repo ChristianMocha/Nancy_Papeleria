@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { ShoppingCartService } from '../../../../../../service/shopping-cart.service';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -89,4 +89,5 @@ export class ContentComponent {
       (date.getTime() - firstDayOfYear.getTime()) / 86400000;
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
+
 }

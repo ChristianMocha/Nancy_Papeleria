@@ -10,11 +10,21 @@ import { ContentComponent } from "./components/content/content.component";
 })
 export class SellComponent {
 
-  public searchTerm: string = '';
+  public lstProducts: any;
+  public searchTerm: any;
+  public deleteSearchTermEmit: any;
 
-  searchTermEmmit(data: string){
+  productsEmmit(data: any){
+    this.lstProducts = data
+
+  }
+  searchTermEmmit(data: any){
     this.searchTerm = data
 
+  }
+
+  deleteSearchTerm(data: any){
+    this.deleteSearchTermEmit = data;
   }
 
 }

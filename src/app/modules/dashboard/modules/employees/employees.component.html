@@ -18,55 +18,71 @@
       ✕
     </button>
 
-    <form [formGroup]="employeeForm" >
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
 
-      <!-- Nombre -->
-      <label class="block mb-1 font-medium text-gray-700">Nombre</label>
-      <input
-        type="text"
-        formControlName="emp_nombre"
-        placeholder="Ej: Juan Pérez"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
-      <div *ngIf="employeeForm.get('emp_nombre')?.touched && employeeForm.get('emp_nombre')?.invalid" class="text-red-500 text-sm mb-2">
-        El nombre es obligatorio (mínimo 3 caracteres).
-      </div>
 
-      <!-- Celular -->
-      <label class="block mb-1 font-medium text-gray-700">Celular</label>
-      <input
-        type="text"
-        formControlName="emp_celular"
-        placeholder="Ej: 987654321"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
-      <div *ngIf="employeeForm.get('emp_celular')?.touched && employeeForm.get('emp_celular')?.invalid" class="text-red-500 text-sm mb-2">
-        Ingrese un celular válido (solo números, 9-15 dígitos).
-      </div>
+  <label class="block mb-1 font-medium text-gray-700">Nombre</label>
+  <input
+    type="text"
+    formControlName="emp_name"
+    placeholder="Ej: Juan"
+    class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+  />
+  <div *ngIf="employeeForm.get('emp_name')?.touched && employeeForm.get('emp_name')?.invalid" class="text-red-500 text-sm mb-2">
+    Ingrese un nombre.
+  </div>
 
-      <!-- Rol -->
-      <label class="block mb-1 font-medium text-gray-700">Rol</label>
-      <select formControlName="emp_rol" class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500">
-        <option value="">Seleccione un rol</option>
-        <option *ngFor="let r of roles" [value]="r.id">{{ r.nombre }}</option>
-      </select>
 
-      <div *ngIf="employeeForm.get('emp_rol')?.touched && employeeForm.get('emp_rol')?.invalid" class="text-red-500 text-sm mb-2">
-        Debe seleccionar un rol.
-      </div>
+  <!-- Correo -->
+  <label class="block mb-1 font-medium text-gray-700">Correo electrónico</label>
+  <input
+    type="email"
+    formControlName="emp_email"
+    placeholder="Ej: usuario@empresa.com"
+    class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+  />
+  <div *ngIf="employeeForm.get('emp_email')?.touched && employeeForm.get('emp_email')?.invalid" class="text-red-500 text-sm mb-2">
+    Ingrese un correo válido.
+  </div>
 
-      <!-- Botón Save -->
-      <div class="flex justify-end mt-4">
-        <button
-        (click)="onSubmit()"
-          type="submit"
-          [disabled]="employeeForm.invalid"
-          class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
-        >
-          Save
-        </button>
-      </div>
+  <!-- Contraseña -->
+  <label class="block mb-1 font-medium text-gray-700">Contraseña</label>
+  <input
+    type="password"
+    formControlName="emp_password"
+    placeholder="Mínimo 6 caracteres"
+    class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+  />
+  <div *ngIf="employeeForm.get('emp_password')?.touched && employeeForm.get('emp_password')?.invalid" class="text-red-500 text-sm mb-2">
+    La contraseña debe tener al menos 6 caracteres.
+  </div>
 
-    </form>
+  <!-- Rol -->
+  <label class="block mb-1 font-medium text-gray-700">Rol</label>
+  <select formControlName="emp_role" class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500">
+    <option value="">Seleccione un rol</option>
+    <option *ngFor="let r of roles" [value]="r.id">{{ r.nombre }}</option>
+  </select>
+
+  <div *ngIf="employeeForm.get('emp_role')?.touched && employeeForm.get('emp_role')?.invalid" class="text-red-500 text-sm mb-2">
+    Debe seleccionar un rol.
+  </div>
+
+  <!-- Botón Guardar -->
+  <div class="flex justify-end mt-4">
+    <button
+      type="submit"
+      [disabled]="employeeForm.invalid"
+      class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
+    >
+    <app-loading *ngIf="loading"></app-loading>
+    <span *ngIf="!loading">
+      Crear usuario
+    </span>
+    </button>
+  </div>
+
+</form>
+
   </div>
 </div>

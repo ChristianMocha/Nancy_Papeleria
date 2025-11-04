@@ -15,7 +15,7 @@ export class ModalPurchaseComponent {
   public close = output<any>();
   public confirmSale = output<any>();
 
-  public customerPayment: number = 0;
+  public customerPayment: any;
   public changeAmount: number = 0;
   public loading: boolean = false;
 

@@ -84,8 +84,6 @@ export class ShoppingCartService {
 
       default:
         break;
-
-   
     }
 
     return [];
@@ -103,34 +101,45 @@ export class ShoppingCartService {
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
-  async getTotalBillsAmount(date?: string): Promise<number> {
-    console.log(date);
-    // 1️⃣ Crea referencia a la colección
+  async getTotalBillsAmount(
+    date: string,
+    rangeType: 'day' | 'week' | 'month' | 'year'
+  ): Promise<number> {
+    console.log(`🧾 getTotalBillsAmount → ${rangeType.toUpperCase()}:`, date);
+
+    const { startDate, endDate } = this.getDateRange(date, rangeType);
+
+    const toLocalISODate = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+        d.getDate()
+      ).padStart(2, '0')}`;
+
+    const startISO = toLocalISODate(startDate);
+    const endISO = toLocalISODate(endDate);
+
+    console.log('➡️ Desde:', startISO);
+    console.log('➡️ Hasta:', endISO);
+
     const billsRef: CollectionReference<DocumentData> = collection(
       this.firestore,
       'bills'
     );
 
-    // 2️⃣ Si se pasa fecha, construye una query
-    let q: Query<DocumentData> = billsRef;
-    if (date) {
-      q = query(
-        billsRef,
-        where('bills_date', '>=', date),
-        where('bills_date', '<=', date)
-      );
-    }
+    const q = query(
+      billsRef,
+      where('bills_date', '>=', startISO),
+      where('bills_date', '<=', endISO)
+    );
 
-    // 3️⃣ Ejecuta la consulta (usa `q`, no `billsRef`)
     const snapshot = await getDocs(q);
 
-    // 4️⃣ Suma todos los bills_total
     let total = 0;
     snapshot.forEach((doc) => {
       const data = doc.data() as any;
       total += data.bills_total || 0;
     });
 
+    console.log('💸 Total encontrado:', total);
     return total;
   }
 
@@ -144,11 +153,9 @@ export class ShoppingCartService {
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
-  // ✅ Semanal
   async getPurchasesByWeek(date: string, rangeType: any) {
     const { startDate, endDate } = this.getDateRange(date, rangeType);
 
-    // 🔁 Convierte las fechas a formato ISO corto (YYYY-MM-DD)
     const startISO = startDate.toISOString().slice(0, 10);
     const endISO = endDate.toISOString().slice(0, 10);
 
@@ -171,17 +178,20 @@ export class ShoppingCartService {
     return results;
   }
 
-  // ✅ Mensual
   async getPurchasesByMonth(date: string, rangeType: any) {
     console.log('🗓 Mes:', date);
     const { startDate, endDate } = this.getDateRange(date, rangeType);
 
-    // 🔁 Convertimos las fechas a formato "YYYY-MM-DD"
-    const startISO = startDate.toISOString().slice(0, 10);
-    const endISO = endDate.toISOString().slice(0, 10);
+    const toLocalISODate = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+        d.getDate()
+      ).padStart(2, '0')}`;
 
-    console.log('➡️ Desde (ISO):', startISO);
-    console.log('➡️ Hasta (ISO):', endISO);
+    const startISO = toLocalISODate(startDate);
+    const endISO = toLocalISODate(endDate);
+
+    console.log('➡️ Desde (local ISO):', startISO);
+    console.log('➡️ Hasta (local ISO):', endISO);
 
     const purchasesRef = collection(this.firestore, 'purchases');
     const q = query(
@@ -198,12 +208,10 @@ export class ShoppingCartService {
     return results;
   }
 
-  // ✅ Anual
   async getPurchasesByYear(date: string, rangeType: any) {
     console.log('📅 Año:', date);
     const { startDate, endDate } = this.getDateRange(date, rangeType);
 
-    // 🔁 Convierte a formato "YYYY-MM-DD"
     const startISO = startDate.toISOString().slice(0, 10);
     const endISO = endDate.toISOString().slice(0, 10);
 
@@ -239,11 +247,9 @@ export class ShoppingCartService {
       }
 
       case 'week': {
-        // 🧮 Extrae año y número de semana (formato "YYYY-W##")
         const [year, weekStr] = date.split('-W');
         const week = parseInt(weekStr, 10);
 
-        // 📅 Calcula el lunes de esa semana ISO
         const simple = new Date(Number(year), 0, 1 + (week - 1) * 7);
         const dayOfWeek = simple.getDay();
         const ISOweekStart = new Date(simple);

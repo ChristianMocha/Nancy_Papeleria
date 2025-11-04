@@ -50,6 +50,46 @@
 
           </div>
         </div>
+        
+
+  
+<div *ngIf="!showButtonMore"
+  class="flex flex-col items-center justify-center border rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-200 transition cursor-pointer"
+>
+  <button
+    (click)="nextPage()"
+    [disabled]="loading"
+    class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-md transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+  >
+    <ng-container *ngIf="!loading; else loadingState">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+      Cargar más
+    </ng-container>
+
+    <ng-template #loadingState>
+      <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+           viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10"
+                stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+      </svg>
+      Cargando...
+    </ng-template>
+  </button>
+
+  <p class="text-gray-500 text-sm mt-3">
+    Muestra más productos disponibles
+  </p>
+</div>
+
+
+
+
+
       </div>
     </div>
   </div>

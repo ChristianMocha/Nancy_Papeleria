@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, input, output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ShoppingCartService } from '../../../../../../service/shopping-cart.service';
 import { LoadingComponent } from '../../../../../shared/loading/loading.component';
+import { ProductService } from '../../../../../../service/product.service';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,8 @@ import { LoadingComponent } from '../../../../../shared/loading/loading.componen
 })
 export class HeaderComponent {
 
+  public readonly productService = inject(ProductService);
+
 
   private readonly fb = inject(FormBuilder);
   public form: FormGroup = this.fb.group({});
@@ -21,6 +24,8 @@ export class HeaderComponent {
   public readonly shoppingCartService = inject(ShoppingCartService);
 
   public searchTermEmmit = output<any>();
+  public productsEmmit = output<any>();
+  public deleteSearchTermEmit = input<any>();
 
   public searchTerm: string = '';
 
@@ -72,8 +77,14 @@ export class HeaderComponent {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.searchTerm = '';
+    
+  }
+
   filterProducts(){
     this.searchTermEmmit.emit(this.searchTerm);
+    this.getSearchProducts();
 
   }
 
@@ -130,6 +141,15 @@ export class HeaderComponent {
 
   closeDrawerNewBills(){
     this.isOpenBills = false;
+  }
+
+  getSearchProducts(){
+    console.log(this.searchTerm);
+    if (this.searchTerm.length < 3 && this.searchTerm.length > 0) return;
+    this.productService.searchProducts(this.searchTerm).then((res) => {
+      console.log(res);
+      this.productsEmmit.emit(res);
+    })
   }
 
 

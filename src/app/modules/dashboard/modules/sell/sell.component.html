@@ -1,4 +1,4 @@
-<app-header (searchTermEmmit)="searchTermEmmit($event)"></app-header>
+<app-header (productsEmmit)="productsEmmit($event)" (searchTermEmmit)="searchTermEmmit($event)" [deleteSearchTermEmit]="deleteSearchTermEmit"></app-header>
 <div class="  mt-6 h-[90vh]">
-  <app-content [searchTerm]="searchTerm"></app-content>
+  <app-content [lstProductsSearch]="lstProducts" [searchTerm]="searchTerm" (deleteSearchTerm)="deleteSearchTerm($event)"></app-content>
 </div>

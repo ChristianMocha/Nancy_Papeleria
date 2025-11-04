@@ -19,6 +19,7 @@ export class IncomeComponent {
     new Date().toISOString().substring(0, 10)
   );
   public inputType = input<any>();
+  public searchShopping = input<any>();
 
   public inputTypeIn: any;
 
@@ -26,6 +27,7 @@ export class IncomeComponent {
 
   public lstPurchases: any[] = [];
   public paginatedProducts: any[] = [];
+  private allPurchases: any[] = [];
   public totalSales: number = 0;
   public totalEarnings: number = 0;
   public billsAmount: number = 0;
@@ -35,6 +37,7 @@ export class IncomeComponent {
   public totalPages = 1;
 
   ngOnInit() {
+    this.currentPage = 1;
     console.log(this.inputType());
     this.inputTypeIn = this.inputType();
     if (this.inputType() === 'date') {
@@ -51,6 +54,7 @@ export class IncomeComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.currentPage = 1;
     this.inputTypeIn = this.inputType();
      console.log(this.inputType());
     if (this.inputType() === 'date') {
@@ -67,16 +71,21 @@ export class IncomeComponent {
       this.getPurchasesByDate();
       this.getTotalBillsAmount();
     }
+
+    this.onSearchChange();
   }
 
   getPurchasesByDate() {
     console.log(this.inputTypeIn);
     this.isLoading = true;
+    this.lstPurchases = [];
     this.shoppingCartService
       .getData(this.selectedDate(), this.inputTypeIn)
       .then((res) => {
         console.log(res);
         this.lstPurchases = res;
+        this.allPurchases = res;
+        console.log(this.lstPurchases);
         this.getTotalPrice();
         this.getTotalEarnings();
         this.isLoading = false;
@@ -88,7 +97,7 @@ export class IncomeComponent {
     console.log('entrando ');
     this.isLoading = true;
     this.shoppingCartService
-      .getTotalBillsAmount(this.selectedDate())
+      .getTotalBillsAmount(this.selectedDate(), this.inputTypeIn)
       .then((res) => {
         console.log(res);
         this.billsAmount = res;
@@ -132,4 +141,22 @@ export class IncomeComponent {
       this.updatePagination();
     }
   }
+
+ onSearchChange() {
+  const term = this.searchShopping()?.toString().toLowerCase() || '';
+
+  if (term.trim().length === 0) {
+    this.lstPurchases = [...this.allPurchases];
+    this.updatePagination();
+    return;
+  }
+
+  const filtered = this.allPurchases.filter((purchase) =>
+    purchase.shop_concept?.toLowerCase().includes(term) ||
+    purchase.shop_total?.toString().includes(term)
+  );
+
+  this.lstPurchases = filtered;
+  this.updatePagination();
+}
 }

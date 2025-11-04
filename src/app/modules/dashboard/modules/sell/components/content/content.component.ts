@@ -1,4 +1,4 @@
-import { Component, inject, input, SimpleChanges } from '@angular/core';
+import { Component, inject, input, output, SimpleChanges } from '@angular/core';
 import { CategoryService } from '../../../../../../service/category.service';
 import { ProductService } from '../../../../../../service/product.service';
 import { Category } from '../../../../../shared/models/category';
@@ -18,7 +18,9 @@ import { DateService } from '../../../../../../service/date.service';
   styleUrl: './content.component.scss',
 })
 export class ContentComponent {
-  public searchTerm = input<string>('');
+  public lstProductsSearch = input<any[]>([]);
+  public searchTerm = input<any>();
+  public deleteSearchTerm = output<any>();
 
   private readonly categoryService = inject(CategoryService);
   public readonly productService = inject(ProductService);
@@ -34,11 +36,12 @@ export class ContentComponent {
   public selectedCategory: string = 'all';
 
   public showModal: boolean = false;
+  public loading: boolean = false;
+  public showButtonMore: boolean = false;
 
   public shopDate: string = '';
 
   ngOnInit() {
-
     this.shopDate = this.dateService.getDate();
     console.log(this.shopDate);
     this.getCategories();
@@ -46,8 +49,7 @@ export class ContentComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.searchTerm());
-    if (changes['searchTerm']) {
+    if (changes['lstProductsSearch']) {
       this.filterProducts();
     }
   }
@@ -64,69 +66,74 @@ export class ContentComponent {
   }
 
   selectCategory(categoryId: any) {
+    console.log(categoryId);
     this.selectedCategory = categoryId;
+    if (categoryId === 'all') {
+      this.showButtonMore = false;
+      this.getAllPorducts();
+      return;
+    }
     console.log('Categoría seleccionada:', categoryId);
+    this.productService.getProductsByCategory(categoryId).subscribe((res) => {
+      console.log(res);
+      this.showButtonMore = true;
+      this.filteredProducts = res;
+    });
   }
 
-  async getAllPorducts() {
-    this.productService.getAllProducts().subscribe({
-      next: (res) => {
-        console.log('✅ Productos:', res);
-        this.lstProducts = res;
-        this.lstProducts = res.map((prod) => ({
-          ...prod,
-          prod_start_date: prod.prod_start_date?.toDate
-            ? prod.prod_start_date.toDate()
-            : prod.prod_start_date,
-        }));
-        this.filteredProducts = this.lstProducts;
-        console.log(this.lstProducts);
-      },
-      error: (err) => console.error('❌ Error:', err),
-    });
+  async getAllPorducts(nextPage: boolean = false) {
+    this.loading = true;
+    this.lstProducts = await this.productService.getProductsPaginated(
+      10,
+      nextPage
+    );
+
+    if (nextPage) {
+      this.filteredProducts = [...this.filteredProducts, ...this.lstProducts];
+    } else {
+      this.filteredProducts = this.lstProducts;
+    }
+
+    console.log(this.filteredProducts);
+
+    this.loading = false;
+  }
+  async nextPage() {
+    await this.getAllPorducts(true);
   }
 
   newProduct() {
     this.router.navigate(['product/add']);
   }
 
-  filterProducts() {
-    const term = this.searchTerm().toLowerCase().trim() || '';
-    const cat = this.selectedCategory;
+  async filterProducts() {
+    console.log(this.lstProductsSearch());
 
-    if (term.length < 3) {
-      this.filteredProducts = this.lstProducts.filter(
-        (p) => cat === 'all' || p.prod_category_id === cat
-      );
-      return;
+    if (!this.searchTerm()) {
+      this.getAllPorducts();
     }
-
-    this.filteredProducts = this.lstProducts.filter((p) => {
-      const matchesSearch =
-        p.prod_name?.toLowerCase().includes(term) ||
-        p.prod_code?.toLowerCase().includes(term);
-
-      const matchesCategory = cat === 'all' || p.prod_category_id === cat;
-
-      return matchesSearch && matchesCategory;
-    });
+    if (
+      this.lstProductsSearch() !== undefined &&
+      this.lstProductsSearch() !== null
+    ) {
+      console.log('entrando correctamente');
+      this.filteredProducts = await this.lstProductsSearch();
+    }
   }
 
   addToSelection(product: any) {
-    if (product.prod_quantity_available <= 0) return; // ❌ No permitir si ya no hay stock
+    if (product.prod_quantity_available <= 0) return;
 
-    product.prod_quantity_available--; // 🔹 Resta 1 disponible
+    product.prod_quantity_available--;
 
-    // 🔹 Buscar si ya está en seleccionados
     const existing = this.selectedProducts.find(
       (p) => p.prod_code === product.prod_code
     );
 
     if (existing) {
       existing.pod_selectedQty += 1;
-      this.updatePrice(existing); // Recalcular el precio total
+      this.updatePrice(existing);
     } else {
-      // 🔹 Agregar una copia del producto con cantidad seleccionada y precio total
       const unitPrice = product.prod_discount_price ?? product.prod_sale_price;
 
       this.selectedProducts.push({
@@ -136,16 +143,13 @@ export class ContentComponent {
       });
     }
 
-    // 🔹 Actualizar o insertar producto en selectedProductsUpdate
     const existingUpdate = this.selectedProductsUpdate.find(
       (p) => p.prod_code === product.prod_code
     );
 
     if (existingUpdate) {
-      // ✅ Actualizar solo los datos necesarios
       existingUpdate.prod_quantity_available = product.prod_quantity_available;
     } else {
-      // ✅ Insertar si no existe
       this.selectedProductsUpdate.push({
         ...product,
         prod_quantity_available: product.prod_quantity_available,
@@ -163,7 +167,6 @@ export class ContentComponent {
 
       this.updatePrice(item);
 
-      // 🔹 Sincronizar en arrays principales
       this.updateProductStock(item.prod_code, item.prod_quantity_available);
     }
   }
@@ -175,7 +178,6 @@ export class ContentComponent {
 
       this.updatePrice(item);
 
-      // 🔹 Sincronizar en arrays principales
       this.updateProductStock(item.prod_code, item.prod_quantity_available);
     }
   }
@@ -186,13 +188,12 @@ export class ContentComponent {
       (p) => p.prod_code !== item.prod_code
     );
 
-    // 🔹 Sincronizar cuando se elimina del carrito
     this.updateProductStock(item.prod_code, item.prod_quantity_available);
   }
 
   onDiscountChange(item: any) {
     console.log(item);
-    // Si no hay descuento, vuelve a usar el precio original
+
     if (!item.prod_discount_price || item.prod_discount_price <= 0) {
       item.prod_discount_price = null;
     }
@@ -200,7 +201,6 @@ export class ContentComponent {
   }
 
   getFinalPrice(item: any) {
-    // Usa el precio con descuento si existe, si no el original
     return item.prod_discount_price ?? item.prod_sale_price;
   }
 
@@ -214,7 +214,6 @@ export class ContentComponent {
     newQty: number,
     removeFromUpdate: boolean = false
   ) {
-    // 🔹 Actualiza en lstProducts
     const productInList = this.lstProducts.find(
       (p) => p.prod_code === prodCode
     );
@@ -222,7 +221,6 @@ export class ContentComponent {
       productInList.prod_quantity_available = newQty;
     }
 
-    // 🔹 Actualiza también en filteredProducts
     const productInFiltered = this.filteredProducts.find(
       (p) => p.prod_code === prodCode
     );
@@ -230,21 +228,17 @@ export class ContentComponent {
       productInFiltered.prod_quantity_available = newQty;
     }
 
-    // 🔹 Actualiza o elimina en selectedProductsUpdate
     const productInUpdate = this.selectedProductsUpdate.find(
       (p) => p.prod_code === prodCode
     );
 
     if (removeFromUpdate) {
-      // 🗑️ Eliminar del array si corresponde
       this.selectedProductsUpdate = this.selectedProductsUpdate.filter(
         (p) => p.prod_code !== prodCode
       );
     } else if (productInUpdate) {
-      // 🔁 Actualizar cantidad disponible si ya existe
       productInUpdate.prod_quantity_available = newQty;
     } else {
-      // ➕ Agregar si no estaba en la lista de actualización
       const product = this.lstProducts.find((p) => p.prod_code === prodCode);
       if (product) {
         this.selectedProductsUpdate.push({
@@ -358,6 +352,8 @@ export class ContentComponent {
           this.selectedProducts = [];
           this.selectedProductsUpdate = [];
           this.showModal = false;
+          this.deleteSearchTerm.emit('');
+          this.getAllPorducts();
         });
     });
   }
