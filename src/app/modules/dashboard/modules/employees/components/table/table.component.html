@@ -1,44 +1,106 @@
 <div class="overflow-x-auto">
+  <div
+    class="flex items-center border border-gray-300 rounded-lg px-4 py-2 flex-1 max-w-sm"
+  >
+    <i class="fa-solid fa-magnifying-glass text-gray-400 text-lg mr-2"></i>
+
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="filterEmployees()"
+      class="flex-1 outline-none bg-transparent text-gray-700"
+      placeholder="Buscar empleado por nombre o correo..."
+    />
+  </div>
+  <br>
+
   <table class="min-w-full border-separate border-spacing-y-2">
     <thead>
       <tr class="bg-gray-100 text-gray-600">
         <th class="text-left px-4 py-3 font-semibold">Nombre</th>
-        <th class="text-left px-4 py-3 font-semibold">Celular</th>
+        <th class="text-left px-4 py-3 font-semibold">Correo</th>
         <th class="text-left px-4 py-3 font-semibold">Rol</th>
         <th class="text-left px-4 py-3 font-semibold">Estado</th>
-        <th class="text-left px-4 py-3 font-semibold">Acciones</th>
       </tr>
     </thead>
+
     <tbody class="bg-white">
-      <tr class="shadow rounded-lg">
-        <!-- Nombre -->
-        <td class="px-4 py-3">Cristian Mocha</td>
-
-        <!-- Celular -->
-        <td class="px-4 py-3">+593 987654321</td>
-
-        <!-- Rol -->
+      <tr
+        *ngFor="let emp of paginatedEmployees"
+        class="shadow rounded-lg hover:bg-gray-50 transition-all"
+      >
+        <td class="px-4 py-3 font-medium text-gray-800">{{ emp.emp_name }}</td>
+        <td class="px-4 py-3 text-gray-600">{{ emp.emp_email || "—" }}</td>
         <td class="px-4 py-3">
-          <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
-            Supervisor
+          <span
+            [ngClass]="{
+              'bg-green-100 text-green-700': emp.emp_role === 'admin',
+              'bg-blue-100 text-blue-700': emp.emp_role === 'employee',
+              'bg-gray-100 text-gray-700': emp.emp_role === 'public'
+            }"
+            class="px-3 py-1 rounded-full text-sm font-medium capitalize"
+          >
+            {{ emp.emp_role }}
           </span>
         </td>
 
-        <!-- Estado -->
-        <td class="px-4 py-3 flex items-center gap-2">
-          <span class="flex items-center justify-center w-6 h-6 rounded-full bg-green-100 text-green-600">
-            ✔
-          </span>
-          <span class="text-gray-700">Activo</span>
-        </td>
+        <td class="px-4 py-3 flex items-center gap-3">
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              class="sr-only peer"
+              [checked]="emp.emp_status"
+              (change)="toggleStatus(emp)"
+            />
+            <div
+              class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-400 rounded-full peer peer-checked:bg-green-500 transition-colors duration-300"
+            ></div>
+            <div
+              class="absolute left-0.5 top-0.5 bg-white w-5 h-5 rounded-full transition-transform duration-300 peer-checked:translate-x-5"
+            ></div>
+          </label>
 
-        <!-- Acciones -->
-        <td class="px-4 py-3">
-          <button class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-lg text-sm hover:bg-yellow-200">
-            Editar
-          </button>
+          <span
+            class="text-sm font-medium"
+            [ngClass]="emp.emp_status ? 'text-green-700' : 'text-gray-500'"
+          >
+            {{ emp.emp_status ? "Activo" : "Inactivo" }}
+          </span>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <!-- 🔹 Controles de paginación -->
+  <div class="flex justify-between items-center mt-4">
+    <button
+      class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+      (click)="prevPage()"
+      [disabled]="currentPage === 1"
+    >
+      Anterior
+    </button>
+
+    <div class="flex items-center gap-2">
+      <button
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+        class="w-8 h-8 rounded-lg flex items-center justify-center"
+        [ngClass]="{
+          'bg-blue-500 text-white': currentPage === i + 1,
+          'bg-gray-200 text-gray-700 hover:bg-gray-300': currentPage !== i + 1
+        }"
+        (click)="goToPage(i + 1)"
+      >
+        {{ i + 1 }}
+      </button>
+    </div>
+
+    <button
+      class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Siguiente
+    </button>
+  </div>
 </div>

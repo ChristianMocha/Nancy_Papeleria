@@ -26,6 +26,19 @@ export class EmployeeService {
     const employeeRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return updateDoc(employeeRef, data);
   }
+
+  async toggleStatus(empId: string, currentStatus: boolean): Promise<void> {
+    const employeeRef = doc(this.firestore, this.collectionName, empId);
+    const newStatus = !currentStatus;
+
+    try {
+      await updateDoc(employeeRef, { emp_status: newStatus });
+      console.log(`Estado de empleado ${empId} actualizado a ${newStatus}`);
+    } catch (err) {
+      console.error('Error al actualizar el estado:', err);
+      throw err;
+    }
+  }
   
   getEmployees(): Observable<Employees[]> {
     const employeesRef = collection(this.firestore, 'employees');

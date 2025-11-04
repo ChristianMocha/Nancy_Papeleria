@@ -1,30 +1,95 @@
 import { Component, inject } from '@angular/core';
 import { EmployeeService } from '../../../../../../service/employee.service';
 import { firstValueFrom } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-table',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './table.component.html',
-  styleUrl: './table.component.scss'
+  styleUrl: './table.component.scss',
 })
 export class TableComponent {
-
   private readonly employeeService = inject(EmployeeService);
+
+  public lstEmployees: any[] = [];
+  public paginatedEmployees: any[] = [];
+  public filteredEmployees: any[] = [];
+
+  public currentPage = 1;
+  public pageSize = 10;
+  public totalPages = 1;
+
+  public searchTerm: string = '';
 
   ngOnInit() {
     this.getEmployees();
   }
 
-
   async getEmployees() {
     console.log('entrano el metodo de traer empleados');
-    this.employeeService.getEmployees().subscribe(
-      (res) => {
-        console.log(res);
-        
-      }
-    )
-}
+    this.employeeService.getEmployees().subscribe((res) => {
+      console.log(res);
+      this.lstEmployees = res;
+      this.filteredEmployees = [...this.lstEmployees];
+      this.totalPages = Math.ceil(this.lstEmployees.length / this.pageSize);
+      this.updatePage();
+    });
+  }
+
+  updatePage() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+ this.paginatedEmployees = this.filteredEmployees.slice(start, end);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePage();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePage();
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updatePage();
+  }
+
+  toggleStatus(emp: any) {
+    this.employeeService
+      .toggleStatus(emp.emp_id, emp.emp_status)
+      .then(() => {
+        emp.emp_status = !emp.emp_status; // Actualiza localmente
+      })
+      .catch((err) => console.error(err));
+  }
+
+ filterEmployees() {
+    const term = this.searchTerm.toLowerCase().trim();
+
+    if (!term) {
+      this.filteredEmployees = [...this.lstEmployees];
+    } else {
+      this.filteredEmployees = this.lstEmployees.filter(
+        (emp) =>
+          emp.emp_name?.toLowerCase().includes(term) ||
+          emp.emp_email?.toLowerCase().includes(term)
+      );
+    }
+
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.filteredEmployees.length / this.pageSize);
+    console.log('Filtrados:', this.filteredEmployees.length, 'Total:', this.lstEmployees.length);
+
+    this.updatePage();
+  }
 
 }

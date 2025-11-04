@@ -41,12 +41,12 @@ export class IncomeComponent {
     console.log(this.inputType());
     this.inputTypeIn = this.inputType();
     if (this.inputType() === 'date') {
-           console.log('entrando 1');
+      console.log('entrando 1');
       this.inputTypeIn = 'day';
     }
 
     if (this.inputType() === 'number') {
-            console.log('entrando 2');
+      console.log('entrando 2');
       this.inputTypeIn = 'year';
     }
     this.getPurchasesByDate();
@@ -56,7 +56,7 @@ export class IncomeComponent {
   ngOnChanges(changes: SimpleChanges): void {
     this.currentPage = 1;
     this.inputTypeIn = this.inputType();
-     console.log(this.inputType());
+    console.log(this.inputType());
     if (this.inputType() === 'date') {
       console.log('entrando 1');
       this.inputTypeIn = 'day';
@@ -83,6 +83,10 @@ export class IncomeComponent {
       .getData(this.selectedDate(), this.inputTypeIn)
       .then((res) => {
         console.log(res);
+        res = res.map((p: any) => ({
+          ...p,
+          shop_crea_date: this.convertToDate(p.shop_crea_date),
+        }));
         this.lstPurchases = res;
         this.allPurchases = res;
         console.log(this.lstPurchases);
@@ -142,21 +146,40 @@ export class IncomeComponent {
     }
   }
 
- onSearchChange() {
-  const term = this.searchShopping()?.toString().toLowerCase() || '';
+  onSearchChange() {
+    const term = this.searchShopping()?.toString().toLowerCase() || '';
 
-  if (term.trim().length === 0) {
-    this.lstPurchases = [...this.allPurchases];
+    if (term.trim().length === 0) {
+      this.lstPurchases = [...this.allPurchases];
+      this.updatePagination();
+      return;
+    }
+
+    const filtered = this.allPurchases.filter(
+      (purchase) =>
+        purchase.shop_concept?.toLowerCase().includes(term) ||
+        purchase.shop_total?.toString().includes(term)
+    );
+
+    this.lstPurchases = filtered;
     this.updatePagination();
-    return;
   }
 
-  const filtered = this.allPurchases.filter((purchase) =>
-    purchase.shop_concept?.toLowerCase().includes(term) ||
-    purchase.shop_total?.toString().includes(term)
-  );
+  convertToDate(value: any): Date | null {
+    if (!value) return null;
 
-  this.lstPurchases = filtered;
-  this.updatePagination();
-}
+    // Caso 1: Timestamp (Firebase)
+    if (value.toDate) {
+      try {
+        return value.toDate();
+      } catch {
+        // por si viene algo raro
+        return null;
+      }
+    }
+
+    // Caso 2: string o número válido
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
+  }
 }
