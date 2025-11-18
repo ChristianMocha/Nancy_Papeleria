@@ -37,6 +37,13 @@ const DashboardRoute: Routes = [
           ),
       },
       {
+        path: 'service',
+        loadComponent: () =>
+          import('./modules/technical-service/technical-service.component').then(
+            (m) => m.TechnicalServiceComponent
+          ),
+      },
+      {
         path: 'movements',
         loadComponent: () =>
           import('./modules/movements/movements.component').then(

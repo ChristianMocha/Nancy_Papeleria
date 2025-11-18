@@ -8,7 +8,7 @@ import { ProductService } from '../../../../../../service/product.service';
 import { toast } from 'ngx-sonner';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { UploadService } from '../../../../../../service/upload.service';
-import { LoadingComponent } from '../../../../../shared/loading/loading.component';
+import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 

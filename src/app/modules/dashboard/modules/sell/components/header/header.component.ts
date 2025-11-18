@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, input, output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ShoppingCartService } from '../../../../../../service/shopping-cart.service';
-import { LoadingComponent } from '../../../../../shared/loading/loading.component';
+import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 import { ProductService } from '../../../../../../service/product.service';
 
 @Component({

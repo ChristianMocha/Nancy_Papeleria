@@ -13,7 +13,7 @@ import { EmployeeService } from '../../../../service/employee.service';
 import { AuthService } from '../../../../service/auth.service';
 import { Role } from '../../../shared/models/category copy';
 import { DateService } from '../../../../service/date.service';
-import { LoadingComponent } from '../../../shared/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-employees',

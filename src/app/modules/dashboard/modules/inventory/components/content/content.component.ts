@@ -187,6 +187,7 @@ export class ContentComponent {
       Swal.fire('Eliminado', 'El registro fue eliminado correctamente.', 'success');
     })
   }
+  
 
   openImageModal(imageUrl: string | undefined) {
   if (!imageUrl) return;

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoadingComponent } from '../../../../../shared/loading/loading.component';
+import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-modal-purchase',

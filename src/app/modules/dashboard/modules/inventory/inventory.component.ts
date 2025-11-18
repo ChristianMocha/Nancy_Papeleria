@@ -5,7 +5,7 @@ import { ContentComponent } from './components/content/content.component';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { CategoryService } from '../../../../service/category.service';
-import { LoadingComponent } from '../../../shared/loading/loading.component';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-inventory',
