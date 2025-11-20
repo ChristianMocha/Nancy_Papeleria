@@ -345,28 +345,72 @@ export class ServicesComponent {
       <head>
         <title>Impresión de Servicio</title>
         <style>
-          @media print {
-            @page { margin: 0; }
-            body { margin: 0; padding: 10px; width: 100%; }
-            .card { width: 100%; box-sizing: border-box; margin-bottom: 20px; }
-          }
+  @media print {
+    @page { 
+      margin: 0;
+      size: 58mm auto; /* 👈 Ajusta a 58mm si deseas más pequeño */
+    }
 
-          body { font-family: Arial; padding: 10px; width: 100%; }
-          h2 { text-align: center; margin-bottom: 20px; }
-          .item { font-size: 16px; margin-bottom: 12px; }
-          .label { font-weight: bold; }
-          .card {
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 40px;
-            width: 100%;
-            box-sizing: border-box;
-          }
-          .page-break { page-break-before: always; }
-          .qr-placeholder { width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; margin: 10px 0; }
-          .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; }
-          .alert { color: red; font-weight: bold; margin-top: 15px; }
-        </style>
+    body { 
+      margin: 0;
+      padding: 10px;
+      width: 58mm !important; /* 👈 Tamaño de impresora térmica */
+    }
+  }
+
+  body { 
+    font-family: Arial; 
+    padding: 10px;
+    width: 58mm !important; /* 👈 también fuera del print */
+    margin: 0 auto;
+  }
+
+  h2 { 
+    text-align: center; 
+    margin-bottom: 20px; 
+  }
+
+  .item { 
+    font-size: 13px; 
+    margin-bottom: 10px; 
+  }
+
+  .label { 
+    font-weight: bold; 
+  }
+
+  .card {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .page-break { 
+    page-break-before: always; 
+  }
+
+  .qr-placeholder { 
+    width: 100px; 
+    height: 100px; 
+    margin: 10px auto;
+  }
+
+  .qr-placeholder img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain;
+  }
+
+  .alert { 
+    color: red; 
+    font-weight: bold; 
+    margin-top: 15px; 
+    font-size: 12px;
+  }
+</style>
+
       </head>
       <body>
         <!-- Primera hoja -->
@@ -401,6 +445,7 @@ export class ServicesComponent {
           </div>
           ${passwordHtml}
         </div>
+
 
         <!-- Segunda hoja -->
         <div class="page-break"></div>
