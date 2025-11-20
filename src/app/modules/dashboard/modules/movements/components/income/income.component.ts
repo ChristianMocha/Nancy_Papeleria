@@ -182,4 +182,137 @@ export class IncomeComponent {
     const date = new Date(value);
     return isNaN(date.getTime()) ? null : date;
   }
+
+
+
+  printFactura(ser: any) {
+
+  const rows = ser.shop_products.map((prod: any) => `
+    <tr>
+      <td>
+        ${prod.shop_pod_selectedQty} <br>
+        ${prod.shop_prod_code}
+      </td>
+
+      <td>${prod.shop_prod_name}</td>
+
+      <td class="right">
+        $${prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price}
+      </td>
+
+      <td class="right">
+        $${((prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty).toFixed(2)}
+      </td>
+    </tr>
+  `).join("");
+
+  const html = `
+  <html>
+    <head>
+      <title>Factura</title>
+      <style>
+        body {
+          font-family: Arial;
+          font-size: 13px;
+          padding: 10px;
+        }
+        h2, h3 { text-align: center; margin: 5px 0; }
+        .center { text-align: center; }
+        .bold { font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        td, th { padding: 4px; border-bottom: 1px dashed #999; }
+        .right { text-align: right; }
+        .totals td { border-bottom: none; }
+        .footer {
+          margin-top: 25px;
+          text-align: center;
+          font-size: 12px;
+          border-top: 1px dashed #999;
+          padding-top: 10px;
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <h3>CRTECNOLOGIA</h3>
+      <div class="left">Tel: 0983922706</div>
+      <div class="left">Dirección: Av. Ricardo Duran - Cuatro Esquinas</div>
+
+      <br>
+
+      <div><span class="bold">Fecha emisión:</span> ${this.formatFechaCompleta(ser.shop_date)}</div>
+
+
+      <br>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Cant<br>Código</th>
+            <th>Producto</th>
+            <th class="right">P.Unit</th>
+            <th class="right">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+
+      <br>
+
+      <table class="totals">
+        <tr>
+          <td class="right bold">TOTAL:</td>
+          <td class="right bold">$${Number(ser.shop_total).toFixed(2)}</td>
+        </tr>
+      </table>
+
+      <div class="footer">
+        Gracias por su compra.<br>
+        *Guarde este comprobante para cualquier reclamo*
+      </div>
+
+      <script>
+        window.onload = function() {
+          window.print();
+        }
+      </script>
+
+    </body>
+  </html>
+  `;
+
+  const win = window.open('', '_blank', 'width=400,height=600');
+  if (win) {
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+  }
+}
+
+formatFechaCompleta(fecha: string): string {
+  const ahora = new Date();
+  const partes = fecha.split('-');
+
+  const f = new Date(
+    Number(partes[0]),
+    Number(partes[1]) - 1,
+    Number(partes[2]),
+    ahora.getHours(),
+    ahora.getMinutes(),
+    ahora.getSeconds()
+  );
+
+  return f.toLocaleString('es-EC', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+}
 }
