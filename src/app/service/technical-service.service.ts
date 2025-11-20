@@ -5,8 +5,11 @@ import {
   deleteDoc,
   doc,
   Firestore,
+  orderBy,
+  query,
   setDoc,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -32,9 +35,26 @@ export class TechnicalServiceService {
 
   getServices(): Observable<any[]> {
     const serviceRef = collection(this.firestore, this.collectionName);
-    return collectionData(serviceRef, { idField: 'ser_id' }) as Observable<
-      any[]
-    >;
+
+    const q = query(
+      serviceRef,
+      where('ser_team_state', '==', true),
+      orderBy('ser_start_date', 'desc')
+    );
+
+    return collectionData(q, { idField: 'ser_id' }) as Observable<any[]>;
+  }
+
+  getServicesFalse(): Observable<any[]> {
+    const ref = collection(this.firestore, this.collectionName);
+
+    const q = query(
+      ref,
+      where('ser_team_state', '==', false),
+      orderBy('ser_start_date', 'desc')
+    );
+
+    return collectionData(q, { idField: 'ser_id' }) as Observable<any[]>;
   }
 
   async toggleStatus(id: string, data: Partial<any>) {

@@ -1,5 +1,48 @@
+<div class="flex gap-4 mb-4 border-b">
+  <button
+    (click)="changeTab('ingresados')"
+    [ngClass]="
+      activeTab === 'ingresados'
+        ? 'border-blue-500 text-blue-600'
+        : 'border-transparent text-gray-600'
+    "
+    class="px-4 py-2 border-b-2 font-semibold"
+  >
+    Ingresados
+  </button>
+
+  <button
+    (click)="changeTab('devueltos')"
+    [ngClass]="
+      activeTab === 'devueltos'
+        ? 'border-red-500 text-red-600'
+        : 'border-transparent text-gray-600'
+    "
+    class="px-4 py-2 border-b-2 font-semibold"
+  >
+    Devueltos
+  </button>
+</div>
+
 <div class="overflow-x-auto">
-  <div
+ 
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center">
+      <p class="text-lg font-bold text-gray-700"> {{ totalPrice | number : "1.0-2"  | currency}}</p>
+      <p class="text-xs text-gray-400">Total Precio</p>
+    </div>
+    <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center" *ngIf="total > 0">
+      <p class="text-lg font-bold text-gray-700">{{ totalPriceReturn | number : "1.0-2" | currency}}</p>
+      <p class="text-xs text-gray-400">Total precios de repuestos:</p>
+    </div>
+    <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center" *ngIf="total > 0">
+      <p class="text-lg font-bold text-gray-700">{{ total | number : "1.0-2" | currency}}</p>
+      <p class="text-xs text-gray-400">Ganancias:</p>
+    </div>
+  </div>
+
+   <div
     class="flex items-center border border-gray-300 rounded-lg px-4 py-2 flex-1 max-w-sm"
   >
     <i class="fa-solid fa-magnifying-glass text-gray-400 text-lg mr-2"></i>
@@ -9,10 +52,9 @@
       [(ngModel)]="searchTerm"
       (input)="filterService()"
       class="flex-1 outline-none bg-transparent text-gray-700"
-      placeholder="Buscar empleado por nombre o correo..."
+      placeholder="Buscar por nombre o descripción..."
     />
   </div>
-  <br />
 
   <table class="min-w-full border-separate border-spacing-y-2">
     <thead>
@@ -21,9 +63,12 @@
         <th class="text-left px-4 py-3 font-semibold">Persona a retirar</th>
         <th class="text-left px-4 py-3 font-semibold">Celular</th>
         <th class="text-left px-4 py-3 font-semibold">Precio del cambio</th>
+        <th class="text-left px-4 py-3 font-semibold">Precio del repuesto</th>
         <th class="text-left px-4 py-3 font-semibold">Estado</th>
         <th class="text-left px-4 py-3 font-semibold">Fecha de ingreso</th>
-        <th class="text-left px-4 py-3 font-semibold">Fecha maximo de retiro</th>
+        <th class="text-left px-4 py-3 font-semibold">
+          Fecha maximo de retiro
+        </th>
         <th class="text-left px-4 py-3 font-semibold">Opciones</th>
       </tr>
     </thead>
@@ -37,8 +82,15 @@
           {{ ser.ser_description }}
         </td>
         <td class="px-4 py-3 text-gray-600">{{ ser.ser_name || "—" }}</td>
-        <td class="px-4 py-3 text-gray-600">{{ ser.ser_phone || "9999999999" }}</td>
-        <td class="px-4 py-3 text-gray-600">{{ ser.ser_price || "0" | currency }}</td>
+        <td class="px-4 py-3 text-gray-600">
+          {{ ser.ser_phone || "9999999999" }}
+        </td>
+        <td class="px-4 py-3 text-gray-600">
+          {{ ser.ser_price || "0" | currency }}
+        </td>
+        <td class="px-4 py-3 text-gray-600">
+          {{ ser.ser_cost_spare_part || "0" | currency }}
+        </td>
 
         <td class="px-4 py-3 flex items-center gap-3">
           <label class="relative inline-flex items-center cursor-pointer">
@@ -58,9 +110,9 @@
 
           <span
             class="text-sm font-medium"
-            [ngClass]="ser.ser_phone ? 'text-green-700' : 'text-gray-500'"
+            [ngClass]="ser.ser_team_state ? 'text-green-700' : 'text-red-500'"
           >
-            {{ ser.ser_phone ? "Ingresado" : "Devuelto" }}
+            {{ ser.ser_team_state ? "Ingresado" : "Devuelto" }}
           </span>
         </td>
 
@@ -73,14 +125,12 @@
         </td>
 
         <td class="p-3 flex items-center gap-2">
-          <!-- Editar -->
           <button
             (click)="editProduct(ser)"
             title="Editar producto"
             aria-label="Editar producto"
             class="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
-            <!-- 🖊️ Icono lápiz (editar) -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -99,14 +149,12 @@
             <span class="text-sm font-medium">Editar</span>
           </button>
 
-          <!-- Eliminar -->
           <button
             (click)="confirmDelete(ser)"
             title="Eliminar producto"
             aria-label="Eliminar producto"
             class="flex items-center gap-2 px-3 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-300"
           >
-            <!-- Icono papelera -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-4 w-4"
@@ -152,7 +200,6 @@
     </tbody>
   </table>
 
-  <!-- 🔹 Controles de paginación -->
   <div class="flex justify-between items-center mt-4">
     <button
       class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50"
