@@ -355,7 +355,18 @@ export class ContentComponent {
           this.deleteSearchTerm.emit('');
           this.getAllPorducts();
         });
-      this.printFactura(formattedData);
+
+      Swal.fire({
+        title: '¿Desea imprimir Recibo?',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: 'Si',
+        denyButtonText: `No`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.printFactura(formattedData);
+        }
+      });
     });
   }
 
@@ -363,9 +374,10 @@ export class ContentComponent {
     if (this.getTotalPrice() > 0) this.showModal = true;
   }
 
-printFactura(ser: any) {
-
-  const rows = ser.shop_products.map((prod: any) => `
+  printFactura(ser: any) {
+    const rows = ser.shop_products
+      .map(
+        (prod: any) => `
     <tr>
       <td>
         ${prod.shop_pod_selectedQty} <br>
@@ -375,16 +387,26 @@ printFactura(ser: any) {
       <td>${prod.shop_prod_name}</td>
 
       <td class="right">
-        $${prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price}
+        ${
+          prod.shop_prod_discount_price > 0
+            ? prod.shop_prod_discount_price
+            : prod.shop_prod_sale_price
+        }
       </td>
 
       <td class="right">
-        $${((prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty).toFixed(2)}
+        ${(
+          (prod.shop_prod_discount_price > 0
+            ? prod.shop_prod_discount_price
+            : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty
+        ).toFixed(2)}
       </td>
     </tr>
-  `).join("");
+  `
+      )
+      .join('');
 
-  const html = `
+    const html = `
   <html>
     <head>
       <title>Factura</title>
@@ -419,7 +441,9 @@ printFactura(ser: any) {
 
       <br>
 
-      <div><span class="bold">Fecha emisión:</span> ${this.formatFechaCompleta(ser.shop_date)}</div>
+      <div><span class="bold">Fecha emisión:</span> ${this.formatFechaCompleta(
+        ser.shop_date
+      )}</div>
 
 
       <br>
@@ -462,38 +486,35 @@ printFactura(ser: any) {
   </html>
   `;
 
-  const win = window.open('', '_blank', 'width=400,height=600');
-  if (win) {
-    win.document.open();
-    win.document.write(html);
-    win.document.close();
+    const win = window.open('', '_blank', 'width=400,height=600');
+    if (win) {
+      win.document.open();
+      win.document.write(html);
+      win.document.close();
+    }
   }
-}
 
-formatFechaCompleta(fecha: string): string {
-  const ahora = new Date();
-  const partes = fecha.split('-');
+  formatFechaCompleta(fecha: string): string {
+    const ahora = new Date();
+    const partes = fecha.split('-');
 
-  const f = new Date(
-    Number(partes[0]),
-    Number(partes[1]) - 1,
-    Number(partes[2]),
-    ahora.getHours(),
-    ahora.getMinutes(),
-    ahora.getSeconds()
-  );
+    const f = new Date(
+      Number(partes[0]),
+      Number(partes[1]) - 1,
+      Number(partes[2]),
+      ahora.getHours(),
+      ahora.getMinutes(),
+      ahora.getSeconds()
+    );
 
-  return f.toLocaleString('es-EC', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  });
-}
-
-
-
+    return f.toLocaleString('es-EC', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    });
+  }
 }

@@ -197,11 +197,11 @@ export class IncomeComponent {
       <td>${prod.shop_prod_name}</td>
 
       <td class="right">
-        $${prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price}
+        ${prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price}
       </td>
 
       <td class="right">
-        $${((prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty).toFixed(2)}
+        ${((prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty).toFixed(2)}
       </td>
     </tr>
   `).join("");
