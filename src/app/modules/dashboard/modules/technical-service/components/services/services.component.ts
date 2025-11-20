@@ -386,6 +386,19 @@ export class ServicesComponent {
           <div class="item"><span class="label">Fecha ingreso:</span> ${
             ser.ser_start_date
           }</div>
+          <div class="item">
+            <span 
+              class="label"
+              style="
+                border: 1px solid #ccc;
+                padding: 4px 8px;
+                border-radius: 6px;
+                display: inline-block;
+              "
+            >
+              ${ser.ser_paid ? 'Pagado' : 'Pendiente de pago'}
+            </span>
+          </div>
           ${passwordHtml}
         </div>
 

@@ -25,24 +25,34 @@
 </div>
 
 <div class="overflow-x-auto">
- 
-
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center">
-      <p class="text-lg font-bold text-gray-700"> {{ totalPrice | number : "1.0-2"  | currency}}</p>
+      <p class="text-lg font-bold text-gray-700">
+        {{ totalPrice | number : "1.0-2" | currency }}
+      </p>
       <p class="text-xs text-gray-400">Total Precio</p>
     </div>
-    <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center" *ngIf="total > 0">
-      <p class="text-lg font-bold text-gray-700">{{ totalPriceReturn | number : "1.0-2" | currency}}</p>
+    <div
+      class="bg-white px-4 py-5 rounded-lg shadow-lg text-center"
+      *ngIf="total > 0"
+    >
+      <p class="text-lg font-bold text-gray-700">
+        {{ totalPriceReturn | number : "1.0-2" | currency }}
+      </p>
       <p class="text-xs text-gray-400">Total precios de repuestos:</p>
     </div>
-    <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center" *ngIf="total > 0">
-      <p class="text-lg font-bold text-gray-700">{{ total | number : "1.0-2" | currency}}</p>
+    <div
+      class="bg-white px-4 py-5 rounded-lg shadow-lg text-center"
+      *ngIf="total > 0"
+    >
+      <p class="text-lg font-bold text-gray-700">
+        {{ total | number : "1.0-2" | currency }}
+      </p>
       <p class="text-xs text-gray-400">Ganancias:</p>
     </div>
   </div>
 
-   <div
+  <div
     class="flex items-center border border-gray-300 rounded-lg px-4 py-2 flex-1 max-w-sm"
   >
     <i class="fa-solid fa-magnifying-glass text-gray-400 text-lg mr-2"></i>
@@ -65,6 +75,7 @@
         <th class="text-left px-4 py-3 font-semibold">Precio del cambio</th>
         <th class="text-left px-4 py-3 font-semibold">Precio del repuesto</th>
         <th class="text-left px-4 py-3 font-semibold">Estado</th>
+        <th class="text-left px-4 py-3 font-semibold">Estado de Pagado</th>
         <th class="text-left px-4 py-3 font-semibold">Fecha de ingreso</th>
         <th class="text-left px-4 py-3 font-semibold">
           Fecha maximo de retiro
@@ -113,6 +124,19 @@
             [ngClass]="ser.ser_team_state ? 'text-green-700' : 'text-red-500'"
           >
             {{ ser.ser_team_state ? "Ingresado" : "Devuelto" }}
+          </span>
+        </td>
+
+        <td class="px-4 py-3 text-gray-600">
+          <span
+            class="px-2 py-1 text-xs font-semibold rounded-lg"
+            [ngClass]="
+              ser.ser_paid
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-700'
+            "
+          >
+            {{ ser.ser_paid ? "Pagado" : "Pendiente" }}
           </span>
         </td>
 

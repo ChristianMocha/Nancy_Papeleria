@@ -59,6 +59,7 @@ export class TechnicalServiceComponent {
     ser_password_code: [''],
     ser_pattern: [''],
     ser_status: [true],
+    ser_paid: [false],
     ser_id: [''],
     ser_start_date: [''],
     ser_update_date: [''],
@@ -311,6 +312,20 @@ export class TechnicalServiceComponent {
           <div class="item"><span class="label">Fecha ingreso:</span> ${
             ser.ser_start_date
           }</div>
+          <div class="item">
+            <span 
+              class="label"
+              style="
+                border: 1px solid #ccc;
+                padding: 4px 8px;
+                border-radius: 6px;
+                display: inline-block;
+              "
+            >
+              ${ser.ser_paid ? 'Pagado' : 'Pendiente'}
+            </span>
+          </div>
+
           ${passwordHtml}
         </div>
 
