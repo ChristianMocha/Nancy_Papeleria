@@ -183,136 +183,162 @@ export class IncomeComponent {
     return isNaN(date.getTime()) ? null : date;
   }
 
-
-
   printFactura(ser: any) {
+    const rows = ser.shop_products
+      .map(
+        (prod: any) => `
+      <tr>
+        <td>
+          ${prod.shop_pod_selectedQty}<br>
+        </td>
+        <td>${prod.shop_prod_name}</td>
+        <td class="col-unit">
+          ${
+            prod.shop_prod_discount_price > 0
+              ? prod.shop_prod_discount_price
+              : prod.shop_prod_sale_price
+          } 
+        </td>
+        
+        <td class="col-total">
+          ${(
+            (prod.shop_prod_discount_price > 0
+              ? prod.shop_prod_discount_price
+              : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty
+          ).toFixed(2)}
+        </td>
 
-  const rows = ser.shop_products.map((prod: any) => `
-    <tr>
-      <td>
-        ${prod.shop_pod_selectedQty} <br>
-        ${prod.shop_prod_code}
-      </td>
+      </tr>
+    `
+      )
+      .join('');
 
-      <td>${prod.shop_prod_name}</td>
-
-      <td class="right">
-        ${prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price}
-      </td>
-
-      <td class="right">
-        ${((prod.shop_prod_discount_price > 0 ? prod.shop_prod_discount_price : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty).toFixed(2)}
-      </td>
-    </tr>
-  `).join("");
-
-  const html = `
+    const html = `
   <html>
-    <head>
-      <title>Factura</title>
-      <style>
-        body {
-          font-family: Arial;
-          font-size: 13px;
-          padding: 10px;
-        }
-        h2, h3 { text-align: center; margin: 5px 0; }
-        .center { text-align: center; }
-        .bold { font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        td, th { padding: 4px; border-bottom: 1px dashed #999; }
-        .right { text-align: right; }
-        .totals td { border-bottom: none; }
-        .footer {
-          margin-top: 25px;
-          text-align: center;
-          font-size: 12px;
-          border-top: 1px dashed #999;
-          padding-top: 10px;
-        }
-      </style>
-    </head>
+  <head>
+    <title>Factura</title>
 
-    <body>
+    <style>
 
-      <h3>CRTECNOLOGIA</h3>
-      <div class="left">Tel: 0983922706</div>
-      <div class="left">Dirección: Av. Ricardo Duran - Cuatro Esquinas</div>
+      /* ELIMINA LA FECHA, ENCABEZADOS Y MÁRGENES */
+      @page {
+        size: 58mm auto;
+        margin: 0;
+      }
 
-      <br>
+      body {
+        font-family: Arial;
+        font-size: 12px;
+        padding: 6px;
+        width: 58mm;
+      }
 
-      <div><span class="bold">Fecha emisión:</span> ${this.formatFechaCompleta(ser.shop_date)}</div>
+      h3 { text-align: center; margin: 5px 0; }
+
+      table { width: 100%; border-collapse: collapse; }
+      td, th { padding: 3px 0; border-bottom: 1px dashed #888; }
+      .right { text-align: right; }
+      .bold { font-weight: bold; }
+      .footer {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 11px;
+      }
+        .col-unit {
+        width: 25%;
+        text-align: right;
+        padding-right: 6px;
+      }
+      
+      .col-total {
+        width: 25%;
+        text-align: right;
+      }
 
 
-      <br>
+    </style>
+  </head>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Cant<br>Código</th>
-            <th>Producto</th>
-            <th class="right">P.Unit</th>
-            <th class="right">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows}
-        </tbody>
-      </table>
+  <body>
 
-      <br>
+    <h3>CRTECNOLOGIA</h3>
+    <div>Tel: 0983922706</div>
+    <div>Dirección: Av. Ricardo Duran - Cuatro Esquinas</div>
 
-      <table class="totals">
+    <br>
+
+    <div><span class="bold">Fecha emisión:</span> ${this.formatFechaCompleta(
+      ser.shop_date
+    )}</div>
+
+    <br>
+
+    <table>
+      <thead>
         <tr>
-          <td class="right bold">TOTAL:</td>
-          <td class="right bold">$${Number(ser.shop_total).toFixed(2)}</td>
+          <th>Cant<br>Código</th>
+          <th>Producto</th>
+          <th class="right">P.Unit</th>
+          <th class="right">Total</th>
         </tr>
-      </table>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
 
-      <div class="footer">
-        Gracias por su compra.<br>
-        *Guarde este comprobante para cualquier reclamo*
-      </div>
+    <br>
 
-      <script>
-        window.onload = function() {
-          window.print();
-        }
-      </script>
+    <table>
+      <tr>
+        <td class="right bold">TOTAL:</td>
+        <td class="right bold">$${Number(ser.shop_total).toFixed(2)}</td>
+      </tr>
+    </table>
 
-    </body>
+    <div class="footer">
+      Gracias por su compra.<br>
+      *Guarde este comprobante para cualquier reclamo*
+    </div>
+
+    <script>
+      window.onload = () => window.print();
+    </script>
+
+  </body>
   </html>
   `;
 
-  const win = window.open('', '_blank', 'width=400,height=600');
-  if (win) {
-    win.document.open();
-    win.document.write(html);
-    win.document.close();
+    // ❗ Usa una ventana especial “_print” para evitar about:blank
+    const win = window.open('', '_blank', 'width=400,height=600');
+
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    }
   }
-}
 
-formatFechaCompleta(fecha: string): string {
-  const ahora = new Date();
-  const partes = fecha.split('-');
+  formatFechaCompleta(fecha: string): string {
+    const ahora = new Date();
+    const partes = fecha.split('-');
 
-  const f = new Date(
-    Number(partes[0]),
-    Number(partes[1]) - 1,
-    Number(partes[2]),
-    ahora.getHours(),
-    ahora.getMinutes(),
-    ahora.getSeconds()
-  );
+    const f = new Date(
+      Number(partes[0]),
+      Number(partes[1]) - 1,
+      Number(partes[2]),
+      ahora.getHours(),
+      ahora.getMinutes(),
+      ahora.getSeconds()
+    );
 
-  return f.toLocaleString('es-EC', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  });
-}
+    return f.toLocaleString('es-EC', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    });
+  }
 }
