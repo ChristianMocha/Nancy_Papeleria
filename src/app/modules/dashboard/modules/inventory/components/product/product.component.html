@@ -82,7 +82,7 @@
 
     <!-- Precio -->
     <label class="block text-sm font-medium text-gray-700 mb-1">
-      Precio de venta <span class="text-red-600">*</span>
+      ¿A cuánto lo vendes? <span class="text-red-600">*</span>
     </label>
     <input
       type="number"
@@ -92,7 +92,7 @@
     />
 
     <!-- Costo -->
-    <label class="block text-sm font-medium text-gray-700 mb-1">Costo de compra</label>
+    <label class="block text-sm font-medium text-gray-700 mb-1">¿ A cuanto lo compraste?</label>
     <input
       type="number"
       formControlName="prod_purchase_cost"
@@ -116,6 +116,19 @@
       <option value="">Selecciona una categoría</option>
       <option *ngFor="let cat of categories" [value]="cat.cat_id">
         {{ cat.cat_name }}
+      </option>
+    </select>
+
+     <label class="block text-sm font-medium text-gray-700 mb-1">
+      Proveedor <span class="text-red-500">*</span>
+    </label>
+    <select
+      formControlName="prod_supplier_id"
+      class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    >
+      <option value="">Selecciona una proveedor</option>
+      <option *ngFor="let item of suppliers" [value]="item.supp_id">
+        {{ item.supp_full_name }}
       </option>
     </select>
 

@@ -25,7 +25,13 @@ export class ShoppingCartService {
   async savePurchase(purchaseData: any) {
     const purchaseCollection = collection(this.firestore, 'purchases');
     const newPurchaseRef = doc(purchaseCollection);
+    purchaseData.created_at = Timestamp.fromDate(
+      this.dateService.getDateTimeStamp()
+    );
     purchaseData.shop_id = newPurchaseRef.id;
+    purchaseData.created_at = Timestamp.fromDate(
+      this.dateService.getDateTimeStamp()
+    );
     (purchaseData.shop_crea_date = this.dateService.getDate()),
       await setDoc(newPurchaseRef, purchaseData);
 
@@ -35,6 +41,9 @@ export class ShoppingCartService {
   async saveBills(billsData: any) {
     const billsCollection = collection(this.firestore, 'bills');
     const newBillsRef = doc(billsCollection);
+    billsData.created_at = Timestamp.fromDate(
+      this.dateService.getDateTimeStamp()
+    );
     billsData.bills_id = newBillsRef.id;
     (billsData.bills_crea_date = this.dateService.getDate()),
       await setDoc(newBillsRef, billsData);
@@ -53,6 +62,7 @@ export class ShoppingCartService {
       batch.update(productRef, {
         ...p,
         prod_update_date: new Date(),
+        updated_at: Timestamp.fromDate(this.dateService.getDateTimeStamp()),
       });
     });
 

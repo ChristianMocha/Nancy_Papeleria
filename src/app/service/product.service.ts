@@ -19,6 +19,7 @@ import {
   orderBy,
   query,
   startAfter,
+  Timestamp,
   where,
 } from 'firebase/firestore';
 import { DateService } from './date.service';
@@ -39,6 +40,9 @@ export class ProductService {
     product.prod_id = productRef.id;
     product.prod_status = true;
     product.prod_start_date = this.dateService.getDate();
+    product.created_at = Timestamp.fromDate(
+      this.dateService.getDateTimeStamp()
+    );
     return setDoc(productRef, product);
   }
 
@@ -97,6 +101,9 @@ export class ProductService {
     const productRef = doc(
       this.firestore,
       `category/${categoryId}/products/${productId}`
+    );
+    data['updated_at'] = Timestamp.fromDate(
+      this.dateService.getDateTimeStamp()
     );
     data.prod_update_date = this.dateService.getDate();
     return updateDoc(productRef, data);

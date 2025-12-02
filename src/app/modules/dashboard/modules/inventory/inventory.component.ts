@@ -39,8 +39,7 @@ export class InventoryComponent {
     try {
       const docRef = await this.categoryService.addCategory({
         cat_name: this.categoryName,
-        cat_status: true,
-        cat_start_date: new Date(),
+        is_active: true
       });
       this.loading = false;
       this.showModal = false;

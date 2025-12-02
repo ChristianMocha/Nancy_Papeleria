@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SuppliersService } from '../../../../../../service/suppliers.service';
 import { Supplier } from '../../../../../shared/models/supplier';
 import Swal from 'sweetalert2';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-content',
@@ -27,6 +28,7 @@ export class ContentComponent {
   public suppliers: Supplier[] = [];
   public filteredSupplier: Supplier[] = [];
   public paginatedSuppliers: Supplier[] = [];
+  public productsService: any[] = [];
 
   ngOnInit() {
     this.getSuppliers();
@@ -47,6 +49,21 @@ export class ContentComponent {
   getSuppliers() {
     this.suppliersService.getSuppliers().subscribe((suppliers) => {
       this.suppliers = suppliers;
+      this.suppliers.forEach((s) => {
+        this.suppliersService
+          .getProductsBySupplierId(s.supp_id)
+          .subscribe((products) => {
+            console.log(products);
+            const total = products.reduce(
+              (acc, prod) => acc + (prod.prod_purchase_cost * prod.prod_quantity_available),
+
+              0
+            );
+
+            s.supp_total_to_pay = total; // ✔ ahora sí es número
+          });
+      });
+      console.log(this.suppliers);
       this.filteredSupplier = [...this.suppliers];
       this.totalPages = Math.ceil(this.suppliers.length / this.pageSize);
       this.calcularResumen();
@@ -60,7 +77,7 @@ export class ContentComponent {
     this.suppliersService
       .updateSupplier(item.supp_id, { is_active: newState })
       .then(() => {
-        item.is_active = newState; 
+        item.is_active = newState;
       })
       .catch((err) => console.error(err));
   }
@@ -143,5 +160,17 @@ export class ContentComponent {
   goToPage(page: number) {
     this.currentPage = page;
     this.updatePage();
+  }
+
+  getTotalSpentBySupplier(supplierId: string): Observable<number> {
+    return this.suppliersService.getProductsBySupplierId(supplierId).pipe(
+      map((products: any[]) => {
+        return products.reduce((sum, p) => {
+          const qty = p.prod_quantity_available || 0;
+          const cost = p.prod_purchase_cost || 0;
+          return sum + qty * cost;
+        }, 0);
+      })
+    );
   }
 }
