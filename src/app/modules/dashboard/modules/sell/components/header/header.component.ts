@@ -10,6 +10,7 @@ import {
 import { ShoppingCartService } from '../../../../../../service/shopping-cart.service';
 import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 import { ProductService } from '../../../../../../service/product.service';
+import { AuthService } from '../../../../../../service/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +21,7 @@ import { ProductService } from '../../../../../../service/product.service';
 })
 export class HeaderComponent {
   public readonly productService = inject(ProductService);
+    public readonly authService = inject(AuthService);
 
   private readonly fb = inject(FormBuilder);
   public form: FormGroup = this.fb.group({});

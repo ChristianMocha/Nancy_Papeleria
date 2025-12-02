@@ -10,10 +10,15 @@ import {
   setDoc,
   updateDoc,
   Timestamp,
+  query,
+  where,
+  fromRef,
+  getDocs,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Employees } from '../modules/shared/models/employe';
 import { DateService } from './date.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +27,7 @@ export class EmployeeService {
   public firestore = inject(Firestore);
 
   private readonly dateService = inject(DateService);
+    private readonly authService = inject(AuthService);
 
   private collectionName = 'employees';
 
@@ -30,6 +36,7 @@ export class EmployeeService {
     employee.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    employee.created_by = this.authService.getUserLocalStorage();
     const employeesRef = doc(collection(this.firestore, this.collectionName));
     employee.emp_id = employeesRef.id;
     return setDoc(employeesRef, employee);
@@ -39,6 +46,7 @@ export class EmployeeService {
     data['updated_at'] = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    data['updated_by'] = this.authService.getUserLocalStorage();
     const employeeRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return updateDoc(employeeRef, data);
   }
@@ -64,11 +72,22 @@ export class EmployeeService {
     >;
   }
 
-  getEmployeeById(id: string): Observable<Employees | undefined> {
-    const employeeRef = doc(this.firestore, `${this.collectionName}/${id}`);
-    return docData(employeeRef, { idField: 'emp_id' }) as Observable<
-      Employees | undefined
-    >;
+async getEmployeeById(emp_id: string): Promise<Employees | null> {
+    try {
+      const employeesRef = collection(this.firestore, this.collectionName);
+      const q = query(employeesRef, where('emp_uid', '==', emp_id));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        return null; // No se encontró
+      }
+
+      const docSnap = querySnapshot.docs[0];
+      return { emp_uid: docSnap.id, ...docSnap.data() } as Employees;
+    } catch (error) {
+      console.error('Error al buscar empleado:', error);
+      return null;
+    }
   }
 
   deleteEmployee(id: string) {

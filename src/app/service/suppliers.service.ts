@@ -14,12 +14,14 @@ import {
 } from '@angular/fire/firestore';
 import { DateService } from './date.service';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SuppliersService {
   private readonly dateService = inject(DateService);
+    private readonly authService = inject(AuthService);
   private collectionName = 'supplier';
 
   public firestore = inject(Firestore);
@@ -28,6 +30,7 @@ export class SuppliersService {
     supplier.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+            supplier.created_by = this.authService.getUserLocalStorage();
     console.log(supplier);
     const supplierRef = doc(collection(this.firestore, this.collectionName));
     supplier.supp_id = supplierRef.id;
@@ -55,6 +58,7 @@ export class SuppliersService {
     data['updated_at'] = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    data['updated_by'] = this.authService.getUserLocalStorage();
 
     const supplierRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return updateDoc(supplierRef, data);

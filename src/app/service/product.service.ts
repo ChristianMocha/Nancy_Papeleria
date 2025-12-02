@@ -23,12 +23,14 @@ import {
   where,
 } from 'firebase/firestore';
 import { DateService } from './date.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   public readonly dateService = inject(DateService);
+  private readonly authService = inject(AuthService);
   private lastVisible: any = null;
 
   constructor(private firestore: Firestore) {}
@@ -37,12 +39,14 @@ export class ProductService {
     const productRef = doc(
       collection(this.firestore, `category/${categoryId}/products`)
     );
+
     product.prod_id = productRef.id;
     product.prod_status = true;
     product.prod_start_date = this.dateService.getDate();
     product.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    product.created_by = this.authService.getUserLocalStorage();
     return setDoc(productRef, product);
   }
 
@@ -105,6 +109,7 @@ export class ProductService {
     data['updated_at'] = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    data['updated_by'] = this.authService.getUserLocalStorage();
     data.prod_update_date = this.dateService.getDate();
     return updateDoc(productRef, data);
   }

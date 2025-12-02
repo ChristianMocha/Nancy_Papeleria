@@ -14,6 +14,7 @@ import {
   Query,
 } from 'firebase/firestore';
 import { DateService } from './date.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ import { DateService } from './date.service';
 export class ShoppingCartService {
   public firestore = inject(Firestore);
   public readonly dateService = inject(DateService);
+       private readonly authService = inject(AuthService);
 
   async savePurchase(purchaseData: any) {
     const purchaseCollection = collection(this.firestore, 'purchases');
@@ -32,6 +34,7 @@ export class ShoppingCartService {
     purchaseData.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    purchaseData.created_by = this.authService.getUserLocalStorage();
     (purchaseData.shop_crea_date = this.dateService.getDate()),
       await setDoc(newPurchaseRef, purchaseData);
 
@@ -44,6 +47,7 @@ export class ShoppingCartService {
     billsData.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+        billsData.created_by = this.authService.getUserLocalStorage();
     billsData.bills_id = newBillsRef.id;
     (billsData.bills_crea_date = this.dateService.getDate()),
       await setDoc(newBillsRef, billsData);
@@ -63,6 +67,7 @@ export class ShoppingCartService {
         ...p,
         prod_update_date: new Date(),
         updated_at: Timestamp.fromDate(this.dateService.getDateTimeStamp()),
+            updated_by: this.authService.getUserLocalStorage()
       });
     });
 

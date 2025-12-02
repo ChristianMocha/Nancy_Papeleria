@@ -92,6 +92,7 @@ export class TechnicalServiceComponent {
       if (!this.serviceForm.valid) {
         this.serviceForm.markAllAsTouched();
         console.log('Ingrese todos los campos');
+        this.loading = false;
         return;
       }
 

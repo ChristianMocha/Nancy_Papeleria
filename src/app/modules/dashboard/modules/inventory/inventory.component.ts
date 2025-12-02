@@ -1,35 +1,41 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ContentComponent } from './components/content/content.component';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { CategoryService } from '../../../../service/category.service';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { AuthService } from '../../../../service/auth.service';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [CommonModule, NavBarComponent, ContentComponent, FormsModule, LoadingComponent],
+  imports: [
+    CommonModule,
+    NavBarComponent,
+    ContentComponent,
+    FormsModule,
+    LoadingComponent,
+  ],
   templateUrl: './inventory.component.html',
-  styleUrl: './inventory.component.scss'
+  styleUrl: './inventory.component.scss',
 })
 export class InventoryComponent {
+  public authService = inject(AuthService);
 
   public showModal: boolean = false;
   public loading: boolean = false;
   public categoryName: string = '';
   private readonly categoryService = inject(CategoryService);
 
-  showModalCategories(){
+  showModalCategories() {
     this.showModal = true;
-
   }
-
 
   async onSave() {
     this.loading = true;
-    
+
     if (!this.categoryName) {
       this.loading = false;
       this.showModal = false;
@@ -39,7 +45,7 @@ export class InventoryComponent {
     try {
       const docRef = await this.categoryService.addCategory({
         cat_name: this.categoryName,
-        is_active: true
+        is_active: true,
       });
       this.loading = false;
       this.showModal = false;
@@ -49,13 +55,9 @@ export class InventoryComponent {
       this.showModal = false;
       console.error('❌ error:', err);
     }
-
   }
 
   onClose() {
     this.showModal = false;
   }
-
-  
-
 }

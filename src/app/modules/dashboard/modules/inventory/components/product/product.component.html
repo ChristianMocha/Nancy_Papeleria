@@ -12,7 +12,11 @@
       stroke-width="2"
       viewBox="0 0 24 24"
     >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M15 19l-7-7 7-7"
+      />
     </svg>
   </button>
 
@@ -20,29 +24,47 @@
   <h2 class="text-xl font-bold text-gray-900 ml-2">Crear producto</h2>
 </div>
 
-
-
-<form [formGroup]="formProd" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6 h-[90vh]">
+<form
+  [formGroup]="formProd"
+  (ngSubmit)="onSubmit()"
+  class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6 h-[90vh]"
+>
   <!-- Columna izquierda -->
   <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
     <h2 class="text-lg font-semibold text-gray-800 mb-4">Datos del producto</h2>
 
     <!-- Subir imagen -->
-    <div class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5" *ngIf="!this.idCategory && !this.idProduct">
-       <div class="custom-dropzonee" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
-            <ngx-dropzone-label>
-                <div>
-                    <ngx-dropzone-label>Drag your image!</ngx-dropzone-label>
-                </div>
-            </ngx-dropzone-label>
-            <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files"
-                [file]="f" [removable]="true" (removed)="onRemove(f)">
-            </ngx-dropzone-image-preview>
-        </div>
+    <div
+      class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5"
+      *ngIf="!this.idCategory && !this.idProduct"
+    >
+      <div
+        class="custom-dropzonee"
+        ngx-dropzone
+        [accept]="'image/*'"
+        (change)="onSelect($event)"
+      >
+        <ngx-dropzone-label>
+          <div>
+            <ngx-dropzone-label>Drag your image!</ngx-dropzone-label>
+          </div>
+        </ngx-dropzone-label>
+        <ngx-dropzone-image-preview
+          ngProjectAs="ngx-dropzone-preview"
+          *ngFor="let f of files"
+          [file]="f"
+          [removable]="true"
+          (removed)="onRemove(f)"
+        >
+        </ngx-dropzone-image-preview>
+      </div>
     </div>
 
-    <div class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5 w-[40%]" *ngIf="this.idCategory && this.idProduct">
-       <img [src]="formProd.value.prod_image" alt="">
+    <div
+      class="border-2 border-dashed border-blue-400 bg-blue-50 rounded-lg p-6 text-center mb-5 w-[40%]"
+      *ngIf="this.idCategory && this.idProduct"
+    >
+      <img [src]="formProd.value.prod_image" alt="" />
     </div>
 
     <!-- Código -->
@@ -63,17 +85,23 @@
       formControlName="prod_name"
       placeholder="Camiseta, perfume, aretes..."
       class="w-full mb-1 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-      [class.border-red-500]="formProd.get('prod_name')?.invalid && formProd.get('prod_name')?.touched"
+      [class.border-red-500]="
+        formProd.get('prod_name')?.invalid && formProd.get('prod_name')?.touched
+      "
     />
     <p
-      *ngIf="formProd.get('prod_name')?.invalid && formProd.get('prod_name')?.touched"
+      *ngIf="
+        formProd.get('prod_name')?.invalid && formProd.get('prod_name')?.touched
+      "
       class="text-xs text-red-500 mb-4"
     >
       El campo es requerido
     </p>
 
     <!-- Cantidad -->
-    <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad disponible</label>
+    <label class="block text-sm font-medium text-gray-700 mb-1"
+      >Cantidad disponible</label
+    >
     <input
       type="number"
       formControlName="prod_quantity_available"
@@ -92,7 +120,9 @@
     />
 
     <!-- Costo -->
-    <label class="block text-sm font-medium text-gray-700 mb-1">¿ A cuanto lo compraste?</label>
+    <label class="block text-sm font-medium text-gray-700 mb-1"
+      >¿ A cuanto lo compraste?</label
+    >
     <input
       type="number"
       formControlName="prod_purchase_cost"
@@ -102,8 +132,12 @@
   </div>
 
   <!-- Columna derecha -->
-  <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col h-full">
-    <h2 class="text-lg font-semibold text-gray-800 mb-4">Información adicional</h2>
+  <div
+    class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col h-full"
+  >
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">
+      Información adicional
+    </h2>
 
     <!-- Categoría -->
     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -119,7 +153,7 @@
       </option>
     </select>
 
-     <label class="block text-sm font-medium text-gray-700 mb-1">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
       Proveedor <span class="text-red-500">*</span>
     </label>
     <select
@@ -133,7 +167,9 @@
     </select>
 
     <!-- Descripción -->
-    <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+    <label class="block text-sm font-medium text-gray-700 mb-1"
+      >Descripción</label
+    >
     <textarea
       rows="4"
       formControlName="prod_description"
@@ -144,16 +180,15 @@
     <!-- Botón crear siempre al final -->
     <div class="mt-auto">
       <button
-      [disabled]="loading"
+        [disabled]="
+          loading || !(authService.isAdmin() || authService.isEmployee())
+        "
         type="submit"
         class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold shadow hover:bg-green-500 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
-      <app-loading *ngIf="loading"></app-loading>
-      <span *ngIf="!loading">
-        Guardar producto
-      </span>
+        <app-loading *ngIf="loading"></app-loading>
+        <span *ngIf="!loading"> Guardar producto </span>
       </button>
     </div>
   </div>
 </form>
-

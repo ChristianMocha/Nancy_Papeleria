@@ -147,6 +147,7 @@
           <!-- Editar -->
           <button
             (click)="editProduct(prod)"
+            [disabled]="!(authService.isAdmin() || authService.isEmployee())"
             title="Editar producto"
             aria-label="Editar producto"
             class="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -165,6 +166,7 @@
           <!-- Eliminar -->
           <button
             (click)="confirmDelete(prod)"
+             [disabled]="!(authService.isAdmin() || authService.isEmployee())"
             title="Eliminar producto"
             aria-label="Eliminar producto"
             class="flex items-center gap-2 px-3 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-300"

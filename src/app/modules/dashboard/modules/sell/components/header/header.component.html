@@ -4,38 +4,47 @@
   <div class="flex items-center gap-4">
     <h2 class="text-xl font-bold text-gray-900">Nueva venta</h2>
     <div class="relative w-100">
-      <input type="text" placeholder="Buscar productos..." class="w-full pl-10 pr-3 py-2 border rounded-2xl shadow focus:outline-none mb-4" [(ngModel)]="searchTerm" (input)="filterProducts()"/>
+      <input
+        type="text"
+        placeholder="Buscar productos..."
+        class="w-full pl-10 pr-3 py-2 border rounded-2xl shadow focus:outline-none mb-4"
+        [(ngModel)]="searchTerm"
+        (input)="filterProducts()"
+      />
     </div>
   </div>
 
   <!-- Botones -->
   <div class="flex items-center gap-3">
     <!-- Botón Abrir caja -->
-    <button class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition">
+    <button
+      class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition"
+    >
       <span class="text-yellow-400"></span>
       <span>Abrir caja</span>
     </button>
 
-
     <!-- Otros botones -->
-    <button class="flex-1 md:flex-none bg-green-600 text-white px-5 py-2 rounded-xl shadow hover:bg-green-500 transition" (click)="openDrawer()">
+    <button
+      class="flex-1 md:flex-none bg-green-600 text-white px-5 py-2 rounded-xl shadow hover:bg-green-500 transition"
+      (click)="openDrawer()"
+    >
       Nueva venta libre
     </button>
-    <button class="flex-1 md:flex-none bg-red-600 text-white px-5 py-2 rounded-xl shadow hover:bg-red-500 transition" (click)="openDrawerNewBills()">
+    <button
+      class="flex-1 md:flex-none bg-red-600 text-white px-5 py-2 rounded-xl shadow hover:bg-red-500 transition"
+      (click)="openDrawerNewBills()"
+    >
       Nuevo gasto
     </button>
   </div>
 </div>
 
-
-
-
-
-
-<div *ngIf="isOpen" 
-     class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-     (click)="closeDrawer()">
-</div>
+<div
+  *ngIf="isOpen"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+  (click)="closeDrawer()"
+></div>
 
 <!-- Drawer lateral -->
 <div
@@ -50,20 +59,26 @@
     </button>
   </div>
 
-<hr class="border border-gray-200 my-4" />
+  <hr class="border border-gray-200 my-4" />
 
-
-  <form [formGroup]="form" class="space-y-5 flex flex-col h-full" (ngSubmit)="submit()">
-
-
+  <form
+    [formGroup]="form"
+    class="space-y-5 flex flex-col h-full"
+    (ngSubmit)="submit()"
+  >
     <!-- Fecha -->
     <div class="space-y-1">
       <label class="text-sm font-medium">Fecha de la venta *</label>
-      <input type="date" formControlName="shop_date"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
-      
-      <p *ngIf="form.get('shop_date')?.touched && form.get('shop_date')?.invalid"
-        class="text-red-600 text-sm">
+      <input
+        type="date"
+        formControlName="shop_date"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="form.get('shop_date')?.touched && form.get('shop_date')?.invalid"
+        class="text-red-600 text-sm"
+      >
         La fecha es obligatoria.
       </p>
     </div>
@@ -71,11 +86,18 @@
     <!-- Valor -->
     <div class="space-y-1">
       <label class="text-sm font-medium">Valor *</label>
-      <input type="number" formControlName="shop_total"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+      <input
+        type="number"
+        formControlName="shop_total"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
 
-      <p *ngIf="form.get('shop_total')?.touched && form.get('shop_total')?.invalid"
-        class="text-red-600 text-sm">
+      <p
+        *ngIf="
+          form.get('shop_total')?.touched && form.get('shop_total')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
         El valor es obligatorio.
       </p>
     </div>
@@ -83,32 +105,45 @@
     <!-- Valor -->
     <div class="space-y-1">
       <label class="text-sm font-medium">¿Con cuánto paga tu cliente? *</label>
-      <input type="number" formControlName="shop_payment"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+      <input
+        type="number"
+        formControlName="shop_payment"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
 
-      <p *ngIf="form.get('shop_payment')?.touched && form.get('shop_payment')?.invalid"
-        class="text-red-600 text-sm">
+      <p
+        *ngIf="
+          form.get('shop_payment')?.touched && form.get('shop_payment')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
         El valor es obligatorio.
       </p>
 
       <div class="flex justify-between items-center mb-6">
         <span class="text-gray-600 font-medium">Valor a devolver:</span>
         <span class="text-2xl font-bold text-green-600">
-          {{ form.get('shop_change')?.value | currency:'USD' }}
+          {{ form.get("shop_change")?.value | currency : "USD" }}
         </span>
-
       </div>
     </div>
 
     <!-- Concepto -->
     <div class="space-y-1">
       <label class="text-sm font-medium">Concepto de la venta *</label>
-      <input type="text" formControlName="shop_concept"
+      <input
+        type="text"
+        formControlName="shop_concept"
         placeholder="Ej: Venta de celular"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
 
-      <p *ngIf="form.get('shop_concept')?.touched && form.get('shop_concept')?.invalid"
-        class="text-red-600 text-sm">
+      <p
+        *ngIf="
+          form.get('shop_concept')?.touched && form.get('shop_concept')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
         El concepto es obligatorio.
       </p>
     </div>
@@ -116,23 +151,22 @@
     <!-- Submit -->
     <button
       type="submit"
-      [disabled]="form.invalid"
-      class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition">
+      [disabled]="
+        form.invalid || !(authService.isAdmin() || authService.isEmployee())
+      "
+      class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition"
+    >
       <app-loading *ngIf="loading"></app-loading>
-      <span *ngIf="!loading">
-        Crear Venta
-      </span>
+      <span *ngIf="!loading"> Crear Venta </span>
     </button>
-
   </form>
-
 </div>
 
-
-<div *ngIf="isOpenBills" 
-     class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-     (click)="closeDrawerNewBills()">
-</div>
+<div
+  *ngIf="isOpenBills"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+  (click)="closeDrawerNewBills()"
+></div>
 
 <!-- Drawer lateral Bills -->
 <div
@@ -142,25 +176,37 @@
 >
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-xl font-bold">Nuevo Gasto</h2>
-    <button (click)="closeDrawerNewBills()" class="text-gray-600 hover:text-black">
+    <button
+      (click)="closeDrawerNewBills()"
+      class="text-gray-600 hover:text-black"
+    >
       ✕
     </button>
   </div>
 
-<hr class="border border-gray-200 my-4" />
+  <hr class="border border-gray-200 my-4" />
 
-
-  <form [formGroup]="formBills" class="space-y-5 flex flex-col h-full" (ngSubmit)="submitBills()">
-
-
+  <form
+    [formGroup]="formBills"
+    class="space-y-5 flex flex-col h-full"
+    (ngSubmit)="submitBills()"
+  >
     <!-- Fecha -->
     <div class="space-y-1">
       <label class="text-sm font-medium">Fecha de la venta *</label>
-      <input type="date" formControlName="bills_date"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
-      
-      <p *ngIf="formBills.get('bills_date')?.touched && formBills.get('bills_date')?.invalid"
-        class="text-red-600 text-sm">
+      <input
+        type="date"
+        formControlName="bills_date"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="
+          formBills.get('bills_date')?.touched &&
+          formBills.get('bills_date')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
         La fecha es obligatoria.
       </p>
     </div>
@@ -168,11 +214,19 @@
     <!-- Valor -->
     <div class="space-y-1">
       <label class="text-sm font-medium">Costo del gasto *</label>
-      <input type="number" formControlName="bills_total"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+      <input
+        type="number"
+        formControlName="bills_total"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
 
-      <p *ngIf="formBills.get('bills_total')?.touched && formBills.get('bills_total')?.invalid"
-        class="text-red-600 text-sm">
+      <p
+        *ngIf="
+          formBills.get('bills_total')?.touched &&
+          formBills.get('bills_total')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
         El valor es obligatorio.
       </p>
     </div>
@@ -180,12 +234,20 @@
     <!-- Concepto -->
     <div class="space-y-1">
       <label class="text-sm font-medium">Concepto del gasto *</label>
-      <input type="text" formControlName="bills_concept"
+      <input
+        type="text"
+        formControlName="bills_concept"
         placeholder="Ej: Venta de celular"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600">
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
 
-      <p *ngIf="formBills.get('bills_concept')?.touched && formBills.get('bills_concept')?.invalid"
-        class="text-red-600 text-sm">
+      <p
+        *ngIf="
+          formBills.get('bills_concept')?.touched &&
+          formBills.get('bills_concept')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
         El concepto es obligatorio.
       </p>
     </div>
@@ -193,14 +255,13 @@
     <!-- Submit -->
     <button
       type="submit"
-      [disabled]="formBills.invalid"
-      class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition">
+      [disabled]="
+        form.invalid || !(authService.isAdmin() || authService.isEmployee())
+      "
+      class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition"
+    >
       <app-loading *ngIf="loading"></app-loading>
-      <span *ngIf="!loading">
-        Crear Venta
-      </span>
+      <span *ngIf="!loading"> Crear Venta </span>
     </button>
-
   </form>
-
 </div>

@@ -14,12 +14,14 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { DateService } from './date.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TechnicalServiceService {
   private readonly dateService = inject(DateService);
+  private readonly authService = inject(AuthService);
   public firestore = inject(Firestore);
 
   private collectionName = 'technical_service';
@@ -29,6 +31,7 @@ export class TechnicalServiceService {
     service.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    service.created_by = this.authService.getUserLocalStorage();
     const serviceRef = doc(collection(this.firestore, this.collectionName));
     service.ser_id = serviceRef.id;
     return setDoc(serviceRef, service);
@@ -38,6 +41,7 @@ export class TechnicalServiceService {
     data['updated_at'] = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    data['updated_by'] = this.authService.getUserLocalStorage();
     const serviceRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return updateDoc(serviceRef, data);
   }
@@ -70,6 +74,8 @@ export class TechnicalServiceService {
     data['updated_at'] = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    data['updated_by'] = this.authService.getUserLocalStorage();
+    console.log(data);
     const serviceRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return updateDoc(serviceRef, data);
   }

@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -7,6 +7,8 @@ import { Component, output } from '@angular/core';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+
+
   public emitModal = output<any>();
   onCreateSuppliers() {
     this.emitModal.emit(true);

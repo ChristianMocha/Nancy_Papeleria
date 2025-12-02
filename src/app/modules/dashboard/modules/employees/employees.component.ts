@@ -48,6 +48,7 @@ export class EmployeesComponent {
 
   public employeeForm: FormGroup = this.formBuilder.group({
     emp_id: [''],
+    emp_uid: [''],
     emp_name: ['', [Validators.required]],
     emp_email: ['', [Validators.required, Validators.email]],
     emp_password: ['', [Validators.required, Validators.minLength(6)]],
@@ -59,7 +60,9 @@ export class EmployeesComponent {
     updated_at: [''],
   });
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.authService.getUserLocalStorage());
+  }
 
   emitModal(event: boolean) {
     this.openModal = event;
@@ -90,10 +93,10 @@ export class EmployeesComponent {
         console.log('Ingrese todos los campos');
         return;
       }
-      const res = await this.authService.registerUser(this.employeeForm.value);
+      const res = await this.authService.registerUserWithoutLoggingOut(this.employeeForm.value);
       console.log(res);
       if (res) {
-        this.employeeForm.get('emp_id')?.setValue(res);
+        this.employeeForm.get('emp_uid')?.setValue(res);
         delete this.employeeForm.value.emp_password;
         console.log(this.employeeForm.value);
         this.employeeService

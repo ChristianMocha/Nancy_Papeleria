@@ -17,6 +17,7 @@ import { LoadingComponent } from '../../../../../shared/components/loading/loadi
 import { ActivatedRoute, Router } from '@angular/router';
 import { SuppliersService } from '../../../../../../service/suppliers.service';
 import { Supplier } from '../../../../../shared/models/supplier';
+import { AuthService } from '../../../../../../service/auth.service';
 
 @Component({
   selector: 'app-product',
@@ -37,6 +38,7 @@ export class ProductComponent {
   public readonly productService = inject(ProductService);
   public readonly uploadService = inject(UploadService);
   private readonly route = inject(ActivatedRoute);
+    public authService = inject(AuthService);
   public router = inject(Router);
 
   public imgPoduct: string = '';

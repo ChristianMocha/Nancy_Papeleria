@@ -46,23 +46,27 @@
           </span>
         </td>
 
-         <td class="p-3">
-            {{ emp.created_by || "Sin información" }}
-          </td>
-          <td class="p-3">
-            {{
-              emp.created_at
-                ? (emp.created_at.toDate() | date : "dd/MM/yyyy HH:mm:ss")
-                : ""
-            }}
-          </td>
+        <td class="p-3">
+          {{ emp.created_by.emp_name || "Sin información" }}
+        </td>
+        <td class="p-3">
+          {{
+            emp.created_at
+              ? (emp.created_at.toDate() | date : "dd/MM/yyyy HH:mm:ss")
+              : ""
+          }}
+        </td>
 
         <td class="px-4 py-3 flex items-center gap-3">
-          <label class="relative inline-flex items-center cursor-pointer">
+          <label
+            class="relative inline-flex items-center cursor-pointer"
+            [style.pointer-events]="!authService.isAdmin() ? 'none' : 'auto'"
+          >
             <input
               type="checkbox"
               class="sr-only peer"
               [checked]="emp.is_active"
+              [disabled]="!authService.isAdmin()"
               (change)="toggleStatus(emp)"
             />
             <div

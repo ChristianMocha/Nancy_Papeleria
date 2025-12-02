@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '../shared/guards/auth.guard';
 
 const DashboardRoute: Routes = [
   {
@@ -6,8 +7,9 @@ const DashboardRoute: Routes = [
     loadComponent: () => {
       return import('./layout/layout.component').then((m) => m.LayoutComponent);
     },
+    canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'movements', pathMatch: 'full' },
       {
         path: 'dashboard',
         loadComponent: () =>
@@ -105,7 +107,7 @@ const DashboardRoute: Routes = [
         redirectTo: 'inventory',
       },
     ],
-  },
+  }
 ];
 
 export default DashboardRoute;

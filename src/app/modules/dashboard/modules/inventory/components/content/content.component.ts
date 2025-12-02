@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { SearchPipe } from '../../../../../shared/pipe/search.pipe';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../../../service/auth.service';
 
 @Component({
   selector: 'app-content',
@@ -18,6 +19,7 @@ import { Router } from '@angular/router';
 export class ContentComponent {
 
   private readonly categoryService = inject(CategoryService);
+  public readonly authService = inject(AuthService);
   public readonly productService = inject(ProductService);
   public router = inject(Router);
 

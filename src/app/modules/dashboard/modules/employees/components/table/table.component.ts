@@ -3,6 +3,7 @@ import { EmployeeService } from '../../../../../../service/employee.service';
 import { firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../../../service/auth.service';
 
 @Component({
   selector: 'app-table',
@@ -12,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class TableComponent {
   private readonly employeeService = inject(EmployeeService);
+  public authService = inject(AuthService);
 
   public lstEmployees: any[] = [];
   public paginatedEmployees: any[] = [];
@@ -69,7 +71,7 @@ export class TableComponent {
     this.employeeService
       .updateEmployee(item.emp_id, { is_active: newState })
       .then(() => {
-        item.is_active = newState; 
+        item.is_active = newState;
       })
       .catch((err) => console.error(err));
   }

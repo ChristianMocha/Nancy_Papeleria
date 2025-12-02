@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
+import { AuthService } from '../../../../../../service/auth.service';
 
 @Component({
   selector: 'app-modal-purchase',
@@ -10,6 +11,7 @@ import { LoadingComponent } from '../../../../../shared/components/loading/loadi
   styleUrl: './modal-purchase.component.scss'
 })
 export class ModalPurchaseComponent {
+      public readonly authService = inject(AuthService);
 
   public totalSale = input<number>(0);
   public close = output<any>();

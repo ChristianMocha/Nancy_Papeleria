@@ -5,13 +5,20 @@
   <!-- Botones -->
   <div class="flex gap-3">
     <!-- Botón Categorías -->
-    <button (click)="showModalCategories()" class="flex items-center gap-2 border border-gray-900 text-gray-900 px-5 py-2 rounded-xl hover:bg-gray-100 transition">
+    <button
+      (click)="showModalCategories()"
+      [disabled]="!(authService.isAdmin() || authService.isEmployee())"
+      class="flex items-center gap-2 border border-gray-900 text-gray-900 px-5 py-2 rounded-xl hover:bg-gray-100 transition"
+    >
       <i class="fas fa-th-large text-gray-600"></i>
       <span>Categorías</span>
     </button>
 
     <!-- Botón Crear productos -->
-    <button (click)="addProduct()" class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition">
+    <button
+      (click)="addProduct()"
+      class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition"
+    >
       <i class="fas fa-plus-circle"></i>
       <span>Crear productos</span>
     </button>

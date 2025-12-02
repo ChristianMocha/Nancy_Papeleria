@@ -5,6 +5,7 @@ import { SuppliersService } from '../../../../../../service/suppliers.service';
 import { Supplier } from '../../../../../shared/models/supplier';
 import Swal from 'sweetalert2';
 import { map, Observable } from 'rxjs';
+import { AuthService } from '../../../../../../service/auth.service';
 
 @Component({
   selector: 'app-content',
@@ -15,6 +16,7 @@ import { map, Observable } from 'rxjs';
 export class ContentComponent {
   private readonly suppliersService = inject(SuppliersService);
   public supplierEmit = output<Supplier>();
+    public readonly authService = inject(AuthService);
 
   public totalClientes = 0;
   public totalPorCobrar = 0;

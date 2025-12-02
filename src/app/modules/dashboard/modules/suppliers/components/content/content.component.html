@@ -123,11 +123,12 @@
           </td>
 
           <td class="py-3">
-            <label class="relative inline-flex items-center cursor-pointer">
+            <label class="relative inline-flex items-center cursor-pointer"  [style.pointer-events]="!(authService.isAdmin() || authService.isEmployee()) ? 'none' : 'auto'">
               <input
                 type="checkbox"
                 class="sr-only peer"
                 [checked]="item.is_active"
+                [disabled]="!(authService.isAdmin() || authService.isEmployee())"
                 (change)="toggleStatus(item)"
               />
               <div
@@ -172,6 +173,7 @@
             </button>
 
             <button
+              [disabled]="!(authService.isAdmin() || authService.isEmployee())"
               (click)="confirmDelete(item)"
               title="Eliminar producto"
               aria-label="Eliminar producto"

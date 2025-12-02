@@ -10,8 +10,9 @@
   class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
   *ngIf="openModal"
 >
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative 
-           max-h-[90vh] overflow-y-auto">
+  <div
+    class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative max-h-[90vh] overflow-y-auto"
+  >
     <button
       type="button"
       (click)="onClose()"
@@ -177,6 +178,7 @@
 
       <div class="flex justify-end mt-4">
         <button
+          [disabled]="!(authService.isAdmin() || authService.isEmployee())"
           type="submit"
           class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
         >

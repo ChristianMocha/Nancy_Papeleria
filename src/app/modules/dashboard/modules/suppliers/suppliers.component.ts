@@ -12,6 +12,7 @@ import {
 } from '@angular/forms';
 import { SuppliersService } from '../../../../service/suppliers.service';
 import { Supplier } from '../../../shared/models/supplier';
+import { AuthService } from '../../../../service/auth.service';
 
 @Component({
   selector: 'app-suppliers',
@@ -28,6 +29,7 @@ import { Supplier } from '../../../shared/models/supplier';
 })
 export class SuppliersComponent {
   private readonly suppliersService = inject(SuppliersService);
+  public readonly authService = inject(AuthService);
 
   private readonly formBuilder = inject(FormBuilder);
   public settingForm: FormGroup = this.formBuilder.group({});

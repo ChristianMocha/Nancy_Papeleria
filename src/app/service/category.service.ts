@@ -14,12 +14,14 @@ import {
 import { Observable } from 'rxjs';
 import { Category } from '../modules/shared/models/category';
 import { DateService } from './date.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
   private readonly dateService = inject(DateService);
+  private readonly authService = inject(AuthService);
 
   constructor(private firestore: Firestore) {}
 
@@ -27,6 +29,7 @@ export class CategoryService {
     category.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
+    category.created_by = this.authService.getUserLocalStorage();
     const newDocRef = doc(collection(this.firestore, 'category'));
     console.log(newDocRef);
     category.cat_id = newDocRef.id;
