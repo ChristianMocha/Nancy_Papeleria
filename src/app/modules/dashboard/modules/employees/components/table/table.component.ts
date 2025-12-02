@@ -41,7 +41,7 @@ export class TableComponent {
   updatePage() {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
- this.paginatedEmployees = this.filteredEmployees.slice(start, end);
+    this.paginatedEmployees = this.filteredEmployees.slice(start, end);
   }
 
   nextPage() {
@@ -63,16 +63,18 @@ export class TableComponent {
     this.updatePage();
   }
 
-  toggleStatus(emp: any) {
+  toggleStatus(item: any) {
+    const newState = !item.is_active;
+
     this.employeeService
-      .toggleStatus(emp.emp_id, emp.emp_status)
+      .updateEmployee(item.emp_id, { is_active: newState })
       .then(() => {
-        emp.emp_status = !emp.emp_status; // Actualiza localmente
+        item.is_active = newState; 
       })
       .catch((err) => console.error(err));
   }
 
- filterEmployees() {
+  filterEmployees() {
     const term = this.searchTerm.toLowerCase().trim();
 
     if (!term) {
@@ -87,9 +89,13 @@ export class TableComponent {
 
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.filteredEmployees.length / this.pageSize);
-    console.log('Filtrados:', this.filteredEmployees.length, 'Total:', this.lstEmployees.length);
+    console.log(
+      'Filtrados:',
+      this.filteredEmployees.length,
+      'Total:',
+      this.lstEmployees.length
+    );
 
     this.updatePage();
   }
-
 }

@@ -83,6 +83,8 @@
           <th class="p-3">Celular</th>
           <th class="p-3">Documento</th>
           <th class="p-3">Total por pagar</th>
+          <th class="p-3">Creado por</th>
+          <th class="p-3">Creado el</th>
           <th class="p-3">Estado</th>
           <th class="p-3">Acciones</th>
         </tr>
@@ -108,6 +110,16 @@
             <span>{{
               item.supp_total_to_pay | currency : "USD" : "symbol"
             }}</span>
+          </td>
+          <td class="p-3">
+            {{ item.created_by || "Sin información" }}
+          </td>
+          <td class="p-3">
+            {{
+              item.created_at
+                ? (item.created_at.toDate() | date : "dd/MM/yyyy HH:mm:ss")
+                : ""
+            }}
           </td>
 
           <td class="py-3">

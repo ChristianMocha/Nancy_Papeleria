@@ -428,7 +428,8 @@ export class ServicesComponent {
             ser.ser_price
           }</div>
           <div class="item"><span class="label">Fecha ingreso:</span> ${
-            ser.ser_start_date
+           ser.created_at.toDate().toLocaleDateString('es-EC')
+
           }</div>
           <div class="item">
             <span 
@@ -461,7 +462,8 @@ export class ServicesComponent {
             ser.ser_name
           }</div>
           <div class="item"><span class="label">Fecha ingreso:</span> ${
-            ser.ser_start_date
+            ser.created_at.toDate().toLocaleDateString('es-EC')
+
           }</div>
           <hr style="margin: 15px 0;">
           <div class="item"><span class="label">Empresa:</span> CrTecnologia</div>

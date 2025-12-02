@@ -65,6 +65,11 @@ export class TechnicalServiceComponent {
     ser_update_date: [''],
     ser_maximum_withdrawal_date: [''],
     ser_team_state: [true],
+    is_active: [true, Validators.required],
+    created_by: [''],
+    created_at: [''],
+    updated_by: [''],
+    updated_at: [''],
   });
 
   ngOnInit() {}
@@ -75,7 +80,10 @@ export class TechnicalServiceComponent {
 
   onClose() {
     this.openModal = false;
-    this.serviceForm.reset();
+    this.serviceForm.reset({
+      ser_status: true,
+      ser_team_state: this.serviceForm.value.ser_team_state,
+    });
   }
 
   async onSubmit() {
@@ -98,6 +106,10 @@ export class TechnicalServiceComponent {
           .then((res) => {
             this.print(this.serviceForm.value);
             this.finishSave();
+            this.serviceForm.reset({
+              ser_status: true,
+              ser_team_state: this.serviceForm.value.ser_team_state,
+            });
           });
       } else {
         this.serviceForm
@@ -115,6 +127,10 @@ export class TechnicalServiceComponent {
           .then((res) => {
             this.print(this.serviceForm.value);
             this.finishSave();
+            this.serviceForm.reset({
+              ser_status: true,
+              ser_team_state: true,
+            });
           });
       }
     } catch (err) {
@@ -126,10 +142,6 @@ export class TechnicalServiceComponent {
   finishSave() {
     this.openModal = false;
     this.loading = false;
-    this.serviceForm.reset({
-      ser_status: true,
-      ser_team_state: true,
-    });
   }
 
   onPattern(arr: number[]) {
@@ -310,7 +322,7 @@ export class TechnicalServiceComponent {
             ser.ser_price
           }</div>
           <div class="item"><span class="label">Fecha ingreso:</span> ${
-            ser.ser_start_date
+            ser.created_at.toDate().toLocaleDateString('es-EC')
           }</div>
           <div class="item">
             <span 
@@ -343,7 +355,7 @@ export class TechnicalServiceComponent {
             ser.ser_name
           }</div>
           <div class="item"><span class="label">Fecha ingreso:</span> ${
-            ser.ser_start_date
+            ser.created_at.toDate().toLocaleDateString('es-EC')
           }</div>
           <hr style="margin: 15px 0;">
           <div class="item"><span class="label">Empresa:</span> CrTecnologia</div>

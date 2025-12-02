@@ -23,7 +23,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
     HeaderComponent,
     FormsModule,
     ReactiveFormsModule,
-    LoadingComponent
+    LoadingComponent,
   ],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.scss',
@@ -47,15 +47,17 @@ export class EmployeesComponent {
   ];
 
   public employeeForm: FormGroup = this.formBuilder.group({
+    emp_id: [''],
     emp_name: ['', [Validators.required]],
     emp_email: ['', [Validators.required, Validators.email]],
     emp_password: ['', [Validators.required, Validators.minLength(6)]],
     emp_role: ['', Validators.required],
-    emp_status: [true],
-    emp_id: [''],
-    emp_start_date: [''],
+    is_active: [true, Validators.required],
+    created_by: [''],
+    created_at: [''],
+    updated_by: [''],
+    updated_at: [''],
   });
-
 
   ngOnInit() {}
 
@@ -65,6 +67,9 @@ export class EmployeesComponent {
 
   onClose() {
     this.openModal = false;
+    this.employeeForm.reset({
+      is_active: true,
+    });
   }
 
   // async onSubmit() {
@@ -85,27 +90,35 @@ export class EmployeesComponent {
         console.log('Ingrese todos los campos');
         return;
       }
-     const res = await this.authService.registerUser(this.employeeForm.value);
-     console.log(res);
-     if (res) {
-      this.employeeForm.get('emp_id')?.setValue(res);
-      console.log(this.dateService.getDate());
-      this.employeeForm.get('emp_start_date')?.setValue(this.dateService.getDate());
-      delete this.employeeForm.value.emp_password;
-      console.log(this.employeeForm.value);
-      this.employeeService.addEmployee(this.employeeForm.value).then((res) => {
-        this.openModal = false;
-        this.loading = false;
-        this.employeeForm.reset();
-      })
-      
-     }
+      const res = await this.authService.registerUser(this.employeeForm.value);
+      console.log(res);
+      if (res) {
+        this.employeeForm.get('emp_id')?.setValue(res);
+        delete this.employeeForm.value.emp_password;
+        console.log(this.employeeForm.value);
+        this.employeeService
+          .addEmployee(this.employeeForm.value)
+          .then((res) => {
+            console.log(res);
+            this.openModal = false;
+            this.loading = false;
+            this.employeeForm.reset({
+              is_active: true,
+            });
+          });
+      }
       // alert('Usuario creado correctamente');
-     
     } catch (err) {
       this.loading = false;
+
+      const error = err as { code?: string };
+
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('Este correo ya está registrado');
+        return;
+      }
+
       console.error(err);
-      // alert('Error al crear usuario');
     }
   }
 }

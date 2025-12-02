@@ -6,16 +6,10 @@ import { Injectable } from '@angular/core';
 export class DateService {
   getDate(): string {
     const now = new Date();
-
-    const formatter = new Intl.DateTimeFormat('es-EC', {
-      dateStyle: 'long',
-      timeStyle: 'medium',
-      hour12: true,
-      timeZone: 'America/Guayaquil', // zona horaria correcta de Ecuador
-    });
-
-    return formatter.format(now) + ' UTC-5';
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now.toISOString().split('T')[0];
   }
+  
   getDateTimeStamp(): Date {
     return new Date();
   }

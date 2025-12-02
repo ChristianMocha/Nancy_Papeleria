@@ -12,7 +12,7 @@
       placeholder="Buscar empleado por nombre o correo..."
     />
   </div>
-  <br>
+  <br />
 
   <table class="min-w-full border-separate border-spacing-y-2">
     <thead>
@@ -20,6 +20,8 @@
         <th class="text-left px-4 py-3 font-semibold">Nombre</th>
         <th class="text-left px-4 py-3 font-semibold">Correo</th>
         <th class="text-left px-4 py-3 font-semibold">Rol</th>
+        <th class="p-3">Creado por</th>
+        <th class="p-3">Creado el</th>
         <th class="text-left px-4 py-3 font-semibold">Estado</th>
       </tr>
     </thead>
@@ -44,12 +46,23 @@
           </span>
         </td>
 
+         <td class="p-3">
+            {{ emp.created_by || "Sin información" }}
+          </td>
+          <td class="p-3">
+            {{
+              emp.created_at
+                ? (emp.created_at.toDate() | date : "dd/MM/yyyy HH:mm:ss")
+                : ""
+            }}
+          </td>
+
         <td class="px-4 py-3 flex items-center gap-3">
           <label class="relative inline-flex items-center cursor-pointer">
             <input
               type="checkbox"
               class="sr-only peer"
-              [checked]="emp.emp_status"
+              [checked]="emp.is_active"
               (change)="toggleStatus(emp)"
             />
             <div
@@ -62,9 +75,9 @@
 
           <span
             class="text-sm font-medium"
-            [ngClass]="emp.emp_status ? 'text-green-700' : 'text-gray-500'"
+            [ngClass]="emp.is_active ? 'text-green-700' : 'text-gray-500'"
           >
-            {{ emp.emp_status ? "Activo" : "Inactivo" }}
+            {{ emp.is_active ? "Activo" : "Inactivo" }}
           </span>
         </td>
       </tr>

@@ -141,7 +141,10 @@
         </td>
 
         <td class="px-4 py-3 text-gray-600">
-          {{ ser.ser_start_date }}
+          {{ ser.created_at
+                ? (ser.created_at.toDate() | date : "dd/MM/yyyy HH:mm:ss")
+                : ""
+            }}
         </td>
 
         <td class="px-4 py-3 text-gray-600">
