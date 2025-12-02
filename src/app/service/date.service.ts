@@ -4,9 +4,25 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class DateService {
-  getDate(): string {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    return now.toISOString().split('T')[0];
-  }
+ getDate(): string {
+  const now = new Date();
+
+  // Ajustar a Ecuador UTC-5
+  const ecuOffset = -5;
+  const localOffset = now.getTimezoneOffset() / 60;
+  now.setHours(now.getHours() + ecuOffset - localOffset);
+
+  // Formato de fecha en español
+  const formatter = new Intl.DateTimeFormat('es-EC', {
+    dateStyle: 'long',
+    timeStyle: 'medium',
+    hour12: true,
+    timeZone: 'UTC'
+  });
+
+  const formatted = formatter.format(now);
+
+  return `${formatted} UTC-5`;
+}
+
 }

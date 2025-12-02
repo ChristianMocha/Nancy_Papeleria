@@ -13,10 +13,10 @@ export class ContentComponent {
  totalClientes = 0;
   totalPorCobrar = 0;
 
-  // Input buscador
-  filtro = '';
 
-  // Lista de clientes
+  public filtro: string = '';
+
+
   clientes: any[] = [
     {
       nombre: 'Laura Jimena Rojas',

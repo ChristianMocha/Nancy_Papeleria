@@ -110,8 +110,11 @@ export class ContentComponent {
     console.log(this.lstProductsSearch());
 
     if (!this.searchTerm()) {
-      this.getAllPorducts();
-    }
+    console.log('borrado todo');
+    this.filteredProducts = [...this.lstProducts];
+    this.syncStockWithCart();
+    return;
+  }
     if (
       this.lstProductsSearch() !== undefined &&
       this.lstProductsSearch() !== null
@@ -119,6 +122,8 @@ export class ContentComponent {
       console.log('entrando correctamente');
       this.filteredProducts = await this.lstProductsSearch();
     }
+
+      this.syncStockWithCart();
   }
 
   addToSelection(product: any) {
@@ -517,4 +522,20 @@ export class ContentComponent {
       hour12: true,
     });
   }
+
+  syncStockWithCart() {
+    console.log('entrandooooooo');
+  this.filteredProducts.forEach(prod => {
+    const cartItem = this.selectedProducts.find(p => p.prod_code === prod.prod_code);
+    if (cartItem) {
+      prod.prod_quantity_available =
+        prod.prod_quantity_available - cartItem.pod_selectedQty;
+
+      if (prod.prod_quantity_available < 0) {
+        prod.prod_quantity_available = 0;
+      }
+    }
+  });
+}
+
 }
