@@ -31,7 +31,6 @@ export class CategoryService {
     );
     category.created_by = this.authService.getUserLocalStorage();
     const newDocRef = doc(collection(this.firestore, 'category'));
-    console.log(newDocRef);
     category.cat_id = newDocRef.id;
 
     return setDoc(newDocRef, category);

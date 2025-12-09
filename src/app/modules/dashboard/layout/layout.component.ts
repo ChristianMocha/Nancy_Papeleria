@@ -23,8 +23,6 @@ export class LayoutComponent {
 
   ngOnInit() {
     this.user = this.authService.getUserLocalStorage();
-    console.log(this.user);
-    console.log(this.user);
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
@@ -33,7 +31,6 @@ export class LayoutComponent {
   }
 
   goToPage(path: string) {
-    console.log(path);
     this.router.navigate([path]);
     this.currentPage = path;
   }

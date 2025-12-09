@@ -32,7 +32,6 @@ export class EmployeeService {
   private collectionName = 'employees';
 
   addEmployee(employee: any) {
-    console.log(employee);
     employee.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
@@ -58,7 +57,6 @@ export class EmployeeService {
 
     try {
       await updateDoc(employeeRef, { emp_status: newStatus });
-      console.log(`Estado de empleado ${empId} actualizado a ${newStatus}`);
     } catch (err) {
       console.error('Error al actualizar el estado:', err);
       throw err;

@@ -32,21 +32,18 @@ export class IncomeComponent {
   public totalEarnings: number = 0;
   public billsAmount: number = 0;
 
-  public itemsPerPage = 6;
+  public itemsPerPage = 2;
   public currentPage = 1;
   public totalPages = 1;
 
   ngOnInit() {
     this.currentPage = 1;
-    console.log(this.inputType());
     this.inputTypeIn = this.inputType();
     if (this.inputType() === 'date') {
-      console.log('entrando 1');
       this.inputTypeIn = 'day';
     }
 
     if (this.inputType() === 'number') {
-      console.log('entrando 2');
       this.inputTypeIn = 'year';
     }
     this.getPurchasesByDate();
@@ -56,14 +53,11 @@ export class IncomeComponent {
   ngOnChanges(changes: SimpleChanges): void {
     this.currentPage = 1;
     this.inputTypeIn = this.inputType();
-    console.log(this.inputType());
     if (this.inputType() === 'date') {
-      console.log('entrando 1');
       this.inputTypeIn = 'day';
     }
 
     if (this.inputType() === 'number') {
-      console.log('entrando 2');
       this.inputTypeIn = 'year';
     }
 
@@ -76,20 +70,17 @@ export class IncomeComponent {
   }
 
   getPurchasesByDate() {
-    console.log(this.inputTypeIn);
     this.isLoading = true;
     this.lstPurchases = [];
     this.shoppingCartService
       .getData(this.selectedDate(), this.inputTypeIn)
       .then((res) => {
-        console.log(res);
         res = res.map((p: any) => ({
           ...p,
           shop_crea_date: this.convertToDate(p.shop_crea_date),
         }));
         this.lstPurchases = res;
         this.allPurchases = res;
-        console.log(this.lstPurchases);
         this.getTotalPrice();
         this.getTotalEarnings();
         this.isLoading = false;
@@ -98,13 +89,13 @@ export class IncomeComponent {
   }
 
   getTotalBillsAmount() {
-    console.log('entrando ');
+    console.log(this.inputTypeIn);
     this.isLoading = true;
     this.shoppingCartService
       .getTotalBillsAmount(this.selectedDate(), this.inputTypeIn)
       .then((res) => {
-        console.log(res);
         this.billsAmount = res;
+        console.log(this.billsAmount);
         this.billsAmountEmit.emit(this.billsAmount);
       });
   }
@@ -165,23 +156,29 @@ export class IncomeComponent {
     this.updatePagination();
   }
 
-  convertToDate(value: any): Date | null {
-    if (!value) return null;
+ convertToDate(value: any): Date | null {
+  if (!value) return null;
 
-    // Caso 1: Timestamp (Firebase)
-    if (value.toDate) {
-      try {
-        return value.toDate();
-      } catch {
-        // por si viene algo raro
-        return null;
-      }
+  // Caso 1: Timestamp (Firebase)
+  if (value.toDate) {
+    try {
+      return value.toDate();
+    } catch {
+      return null;
     }
-
-    // Caso 2: string o número válido
-    const date = new Date(value);
-    return isNaN(date.getTime()) ? null : date;
   }
+
+  // Caso 2: Fecha en formato YYYY-MM-DD => parse manual
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day); // 👈 crea fecha local sin UTC
+  }
+
+  // Caso 3: Otros formatos
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? null : date;
+}
+
 
   printFactura(ser: any) {
     const rows = ser.shop_products

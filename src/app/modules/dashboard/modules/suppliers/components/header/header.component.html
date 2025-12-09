@@ -1,12 +1,21 @@
-<div class="flex items-center justify-between border-b border-green-600 pb-2">
-  <!-- Título con ícono dentro de círculo -->
+<div
+  class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-green-600 pb-2 gap-4"
+>
+  <!-- Título + Botón volver -->
   <div class="flex items-center gap-3">
+    <button
+      class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
+      onclick="history.back()"
+    >
+      <i class="fas fa-arrow-left text-gray-700"></i>
+    </button>
+
     <h2 class="text-xl font-bold text-gray-900">Proveedores</h2>
   </div>
 
-  <!-- Botón -->
+  <!-- Botón Crear Proveedores -->
   <button
-    class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition"
+    class="flex items-center justify-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition w-full md:w-auto"
     (click)="onCreateSuppliers()"
   >
     <i class="fas fa-plus"></i>

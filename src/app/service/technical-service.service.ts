@@ -27,7 +27,6 @@ export class TechnicalServiceService {
   private collectionName = 'technical_service';
 
   addService(service: any) {
-    console.log(service);
     service.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
@@ -75,13 +74,11 @@ export class TechnicalServiceService {
       this.dateService.getDateTimeStamp()
     );
     data['updated_by'] = this.authService.getUserLocalStorage();
-    console.log(data);
     const serviceRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return updateDoc(serviceRef, data);
   }
 
   deleteService(id: string) {
-    console.log(id);
     const employeeRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return deleteDoc(employeeRef);
   }

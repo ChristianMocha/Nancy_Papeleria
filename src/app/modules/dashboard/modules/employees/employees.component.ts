@@ -61,7 +61,6 @@ export class EmployeesComponent {
   });
 
   ngOnInit() {
-    console.log(this.authService.getUserLocalStorage());
   }
 
   emitModal(event: boolean) {
@@ -76,33 +75,26 @@ export class EmployeesComponent {
   }
 
   // async onSubmit() {
-  //   console.log(this.employeeForm.value);
 
   //   const docRef = await this.employeeService.addEmployee(
   //     this.employeeForm.value
   //   );
-  //   console.log(docRef);
   // }
 
   async onSubmit() {
     this.loading = true;
     try {
-      console.log(this.employeeForm.value);
       if (!this.employeeForm.valid) {
         this.employeeForm.markAllAsTouched();
-        console.log('Ingrese todos los campos');
         return;
       }
       const res = await this.authService.registerUserWithoutLoggingOut(this.employeeForm.value);
-      console.log(res);
       if (res) {
         this.employeeForm.get('emp_uid')?.setValue(res);
         delete this.employeeForm.value.emp_password;
-        console.log(this.employeeForm.value);
         this.employeeService
           .addEmployee(this.employeeForm.value)
           .then((res) => {
-            console.log(res);
             this.openModal = false;
             this.loading = false;
             this.employeeForm.reset({
@@ -117,7 +109,6 @@ export class EmployeesComponent {
       const error = err as { code?: string };
 
       if (error.code === 'auth/email-already-in-use') {
-        console.log('Este correo ya está registrado');
         return;
       }
 

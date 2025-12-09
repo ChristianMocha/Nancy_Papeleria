@@ -14,10 +14,9 @@ import { AuthService } from '../../../../../../service/auth.service';
   selector: 'app-content',
   imports: [CommonModule, FormsModule, SearchPipe],
   templateUrl: './content.component.html',
-  styleUrl: './content.component.scss'
+  styleUrl: './content.component.scss',
 })
 export class ContentComponent {
-
   private readonly categoryService = inject(CategoryService);
   public readonly authService = inject(AuthService);
   public readonly productService = inject(ProductService);
@@ -25,33 +24,25 @@ export class ContentComponent {
 
   public lstCategories: Category[] = [];
   public lstProducts: any[] = [];
-  public totalInventoryCost: number = 0
-  public totalInventoryCostClient: number = 0
+  public totalInventoryCost: number = 0;
+  public totalInventoryCostClient: number = 0;
 
   public searchTerm: string = '';
   public currentPage: number = 1;
-  public itemsPerPage: number = 7;
+  public itemsPerPage: number = 4;
   public paginatedProducts: any[] = [];
   public selectedImage: string | null = null;
-
-
 
   ngOnInit() {
     this.getAllCategories();
     this.getAllPorducts();
     this.getAllProductsCostTotal();
     this.getAllProductsCostTotalClient();
-
   }
-  
-
 
   async getAllCategories() {
     this.categoryService.getCategories().subscribe({
-      next: (res) => {
-        console.log(this.lstCategories = res);
-        console.log('✅ Categorías:', res)
-      },
+      next: (res) => {},
       error: (err) => console.error('❌ Error:', err),
     });
   }
@@ -59,80 +50,78 @@ export class ContentComponent {
   async getAllPorducts() {
     this.productService.getAllProducts().subscribe({
       next: (res) => {
-        console.log('✅ Productos:', res)
-        this.lstProducts = res
-        this.lstProducts = res.map(prod => ({
+        this.lstProducts = res;
+        this.lstProducts = res.map((prod) => ({
           ...prod,
-          prod_start_date: prod.prod_start_date?.toDate ? prod.prod_start_date.toDate() : prod.prod_start_date
+          prod_start_date: prod.prod_start_date?.toDate
+            ? prod.prod_start_date.toDate()
+            : prod.prod_start_date,
         }));
-        console.log(this.lstProducts);
-          this.updatePaginatedProducts();
+
+        this.updatePaginatedProducts();
       },
       error: (err) => console.error('❌ Error:', err),
     });
   }
   async getAllProductsCostTotal() {
-
-    
-    this.productService.getAllProductsCostTotal().then((res) => {
-      console.log(res);
-      this.totalInventoryCost = res
-      
-    }).catch((err) => {
-      console.error(err);
-      
-    });
+    this.productService
+      .getAllProductsCostTotal()
+      .then((res) => {
+        this.totalInventoryCost = res;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   async getAllProductsCostTotalClient() {
-
-    
-    this.productService.getAllProductsCostTotalClient().then((res) => {
-      console.log(res);
-      this.totalInventoryCostClient = res
-      
-    }).catch((err) => {
-      console.error(err);
-      
-    });
+    this.productService
+      .getAllProductsCostTotalClient()
+      .then((res) => {
+        this.totalInventoryCostClient = res;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
-  async onCategoryChange(event: any){
+  async onCategoryChange(event: any) {
     const selectedCategoryId = (event.target as HTMLSelectElement).value;
-      console.log('Categoría seleccionada:', selectedCategoryId);
-      if (!selectedCategoryId) return this.getAllPorducts();
+    if (!selectedCategoryId) return this.getAllPorducts();
 
-    this.productService.getProductsByCategory(selectedCategoryId)
+    this.productService.getProductsByCategory(selectedCategoryId);
 
     try {
-      this.lstProducts = await firstValueFrom(this.productService.getProductsByCategory(selectedCategoryId));
-      console.log('productos:', this.lstProducts);
+      this.lstProducts = await firstValueFrom(
+        this.productService.getProductsByCategory(selectedCategoryId)
+      );
     } catch (error) {
       console.error('Error al cargar los productos:', error);
     }
   }
-  
+
   get totalPages(): number {
     return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
   }
-  
+
   // 🔹 Filtro de productos según el término de búsqueda
   get filteredProducts(): any[] {
     if (!this.searchTerm) return this.lstProducts;
     const term = this.searchTerm.toLowerCase();
-    return this.lstProducts.filter(p =>
-      p.prod_name.toLowerCase().includes(term) ||
-      p.prod_code.toLowerCase().includes(term)
+    return this.lstProducts.filter(
+      (p) =>
+        p.prod_name.toLowerCase().includes(term) ||
+        p.prod_code.toLowerCase().includes(term)
     );
   }
-  
+
   // 🔹 Actualiza los productos visibles según la página actual
   updatePaginatedProducts() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
   }
-  
+
   // 🔹 Controles de paginación
   nextPage() {
     if (this.currentPage < this.totalPages) {
@@ -140,14 +129,14 @@ export class ContentComponent {
       this.updatePaginatedProducts();
     }
   }
-  
+
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
       this.updatePaginatedProducts();
     }
   }
-  
+
   // 🔹 Detecta cambios en el buscador (puedes llamarlo desde [(ngModel)])
   onSearchChange() {
     this.currentPage = 1;
@@ -155,8 +144,11 @@ export class ContentComponent {
   }
 
   editProduct(prod: any) {
-    console.log('Editar', prod);
-    this.router.navigate(['/product/edit', prod.prod_category_id, prod.prod_id]);
+    this.router.navigate([
+      '/product/edit',
+      prod.prod_category_id,
+      prod.prod_id,
+    ]);
   }
 
   // confirmación antes de eliminar
@@ -169,37 +161,34 @@ export class ContentComponent {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        // 🔥 Aquí va tu lógica para eliminar
-        // por ejemplo: this.service.deleteItem(id).subscribe(...)
-        this.deleteProduct(prod)
-        
+        this.deleteProduct(prod);
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Cancelado', 'El registro sigue intacto.', 'info');
       }
     });
+  }
 
-  }
-  
   deleteProduct(prod: any) {
-    this.productService.deleteProduct(prod.prod_category_id, prod.prod_id).then((res) => {
-      console.log(res);
-      Swal.fire('Eliminado', 'El registro fue eliminado correctamente.', 'success');
-    })
+    this.productService
+      .deleteProduct(prod.prod_category_id, prod.prod_id)
+      .then((res) => {
+        Swal.fire(
+          'Eliminado',
+          'El registro fue eliminado correctamente.',
+          'success'
+        );
+      });
   }
-  
 
   openImageModal(imageUrl: string | undefined) {
-  if (!imageUrl) return;
+    if (!imageUrl) return;
     this.selectedImage = imageUrl;
   }
-  
+
   closeImageModal() {
     this.selectedImage = null;
   }
-
-  
-
 }

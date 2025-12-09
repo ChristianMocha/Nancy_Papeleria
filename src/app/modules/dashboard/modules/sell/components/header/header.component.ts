@@ -121,9 +121,7 @@ export class HeaderComponent {
 
   submit() {
     this.loading = true;
-    console.log(this.form.value);
     if (!this.form.valid) {
-      console.log('Ingrese todos los campos');
       return;
     }
 
@@ -131,10 +129,8 @@ export class HeaderComponent {
       .get('total_earnings')
       ?.setValue(this.form.get('shop_total')?.value);
 
-    console.log(this.form.value);
     // shop_crea_date
     this.shoppingCartService.savePurchase(this.form.value).then((res) => {
-      console.log(res);
       this.form.reset({
         is_active: true,
         shop_date: this.shopDate,
@@ -146,9 +142,8 @@ export class HeaderComponent {
 
   submitBills() {
     this.loading = true;
-    console.log(this.formBills.value);
     if (!this.formBills.valid) {
-      console.log('Ingrese todos los campos bills');
+      this.loading = false;
       return;
     }
 
@@ -156,12 +151,11 @@ export class HeaderComponent {
       .get('bills_total_earnings')
       ?.setValue(this.formBills.get('bills_total')?.value);
 
-    console.log(this.formBills.value);
     this.shoppingCartService.saveBills(this.formBills.value).then((res) => {
-      console.log(res);
       this.formBills.reset({
         is_active: true,
         shop_date: this.shopDate,
+        bills_date: this.shopDate,
       });
       this.closeDrawerNewBills();
       this.loading = false;
@@ -177,10 +171,8 @@ export class HeaderComponent {
   }
 
   getSearchProducts() {
-    console.log(this.searchTerm);
     if (this.searchTerm.length < 3 && this.searchTerm.length > 0) return;
     this.productService.searchProducts(this.searchTerm).then((res) => {
-      console.log(res);
       this.productsEmmit.emit(res);
     });
   }

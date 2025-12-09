@@ -43,7 +43,6 @@ export class ContentComponent {
 
   ngOnInit() {
     this.shopDate = this.dateService.getDate();
-    console.log(this.shopDate);
     this.getCategories();
     this.getAllPorducts();
   }
@@ -59,23 +58,19 @@ export class ContentComponent {
       this.lstCategories = await firstValueFrom(
         this.categoryService.getCategories()
       );
-      console.log('Empleados:', this.lstCategories);
     } catch (error) {
       console.error('Error al cargar empleados:', error);
     }
   }
 
   selectCategory(categoryId: any) {
-    console.log(categoryId);
     this.selectedCategory = categoryId;
     if (categoryId === 'all') {
       this.showButtonMore = false;
       this.getAllPorducts();
       return;
     }
-    console.log('Categoría seleccionada:', categoryId);
     this.productService.getProductsByCategory(categoryId).subscribe((res) => {
-      console.log(res);
       this.showButtonMore = true;
       this.filteredProducts = res;
     });
@@ -94,7 +89,6 @@ export class ContentComponent {
       this.filteredProducts = this.lstProducts;
     }
 
-    console.log(this.filteredProducts);
 
     this.loading = false;
   }
@@ -107,10 +101,8 @@ export class ContentComponent {
   }
 
   async filterProducts() {
-    console.log(this.lstProductsSearch());
 
     if (!this.searchTerm()) {
-    console.log('borrado todo');
     this.filteredProducts = [...this.lstProducts];
     this.syncStockWithCart();
     return;
@@ -119,51 +111,45 @@ export class ContentComponent {
       this.lstProductsSearch() !== undefined &&
       this.lstProductsSearch() !== null
     ) {
-      console.log('entrando correctamente');
       this.filteredProducts = await this.lstProductsSearch();
     }
 
       this.syncStockWithCart();
   }
 
-  addToSelection(product: any) {
-    if (product.prod_quantity_available <= 0) return;
+addToSelection(product: any) {
+  if (product.prod_quantity_available <= 0) return;
 
-    product.prod_quantity_available--;
+  // SIEMPRE RESTAR SOBRE EL MISMO OBJETO
+  product.prod_quantity_available--;
 
-    const existing = this.selectedProducts.find(
-      (p) => p.prod_code === product.prod_code
-    );
+  const existing = this.selectedProducts.find(
+    (p) => p.prod_code === product.prod_code
+  );
 
-    if (existing) {
-      existing.pod_selectedQty += 1;
-      this.updatePrice(existing);
-    } else {
-      const unitPrice = product.prod_discount_price ?? product.prod_sale_price;
+  if (existing) {
+    existing.pod_selectedQty += 1;
+    this.updatePrice(existing);
+  } else {
+    // NO HAGAS COPIA... reusa el MISMO objeto
+    product.pod_selectedQty = 1;
+    product.pro_price_unit = product.prod_discount_price ?? product.prod_sale_price;
 
-      this.selectedProducts.push({
-        ...product,
-        pod_selectedQty: 1,
-        pro_price_unit: unitPrice,
-      });
-    }
-
-    const existingUpdate = this.selectedProductsUpdate.find(
-      (p) => p.prod_code === product.prod_code
-    );
-
-    if (existingUpdate) {
-      existingUpdate.prod_quantity_available = product.prod_quantity_available;
-    } else {
-      this.selectedProductsUpdate.push({
-        ...product,
-        prod_quantity_available: product.prod_quantity_available,
-      });
-    }
-
-    console.log('🛒 selectedProducts:', this.selectedProducts);
-    console.log('📦 selectedProductsUpdate:', this.selectedProductsUpdate);
+    this.selectedProducts.push(product);
   }
+
+  // También actualiza referencias en selectedProductsUpdate
+  const existingUpdate = this.selectedProductsUpdate.find(
+    (p) => p.prod_code === product.prod_code
+  );
+
+  if (existingUpdate) {
+    existingUpdate.prod_quantity_available = product.prod_quantity_available;
+  } else {
+    this.selectedProductsUpdate.push(product);
+  }
+}
+
 
   increaseQty(item: any) {
     if (item.prod_quantity_available > 0) {
@@ -197,7 +183,6 @@ export class ContentComponent {
   }
 
   onDiscountChange(item: any) {
-    console.log(item);
 
     if (!item.prod_discount_price || item.prod_discount_price <= 0) {
       item.prod_discount_price = null;
@@ -323,7 +308,6 @@ export class ContentComponent {
       return acc + profitPerUnit * p.pod_selectedQty;
     }, 0);
 
-    console.log(data);
     let formattedData = {
       shop_date: this.shopDate,
       shop_change: data.change,
@@ -347,10 +331,8 @@ export class ContentComponent {
       })),
     };
 
-    console.log(formattedData);
 
     this.shoppingCartService.savePurchase(formattedData).then((res) => {
-      console.log(res);
       this.shoppingCartService
         .updateMultipleProducts(this.selectedProductsUpdate)
         .then((res) => {
@@ -524,7 +506,6 @@ export class ContentComponent {
   }
 
   syncStockWithCart() {
-    console.log('entrandooooooo');
   this.filteredProducts.forEach(prod => {
     const cartItem = this.selectedProducts.find(p => p.prod_code === prod.prod_code);
     if (cartItem) {

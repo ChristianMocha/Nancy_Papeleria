@@ -55,7 +55,6 @@ export class ContentComponent {
         this.suppliersService
           .getProductsBySupplierId(s.supp_id)
           .subscribe((products) => {
-            console.log(products);
             const total = products.reduce(
               (acc, prod) => acc + (prod.prod_purchase_cost * prod.prod_quantity_available),
 
@@ -65,7 +64,6 @@ export class ContentComponent {
             s.supp_total_to_pay = total; // ✔ ahora sí es número
           });
       });
-      console.log(this.suppliers);
       this.filteredSupplier = [...this.suppliers];
       this.totalPages = Math.ceil(this.suppliers.length / this.pageSize);
       this.calcularResumen();
@@ -101,7 +99,6 @@ export class ContentComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.suppliersService.deleteService(data.supp_id).then((res) => {
-          console.log(res);
           Swal.fire(
             'Eliminado',
             'El registro fue eliminado correctamente.',
@@ -129,12 +126,6 @@ export class ContentComponent {
 
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.filteredSupplier.length / this.pageSize);
-    console.log(
-      'Filtrados:',
-      this.filteredSupplier.length,
-      'Total:',
-      this.suppliers.length
-    );
 
     this.updatePage();
   }

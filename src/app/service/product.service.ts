@@ -187,7 +187,6 @@ export class ProductService {
       return name.includes(termLower) || code.includes(termLower);
     });
 
-    console.log('Coincidencias encontradas:', filtered.length);
     return filtered;
   }
 }

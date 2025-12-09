@@ -67,18 +67,14 @@ export class SuppliersComponent {
 
   onSubmit() {
     this.loading = true;
-    console.log(this.suppliersForm.value);
     try {
       if (!this.suppliersForm.valid) {
-        console.log(this.suppliersForm.value);
         this.suppliersForm.markAllAsTouched();
         this.loading = false;
-        console.log('Ingrese todos los campos');
         return;
       }
 
       if (this.suppliersForm.value.supp_id) {
-        console.log('entrando 1');
 
         this.suppliersService
           .updateSupplier(
@@ -94,7 +90,6 @@ export class SuppliersComponent {
             });
           });
       } else {
-        console.log('entrando 2');
         this.suppliersService
           .addSupplier(this.suppliersForm.value)
           .then((res) => {
@@ -107,7 +102,6 @@ export class SuppliersComponent {
           });
       }
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -115,6 +109,5 @@ export class SuppliersComponent {
     this.suppliersForm.patchValue(data);
     this.openModal = true;
 
-    console.log(this.suppliersForm.value);
   }
 }

@@ -74,7 +74,19 @@
       formControlName="prod_code"
       placeholder="Escanea o escribe el código"
       class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      [class.border-red-500]="
+        formProd.get('prod_code')?.invalid && formProd.get('prod_code')?.touched
+      "
     />
+
+    <p
+      *ngIf="
+        formProd.get('prod_code')?.invalid && formProd.get('prod_code')?.touched
+      "
+      class="text-xs text-red-500 mb-4"
+    >
+      El código es requerido
+    </p>
 
     <!-- Nombre del producto -->
     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -95,7 +107,7 @@
       "
       class="text-xs text-red-500 mb-4"
     >
-      El campo es requerido
+      El nombre es requerido
     </p>
 
     <!-- Cantidad -->
@@ -104,9 +116,24 @@
     >
     <input
       type="number"
+      placeholder="0"
       formControlName="prod_quantity_available"
       class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      [class.border-red-500]="
+        formProd.get('prod_quantity_available')?.invalid &&
+        formProd.get('prod_quantity_available')?.touched
+      "
     />
+
+    <p
+      *ngIf="
+        formProd.get('prod_quantity_available')?.invalid &&
+        formProd.get('prod_quantity_available')?.touched
+      "
+      class="text-xs text-red-500 mb-4"
+    >
+      La cantidad es requerida
+    </p>
 
     <!-- Precio -->
     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -114,10 +141,25 @@
     </label>
     <input
       type="number"
+      placeholder="0"
       formControlName="prod_sale_price"
       placeholder="$0"
       class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      [class.border-red-500]="
+        formProd.get('prod_sale_price')?.invalid &&
+        formProd.get('prod_sale_price')?.touched
+      "
     />
+
+    <p
+      *ngIf="
+        formProd.get('prod_sale_price')?.invalid &&
+        formProd.get('prod_sale_price')?.touched
+      "
+      class="text-xs text-red-500 mb-4"
+    >
+      El costo es requerido
+    </p>
 
     <!-- Costo -->
     <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -125,10 +167,25 @@
     >
     <input
       type="number"
+      placeholder="0"
       formControlName="prod_purchase_cost"
       placeholder="$0"
       class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      [class.border-red-500]="
+        formProd.get('prod_purchase_cost')?.invalid &&
+        formProd.get('prod_purchase_cost')?.touched
+      "
     />
+
+    <p
+      *ngIf="
+        formProd.get('prod_purchase_cost')?.invalid &&
+        formProd.get('prod_purchase_cost')?.touched
+      "
+      class="text-xs text-red-500 mb-4"
+    >
+      El costo es requerido
+    </p>
   </div>
 
   <!-- Columna derecha -->
@@ -146,12 +203,25 @@
     <select
       formControlName="prod_category_id"
       class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      [class.border-red-500]="
+        formProd.get('prod_sale_price')?.invalid &&
+        formProd.get('prod_sale_price')?.touched
+      "
     >
       <option value="">Selecciona una categoría</option>
       <option *ngFor="let cat of categories" [value]="cat.cat_id">
         {{ cat.cat_name }}
       </option>
     </select>
+    <p
+      *ngIf="
+        formProd.get('prod_category_id')?.invalid &&
+        formProd.get('prod_category_id')?.touched
+      "
+      class="text-xs text-red-500 mb-4"
+    >
+      La categoría es requerida
+    </p>
 
     <label class="block text-sm font-medium text-gray-700 mb-1">
       Proveedor <span class="text-red-500">*</span>
@@ -159,12 +229,26 @@
     <select
       formControlName="prod_supplier_id"
       class="w-full mb-4 px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      [class.border-red-500]="
+        formProd.get('prod_supplier_id')?.invalid &&
+        formProd.get('prod_supplier_id')?.touched
+      "
     >
       <option value="">Selecciona una proveedor</option>
       <option *ngFor="let item of suppliers" [value]="item.supp_id">
         {{ item.supp_full_name }}
       </option>
     </select>
+
+    <p
+      *ngIf="
+        formProd.get('prod_supplier_id')?.invalid &&
+        formProd.get('prod_supplier_id')?.touched
+      "
+      class="text-xs text-red-500 mb-4"
+    >
+      El proveedor es requerido
+    </p>
 
     <!-- Descripción -->
     <label class="block text-sm font-medium text-gray-700 mb-1"

@@ -255,8 +255,7 @@
     <!-- Submit -->
     <button
       type="submit"
-      [disabled]="
-        form.invalid || !(authService.isAdmin() || authService.isEmployee())
+      [disabled]=" !(authService.isAdmin() || authService.isEmployee())
       "
       class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition"
     >

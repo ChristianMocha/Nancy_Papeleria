@@ -41,6 +41,7 @@ export class ContentComponent {
   }
 
   billsAmountEmit(data: any) {
+    console.log(data);
     this.billsAmount = data;
     this.calculateBalance();
   }
@@ -50,18 +51,17 @@ export class ContentComponent {
   }
 
   onRangeChange() {
+    console.log('entrando para el filtro de fechas');
     const now = new Date();
 
     switch (this.selectedRange) {
       case 'day':
         this.inputType = 'date';
-        console.log(this.inputType);
         this.selectedDate = now.toISOString().split('T')[0];
         break;
 
       case 'week':
         this.inputType = 'week';
-        console.log(this.inputType);
         const year = now.getFullYear();
         const week = this.getWeekNumber(now);
         this.selectedDate = `${year}-W${week.toString().padStart(2, '0')}`;
@@ -69,18 +69,25 @@ export class ContentComponent {
 
       case 'month':
         this.inputType = 'month';
-        console.log(this.inputType);
         const month = now.toISOString().slice(0, 7);
         this.selectedDate = month;
         break;
 
       case 'year':
         this.inputType = 'number';
-        console.log(this.inputType);
         this.selectedDate = now.getFullYear().toString();
         break;
     }
-    
+
+    setTimeout(() => {
+      this.selectedTab = 'ingresos';
+    });
+  }
+
+  onDateChange(){
+    setTimeout(() => {
+      this.selectedTab = 'ingresos';
+    });
   }
 
   private getWeekNumber(date: Date): number {
@@ -89,5 +96,4 @@ export class ContentComponent {
       (date.getTime() - firstDayOfYear.getTime()) / 86400000;
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
-
 }

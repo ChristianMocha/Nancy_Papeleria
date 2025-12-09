@@ -40,11 +40,8 @@ export class LoginComponent {
         .login(this.loginForm.value.email, this.loginForm.value.password)
         .then((data) => {
           this.employeeService.getEmployeeById(data.user.uid).then((res) => {
-            console.log(res);
             localStorage.setItem('currentUser', JSON.stringify(res));
             this.router.navigate(['/']);
-            console.log(data);
-            console.log('Login exitoso', this.loginForm.value);
             this.loading = false;
           });
 
@@ -56,7 +53,6 @@ export class LoginComponent {
         });
     } else {
       this.loginForm.markAllAsTouched();
-      console.log('Ingrese todos los campos');
       this.loading = false;
     }
   }

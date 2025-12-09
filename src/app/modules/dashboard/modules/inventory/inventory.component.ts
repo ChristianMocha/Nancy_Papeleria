@@ -49,7 +49,6 @@ export class InventoryComponent {
       });
       this.loading = false;
       this.showModal = false;
-      console.log('✅ primera emisión:', docRef);
     } catch (err) {
       this.loading = false;
       this.showModal = false;

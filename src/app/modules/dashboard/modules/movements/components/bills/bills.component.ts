@@ -8,17 +8,17 @@ import { DateService } from '../../../../../../service/date.service';
   selector: 'app-bills',
   imports: [CommonModule, FormsModule],
   templateUrl: './bills.component.html',
-  styleUrl: './bills.component.scss'
+  styleUrl: './bills.component.scss',
 })
 export class BillsComponent {
-
-public readonly shoppingCartService = inject(ShoppingCartService);
+  public readonly shoppingCartService = inject(ShoppingCartService);
 
   public totalEarningsEmit = output<number>();
   public totalSalesEmit = output<number>();
-  public selectedDate = input<string>( new Date().toISOString().substring(0, 10));
+  public selectedDate = input<string>(
+    new Date().toISOString().substring(0, 10)
+  );
   public inputType = input<any>();
-
 
   public isLoading: boolean = false;
 
@@ -26,40 +26,53 @@ public readonly shoppingCartService = inject(ShoppingCartService);
   public paginatedProducts: any[] = [];
   public totalSales: number = 0;
   public totalEarnings: number = 0;
+  public inputTypeIn: any;
 
-  public itemsPerPage = 6;
+  public itemsPerPage = 2;
   public currentPage = 1;
   public totalPages = 1;
 
-
   ngOnInit() {
+    this.inputTypeIn = this.inputType();
+    if (this.inputType() === 'date') {
+      this.inputTypeIn = 'day';
+    }
+
+    if (this.inputType() === 'number') {
+      this.inputTypeIn = 'year';
+    }
+
     this.getBillsByDate();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.selectedDate());
+    this.inputTypeIn = this.inputType();
+    if (this.inputType() === 'date') {
+      this.inputTypeIn = 'day';
+    }
+
+    if (this.inputType() === 'number') {
+      this.inputTypeIn = 'year';
+    }
     if (changes['selectedDate']) {
       this.getBillsByDate();
     }
   }
 
-
-
   getBillsByDate() {
+    console.log(this.inputType());
     this.isLoading = true;
-    this.shoppingCartService
-      .getBillsByDate(this.selectedDate())
-      .then((res) => {
-        console.log(res);
-        this.lstBills = res;
-        this.getTotalPrice();
-        this.getTotalEarnings();
-        this.isLoading = false;
-         this.updatePagination();
-      });
+    this.shoppingCartService.getBillsByRange(this.inputTypeIn, this.selectedDate()).then((res) => {
+      this.lstBills = res;
+      console.log(this.lstBills);
+      this.getTotalPrice();
+      this.getTotalEarnings();
+      this.isLoading = false;
+      this.updatePagination();
+    });
   }
 
-
-  
   getTotalPrice() {
     this.totalSales = this.lstBills.reduce(
       (acc, purchase) => acc + (purchase.shop_total || 0),
@@ -74,7 +87,6 @@ public readonly shoppingCartService = inject(ShoppingCartService);
       0
     );
     this.totalEarningsEmit.emit(this.totalEarnings);
-
   }
 
   updatePagination() {
@@ -98,4 +110,3 @@ public readonly shoppingCartService = inject(ShoppingCartService);
     }
   }
 }
-

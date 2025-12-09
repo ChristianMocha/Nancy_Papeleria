@@ -91,12 +91,6 @@ export class TableComponent {
 
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.filteredEmployees.length / this.pageSize);
-    console.log(
-      'Filtrados:',
-      this.filteredEmployees.length,
-      'Total:',
-      this.lstEmployees.length
-    );
 
     this.updatePage();
   }

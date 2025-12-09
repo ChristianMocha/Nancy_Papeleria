@@ -91,7 +91,6 @@ export class TechnicalServiceComponent {
     try {
       if (!this.serviceForm.valid) {
         this.serviceForm.markAllAsTouched();
-        console.log('Ingrese todos los campos');
         this.loading = false;
         return;
       }
@@ -100,7 +99,6 @@ export class TechnicalServiceComponent {
         this.serviceForm
           .get('ser_update_date')
           ?.setValue(this.dateService.getDate());
-        console.log(this.serviceForm.value);
 
         this.technicalServiceService
           .updateService(this.serviceForm.value.ser_id, this.serviceForm.value)
@@ -121,7 +119,6 @@ export class TechnicalServiceComponent {
         dateObj.setMonth(dateObj.getMonth() + 3);
         const maxDate = dateObj.toISOString().slice(0, 10);
         this.serviceForm.get('ser_maximum_withdrawal_date')?.setValue(maxDate);
-        console.log(this.serviceForm.value);
 
         this.technicalServiceService
           .addService(this.serviceForm.value)
@@ -136,7 +133,6 @@ export class TechnicalServiceComponent {
       }
     } catch (err) {
       this.loading = false;
-      console.error(err);
     }
   }
 
@@ -150,15 +146,12 @@ export class TechnicalServiceComponent {
   }
 
   service(data: any) {
-    console.log(data);
     this.openModal = true;
 
     this.serviceForm.patchValue(data);
-    console.log(this.serviceForm.value);
   }
 
   toggle(data: any) {
-    console.log(data);
     this.serviceForm.patchValue(data.ser);
 
     this.technicalServiceService

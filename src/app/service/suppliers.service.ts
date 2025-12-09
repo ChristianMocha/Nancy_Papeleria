@@ -31,7 +31,6 @@ export class SuppliersService {
       this.dateService.getDateTimeStamp()
     );
             supplier.created_by = this.authService.getUserLocalStorage();
-    console.log(supplier);
     const supplierRef = doc(collection(this.firestore, this.collectionName));
     supplier.supp_id = supplierRef.id;
     return setDoc(supplierRef, supplier);
@@ -53,8 +52,6 @@ export class SuppliersService {
   }
 
   updateSupplier(id: string, data: Partial<any>) {
-    console.log(data);
-    console.log(id);
     data['updated_at'] = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
@@ -65,7 +62,6 @@ export class SuppliersService {
   }
 
   deleteService(id: string) {
-    console.log(id);
     const supplierRef = doc(this.firestore, `${this.collectionName}/${id}`);
     return deleteDoc(supplierRef);
   }

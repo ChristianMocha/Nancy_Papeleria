@@ -18,7 +18,6 @@ export class AuthGuard implements CanActivate {
     return this.authService.getUser().pipe(
       map(user => {
         if (user) {
-          console.log(user);
           return true; 
         } else {
           this.router.navigate(['/login']);

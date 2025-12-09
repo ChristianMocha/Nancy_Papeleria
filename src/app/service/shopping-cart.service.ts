@@ -22,7 +22,7 @@ import { AuthService } from './auth.service';
 export class ShoppingCartService {
   public firestore = inject(Firestore);
   public readonly dateService = inject(DateService);
-       private readonly authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
   async savePurchase(purchaseData: any) {
     const purchaseCollection = collection(this.firestore, 'purchases');
@@ -47,7 +47,7 @@ export class ShoppingCartService {
     billsData.created_at = Timestamp.fromDate(
       this.dateService.getDateTimeStamp()
     );
-        billsData.created_by = this.authService.getUserLocalStorage();
+    billsData.created_by = this.authService.getUserLocalStorage();
     billsData.bills_id = newBillsRef.id;
     (billsData.bills_crea_date = this.dateService.getDate()),
       await setDoc(newBillsRef, billsData);
@@ -67,7 +67,7 @@ export class ShoppingCartService {
         ...p,
         prod_update_date: new Date(),
         updated_at: Timestamp.fromDate(this.dateService.getDateTimeStamp()),
-            updated_by: this.authService.getUserLocalStorage()
+        updated_by: this.authService.getUserLocalStorage(),
       });
     });
 
@@ -75,7 +75,6 @@ export class ShoppingCartService {
   }
 
   async getData(date: string, rangeType: 'day' | 'week' | 'month' | 'year') {
-    console.log(date);
     console.log(rangeType);
     switch (rangeType) {
       case 'day': {
@@ -104,6 +103,39 @@ export class ShoppingCartService {
     return [];
   }
 
+  async getBillsByRange(
+    type: 'day' | 'week' | 'month' | 'year',
+    date?: string
+  ) {
+    console.log(type);
+    const finalDate = date ?? new Date().toISOString().slice(0, 10);
+    switch (type) {
+      case 'day': {
+        return this.getBillsByDate(date);
+        break;
+      }
+      case 'week': {
+        return this.getBillsByWeek(finalDate);
+        break;
+      }
+
+      case 'month': {
+        return this.getBillsByMonth(finalDate);
+        break;
+      }
+
+      case 'year': {
+        return this.getBillsByYear(finalDate);
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    return [];
+  }
+
   async getBillsByDate(date?: string) {
     const purchasesRef = collection(this.firestore, 'bills');
     const q = query(
@@ -116,24 +148,125 @@ export class ShoppingCartService {
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
+  async getBillsByWeek(date: string) {
+    console.log('Fecha recibida:', date);
+
+    const purchasesRef = collection(this.firestore, 'bills');
+
+    // Si es formato YYYY-Wxx → convertir
+    const baseDate = date.includes('-W')
+      ? this.weekStringToDate(date)
+      : new Date(date);
+
+    // Validación
+    if (isNaN(baseDate.getTime())) {
+      throw new Error('Fecha inválida en getBillsByWeek: ' + date);
+    }
+
+    // Calcular lunes
+    const diff = baseDate.getDay() === 0 ? 6 : baseDate.getDay() - 1;
+    const monday = new Date(baseDate);
+    monday.setDate(baseDate.getDate() - diff);
+
+    // Calcular domingo
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    // Pasar a YYYY-MM-DD
+    const startDate = monday.toISOString().slice(0, 10);
+    const endDate = sunday.toISOString().slice(0, 10);
+
+    console.log('Rango semana:', startDate, '→', endDate);
+
+    const q = query(
+      purchasesRef,
+      where('bills_date', '>=', startDate),
+      where('bills_date', '<=', endDate)
+    );
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async getBillsByMonth(date: string) {
+    const purchasesRef = collection(this.firestore, 'bills');
+
+    // date viene como "YYYY-MM"
+    const [yearStr, monthStr] = date.split('-');
+    const year = Number(yearStr);
+    const month = Number(monthStr);
+
+    const startDate = new Date(year, month - 1, 1).toISOString().slice(0, 10);
+    const endDate = new Date(year, month, 0).toISOString().slice(0, 10);
+
+    const q = query(
+      purchasesRef,
+      where('bills_date', '>=', startDate),
+      where('bills_date', '<=', endDate)
+    );
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async getBillsByYear(date: string) {
+    const purchasesRef = collection(this.firestore, 'bills');
+
+    const year = Number(date); // 👈 ahora sí siempre será number
+
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+
+    const q = query(
+      purchasesRef,
+      where('bills_date', '>=', startDate),
+      where('bills_date', '<=', endDate)
+    );
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  private weekStringToDate(weekString: string): Date {
+    const [yearStr, weekStr] = weekString.split('-W');
+    const year = Number(yearStr);
+    const week = Number(weekStr);
+
+    // Día 1 del año + semanas
+    const simple = new Date(year, 0, 1 + (week - 1) * 7);
+    const dow = simple.getDay();
+    const ISOweekStart = new Date(simple);
+
+    // Ajustar al lunes real
+    if (dow <= 4) {
+      ISOweekStart.setDate(simple.getDate() - dow + 1);
+    } else {
+      ISOweekStart.setDate(simple.getDate() + 8 - dow);
+    }
+
+    return ISOweekStart; // lunes de esa semana
+  }
+
   async getTotalBillsAmount(
     date: string,
     rangeType: 'day' | 'week' | 'month' | 'year'
   ): Promise<number> {
-    console.log(`🧾 getTotalBillsAmount → ${rangeType.toUpperCase()}:`, date);
-
+    console.log('=============');
+    console.log(rangeType);
     const { startDate, endDate } = this.getDateRange(date, rangeType);
+    console.log(startDate);
+    console.log(endDate);
+    console.log('=============');
 
-    const toLocalISODate = (d: Date) =>
-      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-        d.getDate()
-      ).padStart(2, '0')}`;
+    const toLocalISODate = (d: Date) => {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
 
     const startISO = toLocalISODate(startDate);
     const endISO = toLocalISODate(endDate);
-
-    console.log('➡️ Desde:', startISO);
-    console.log('➡️ Hasta:', endISO);
 
     const billsRef: CollectionReference<DocumentData> = collection(
       this.firestore,
@@ -154,13 +287,10 @@ export class ShoppingCartService {
       total += data.bills_total || 0;
     });
 
-    console.log('💸 Total encontrado:', total);
     return total;
   }
 
   async getPurchasesByDate(date: string) {
-    console.log('📅 Día:', date);
-
     const purchasesRef = collection(this.firestore, 'purchases');
     const q = query(purchasesRef, where('shop_date', '==', date));
 
@@ -174,10 +304,6 @@ export class ShoppingCartService {
     const startISO = startDate.toISOString().slice(0, 10);
     const endISO = endDate.toISOString().slice(0, 10);
 
-    console.log('📆 Semana:', date);
-    console.log('➡️ Desde (ISO):', startISO);
-    console.log('➡️ Hasta (ISO):', endISO);
-
     const purchasesRef = collection(this.firestore, 'purchases');
     const q = query(
       purchasesRef,
@@ -188,13 +314,10 @@ export class ShoppingCartService {
     const snapshot = await getDocs(q);
     const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-    console.log('📦 Resultados encontrados:', results.length);
-    snapshot.docs.forEach((d) => console.log('🧾', d.id, d.data()));
     return results;
   }
 
   async getPurchasesByMonth(date: string, rangeType: any) {
-    console.log('🗓 Mes:', date);
     const { startDate, endDate } = this.getDateRange(date, rangeType);
 
     const toLocalISODate = (d: Date) =>
@@ -205,9 +328,6 @@ export class ShoppingCartService {
     const startISO = toLocalISODate(startDate);
     const endISO = toLocalISODate(endDate);
 
-    console.log('➡️ Desde (local ISO):', startISO);
-    console.log('➡️ Hasta (local ISO):', endISO);
-
     const purchasesRef = collection(this.firestore, 'purchases');
     const q = query(
       purchasesRef,
@@ -218,21 +338,15 @@ export class ShoppingCartService {
     const snapshot = await getDocs(q);
     const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-    console.log('📦 Resultados encontrados:', results.length);
-    snapshot.docs.forEach((d) => console.log('🧾', d.id, d.data()));
     return results;
   }
 
   async getPurchasesByYear(date: string, rangeType: any) {
-    console.log('📅 Año:', date);
     const { startDate, endDate } = this.getDateRange(date, rangeType);
 
     const startISO = startDate.toISOString().slice(0, 10);
     const endISO = endDate.toISOString().slice(0, 10);
 
-    console.log('➡️ Desde (ISO):', startISO);
-    console.log('➡️ Hasta (ISO):', endISO);
-
     const purchasesRef = collection(this.firestore, 'purchases');
     const q = query(
       purchasesRef,
@@ -243,8 +357,6 @@ export class ShoppingCartService {
     const snapshot = await getDocs(q);
     const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-    console.log('📦 Resultados encontrados:', results.length);
-    snapshot.docs.forEach((d) => console.log('🧾', d.id, d.data()));
     return results;
   }
 
@@ -254,10 +366,10 @@ export class ShoppingCartService {
 
     switch (rangeType) {
       case 'day': {
-        startDate = new Date(date);
-        startDate.setHours(0, 0, 0, 0);
-        endDate = new Date(date);
-        endDate.setHours(23, 59, 59, 999);
+        const [y, m, d] = date.split('-').map(Number);
+
+        startDate = new Date(y, m - 1, d, 0, 0, 0, 0);
+        endDate = new Date(y, m - 1, d, 23, 59, 59, 999);
         break;
       }
 

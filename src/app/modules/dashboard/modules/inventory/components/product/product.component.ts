@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SuppliersService } from '../../../../../../service/suppliers.service';
 import { Supplier } from '../../../../../shared/models/supplier';
 import { AuthService } from '../../../../../../service/auth.service';
+import { AlertService } from '../../../../../../service/alert.service';
 
 @Component({
   selector: 'app-product',
@@ -33,12 +34,13 @@ import { AuthService } from '../../../../../../service/auth.service';
 export class ProductComponent {
   private readonly fb = inject(FormBuilder);
   public formProd: FormGroup = this.fb.group({});
-  public readonly categoryService = inject(CategoryService);
   public readonly suppliersService = inject(SuppliersService);
+  public readonly categoryService = inject(CategoryService);
   public readonly productService = inject(ProductService);
   public readonly uploadService = inject(UploadService);
+  public readonly alertService = inject(AlertService);
   private readonly route = inject(ActivatedRoute);
-    public authService = inject(AuthService);
+  public authService = inject(AuthService);
   public router = inject(Router);
 
   public imgPoduct: string = '';
@@ -52,11 +54,11 @@ export class ProductComponent {
 
   ngOnInit() {
     this.formProd = this.fb.group({
-      prod_code: [''],
+      prod_code: ['', Validators.required],
       prod_name: ['', Validators.required],
-      prod_quantity_available: [0],
-      prod_sale_price: [0, Validators.required],
-      prod_purchase_cost: [0],
+      prod_quantity_available: ['', Validators.required],
+      prod_sale_price: ['', Validators.required],
+      prod_purchase_cost: ['', Validators.required],
       prod_category_id: ['', Validators.required],
       prod_supplier_id: ['', Validators.required],
       prod_description: [''],
@@ -70,8 +72,6 @@ export class ProductComponent {
     });
     this.idCategory = this.route.snapshot.paramMap.get('idCategory')!;
     this.idProduct = this.route.snapshot.paramMap.get('idProduct')!;
-    console.log('ID obtenido:', this.idCategory);
-    console.log('ID obtenido:', this.idProduct);
 
     this.getCategories();
     this.getSuppliers();
@@ -86,7 +86,6 @@ export class ProductComponent {
       this.categories = await firstValueFrom(
         this.categoryService.getCategories()
       );
-      console.log('Empleados:', this.categories);
     } catch (error) {
       console.error('Error al cargar empleados:', error);
     }
@@ -98,7 +97,6 @@ export class ProductComponent {
       this.suppliers = await firstValueFrom(
         this.suppliersService.getSuppliersActive()
       );
-      console.log('proveedores:', this.suppliers);
     } catch (error) {
       console.error('Error al cargar proveedores:', error);
     }
@@ -107,7 +105,10 @@ export class ProductComponent {
   async onSubmit() {
     this.loading = true;
     if (!this.formProd.valid) {
-      toast.error('Los campos son obligatorios');
+      this.formProd.markAllAsTouched();
+      this.alertService.showAlert('Los campos son obligatorios', 'error');
+      this.loading = false;
+      return;
     }
 
     if (this.idCategory && this.idProduct) {
@@ -120,10 +121,9 @@ export class ProductComponent {
         this.formProd.reset({
           is_active: this.formProd.value.is_active,
         });
-        console.log(data);
         this.loading = false;
 
-        toast.success('Producto editado');
+        this.alertService.showAlert('Producto editado', 'success');
       } catch (error) {
         this.loading = false;
         toast.error('Error al editar producto');
@@ -134,10 +134,10 @@ export class ProductComponent {
         .uploadImage(this.files[0])
         .then(async (result: any) => {
           this.imgPoduct = result;
-          console.log(this.imgPoduct);
           if (!this.imgPoduct) {
             this.loading = false;
             toast.error('Error al subir imagen');
+            this.alertService.showAlert('Error al subir imagen', 'error');
 
             return;
           }
@@ -149,30 +149,38 @@ export class ProductComponent {
               this.formProd.value.prod_category_id,
               this.formProd.value
             );
-            console.log(data);
             this.loading = false;
 
-            toast.success('Producto creado');
-            console.log('Empleados:', this.categories);
+            this.alertService.showAlert('Producto creado', 'success');
             this.formProd.reset({
               is_active: true,
             });
             this.files = [];
           } catch (error) {
             this.loading = false;
-            toast.error('Error al crear producto');
+            this.alertService.showAlert('Error al crear producto', 'error');
             console.error('Error al cargar empleados:', error);
           }
         })
         .catch((err) => {
           this.loading = false;
-          console.error('Error al cargar empleados:', err);
+          this.alertService.showAlert(
+            `Error al cargar empleados ${err}`,
+            'error'
+          );
         });
     }
   }
 
-  onSelect(event: any) {
-    this.files.push(...event.addedFiles);
+  async onSelect(event: any) {
+    const file = event.addedFiles[0];
+
+    const compressed = await this.compressImage(file, 0.6); // 60% calidad
+    this.files.push(compressed);
+
+    console.log('Original:', file.size / 1024 / 1024, 'MB');
+    console.log('Comprimida:', compressed.size / 1024 / 1024, 'MB');
+    console.log(this.files[0]);
   }
 
   onRemove(event: any) {
@@ -186,10 +194,39 @@ export class ProductComponent {
       .getProductById(this.idCategory, this.idProduct)
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.formProd.patchValue(res);
         },
         error: (err) => console.error('❌ Error:', err),
       });
+  }
+
+  compressImage(file: File, quality: number = 0.7): Promise<File> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+
+        // Mantener dimensiones originales
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(
+          (blob) => {
+            const compressedFile = new File([blob!], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            });
+            resolve(compressedFile);
+          },
+          'image/jpeg',
+          quality // valor entre 0 y 1 (0 = más compresión)
+        );
+      };
+    });
   }
 }

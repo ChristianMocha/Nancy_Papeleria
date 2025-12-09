@@ -32,7 +32,6 @@ export class ModalPurchaseComponent {
   handleConfirm() {
     this.loading = true;
     if(this.customerPayment < 0 || this.customerPayment < this.totalSale() ) {
-      console.log('entrando al if');
       this.loading = false;
       return;
     };

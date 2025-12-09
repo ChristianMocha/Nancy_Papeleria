@@ -84,14 +84,11 @@ export class ServicesComponent {
 
   changeTab(tab: 'ingresados' | 'devueltos') {
     this.activeTab = tab;
-    console.log(this.activeTab);
     this.lstService = [];
 
     if (tab === 'ingresados') {
-      console.log('entrando 1');
       this.getService();
     } else {
-      console.log('entrando 2');
       this.getServiceReturned();
     }
   }
@@ -122,7 +119,6 @@ export class ServicesComponent {
   }
 
   toggleStatus(ser: any) {
-    console.log(ser);
     if (!ser.ser_team_state) {
       this.emit(ser);
       return;
@@ -155,7 +151,6 @@ export class ServicesComponent {
         if (result.isConfirmed) {
           const pricesRes = Number(result.value); // 👈 Valor ingresado
   
-          console.log('Precio del repuesto:', pricesRes);
           ser.ser_cost_spare_part = pricesRes;
           this.emit(ser);
   
@@ -172,7 +167,6 @@ export class ServicesComponent {
   emit(ser: any){
     ser.ser_team_state = !ser.ser_team_state;
         ser.ser_status = !ser.ser_team_state;
-        console.log(ser);
         const data = {
           ser: ser,
           state: this.activeTab,
@@ -195,18 +189,11 @@ export class ServicesComponent {
 
     this.currentPage = 1;
     this.totalPages = Math.ceil(this.filteredService.length / this.pageSize);
-    console.log(
-      'Filtrados:',
-      this.filteredService.length,
-      'Total:',
-      this.lstService.length
-    );
 
     this.updatePage();
   }
 
   editProduct(ser: any) {
-    console.log(ser);
     this.service.emit(ser);
   }
   confirmDelete(ser: any) {
@@ -222,7 +209,6 @@ export class ServicesComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.technicalServiceService.deleteService(ser.ser_id).then((res) => {
-          console.log(res);
           Swal.fire(
             'Eliminado',
             'El registro fue eliminado correctamente.',
