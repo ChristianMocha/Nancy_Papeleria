@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '../shared/guards/auth.guard';
+import { isDesktopGuard, isMobileGuard } from '../shared/guards/initial-redirect.guard';
+import { desktopOnlyGuard, mobileOnlyGuard } from '../shared/guards/mobile-only.guard';
 
 const DashboardRoute: Routes = [
   {
@@ -9,7 +11,22 @@ const DashboardRoute: Routes = [
     },
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'movements', pathMatch: 'full' },
+      // { path: '', redirectTo: 'movements', pathMatch: 'full' },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+        canMatch: [isMobileGuard],
+      },
+
+      // 💻 Desktop → movements
+      {
+        path: '',
+        redirectTo: 'movements',
+        pathMatch: 'full',
+        canMatch: [isDesktopGuard],
+      },
+
       {
         path: 'inventory',
         loadComponent: () =>
@@ -20,9 +37,7 @@ const DashboardRoute: Routes = [
       {
         path: 'sell',
         loadComponent: () =>
-          import('./modules/sell/sell.component').then(
-            (m) => m.SellComponent
-          ),
+          import('./modules/sell/sell.component').then((m) => m.SellComponent),
       },
       {
         path: 'employees',
@@ -34,9 +49,9 @@ const DashboardRoute: Routes = [
       {
         path: 'service',
         loadComponent: () =>
-          import('./modules/technical-service/technical-service.component').then(
-            (m) => m.TechnicalServiceComponent
-          ),
+          import(
+            './modules/technical-service/technical-service.component'
+          ).then((m) => m.TechnicalServiceComponent),
       },
       {
         path: 'movements',
@@ -69,38 +84,44 @@ const DashboardRoute: Routes = [
       {
         path: 'product/add',
         loadComponent: () =>
-          import('./modules/inventory/components/product/product.component').then(
-            (m) => m.ProductComponent
-          ),
+          import(
+            './modules/inventory/components/product/product.component'
+          ).then((m) => m.ProductComponent),
       },
       {
         path: 'product/add/:idCategory',
         loadComponent: () =>
-          import('./modules/inventory/components/product/product.component').then(
-            (m) => m.ProductComponent
-          ),
+          import(
+            './modules/inventory/components/product/product.component'
+          ).then((m) => m.ProductComponent),
       },
       {
         path: 'product/edit/:idCategory/:idProduct',
         loadComponent: () =>
-          import('./modules/inventory/components/product/product.component').then(
-            (m) => m.ProductComponent
-          ),
+          import(
+            './modules/inventory/components/product/product.component'
+          ).then((m) => m.ProductComponent),
       },
       {
         path: 'product/edit/:idCategory/:id',
         loadComponent: () =>
-          import('./modules/inventory/components/product/product.component').then(
-            (m) => m.ProductComponent
-          ),
+          import(
+            './modules/inventory/components/product/product.component'
+          ).then((m) => m.ProductComponent),
       },
-      
+      {
+        path: 'home',
+        canMatch: [mobileOnlyGuard],
+        loadComponent: () =>
+          import('./modules/home/home.component').then((m) => m.HomeComponent),
+      },
+
       {
         path: '**',
         redirectTo: 'inventory',
       },
     ],
-  }
+  },
 ];
 
 export default DashboardRoute;
