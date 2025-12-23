@@ -170,7 +170,8 @@
 
 <!-- Bottom Nav (mobile) -->
 <nav
-  class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur rounded-[5rem] flex justify-around items-center w-[90%] max-w-md py-3 px-4 md:hidden z-50 shadow-[0_20px_50px_rgba(0,0,0,0.25)] border border-gray-200/40"
+  *ngIf="showNavbar"
+  class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur rounded-[5rem] flex justify-around items-center w-[90%] max-w-md py-3 px-4 md:hidden z-40 shadow-[0_20px_50px_rgba(0,0,0,0.25)] border border-gray-200/40"
 >
   <a
     (click)="goToPage('home')"

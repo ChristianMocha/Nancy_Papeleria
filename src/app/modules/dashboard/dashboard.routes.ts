@@ -38,6 +38,7 @@ const DashboardRoute: Routes = [
         path: 'sell',
         loadComponent: () =>
           import('./modules/sell/sell.component').then((m) => m.SellComponent),
+        data: { hideNavbar: true }
       },
       {
         path: 'employees',

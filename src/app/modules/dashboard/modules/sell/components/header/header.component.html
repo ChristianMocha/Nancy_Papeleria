@@ -1,21 +1,79 @@
 <!-- Header Card -->
-<div class="flex items-center justify-between border-b border-green-600 pb-2">
+<div
+  class="border-b border-green-600 h-20 flex flex-col lg:flex-row max-w-full overflow-x-hidden"
+>
   <!-- Título + Input -->
-  <div class="flex items-center gap-4">
-    <h2 class="text-xl font-bold text-gray-900">Nueva venta</h2>
-    <div class="relative w-100">
+ <div class="flex items-center flex-1 px-4 lg:px-6 min-w-0">
+
+
+    <!-- BLOQUE IZQUIERDA (BACK + TÍTULO) -->
+    <div class="flex items-center gap-2 shrink-0">
+      <button
+        type="button"
+        onclick="history.back()"
+        class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 transition"
+      >
+        <i class="fas fa-arrow-left text-gray-600"></i>
+      </button>
+      <h2 class="text-xl font-bold text-gray-900 whitespace-nowrap">
+        Nueva venta
+      </h2>
+    </div>
+
+    <!-- CONTROL -->
+    <input type="checkbox" id="toggleSearch" class="peer hidden" />
+
+    <!-- INPUT DESKTOP -->
+    <div class="relative w-80 hidden lg:block ml-auto flex-shrink-0">
       <input
         type="text"
         placeholder="Buscar productos..."
-        class="w-full pl-10 pr-3 py-2 border rounded-2xl shadow focus:outline-none mb-4"
+        class="w-full pl-10 pr-10 py-2 border rounded-2xl shadow focus:outline-none"
         [(ngModel)]="searchTerm"
         (input)="filterProducts()"
       />
+      <i
+        class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+      ></i>
+    </div>
+
+    <!-- ICONO LUPA MOBILE -->
+    <label
+      for="toggleSearch"
+      class="lg:hidden ml-auto flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 cursor-pointer peer-checked:hidden"
+    >
+      <i class="fas fa-search text-gray-600 text-lg"></i>
+    </label>
+
+    <!-- INPUT MOBILE -->
+    <div
+      class="relative flex-1 hidden peer-checked:flex items-center lg:hidden transition-all duration-300 ml-2"
+    >
+      <input
+        type="text"
+        placeholder="Buscar productos..."
+        class="w-full pl-10 pr-10 py-2 border rounded-2xl shadow focus:outline-none"
+        [(ngModel)]="searchTerm"
+        (input)="filterProducts()"
+      />
+
+      <i
+        class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+      ></i>
+
+      <!-- BOTÓN CERRAR ❌ -->
+      <label
+        (click)="erase()"
+        for="toggleSearch"
+        class="absolute right-2 flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 cursor-pointer"
+      >
+        <i class="fas fa-times text-gray-500"></i>
+      </label>
     </div>
   </div>
 
   <!-- Botones -->
-  <div class="flex items-center gap-3">
+  <div class="hidden lg:flex items-center gap-3">
     <!-- Botón Abrir caja -->
     <!-- <button
       class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition"
@@ -255,8 +313,7 @@
     <!-- Submit -->
     <button
       type="submit"
-      [disabled]=" !(authService.isAdmin() || authService.isEmployee())
-      "
+      [disabled]="!(authService.isAdmin() || authService.isEmployee())"
       class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition"
     >
       <app-loading *ngIf="loading"></app-loading>

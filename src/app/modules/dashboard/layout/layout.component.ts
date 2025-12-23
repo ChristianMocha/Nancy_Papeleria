@@ -46,4 +46,7 @@ export class LayoutComponent {
     window.location.reload();
     localStorage.clear();
   }
+  get showNavbar(): boolean {
+    return !this.router.url.includes('/sell');
+  }
 }

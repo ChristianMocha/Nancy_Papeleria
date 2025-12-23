@@ -1,11 +1,5 @@
 <nav
-  class="w-full
-         flex items-center gap-3
-         py-3 px-4
-         bg-white
-         shadow-[0_10px_30px_rgba(0,0,0,0.18)]
-         border-b border-gray-200/40
-         sticky top-0 z-40"
+  class="w-full flex items-center gap-3 py-3 px-4 bg-white shadow-[0_10px_30px_rgba(0,0,0,0.18)] border-b border-gray-200/40 sticky top-0 z-40"
 >
   <!-- Avatar -->
   <div
@@ -23,191 +17,205 @@
   </div>
 
   <!-- Nombre -->
-  <span class="text-lg font-semibold text-gray-900">
-    Crtecnologia
-  </span>
+  <span class="text-lg font-semibold text-gray-900"> Crtecnologia </span>
 </nav>
 
-
 <div class="p-3 pb-28">
-
-
-
-    <section class="px-4 py-5">
-    <h2 class="text-xl font-semibold text-gray-900 mb-4">
-        Accesos rápidos
-    </h2>
+  <section class="px-4 py-5">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Accesos rápidos</h2>
 
     <!-- 3 CARDS EN FILA -->
     <div class="grid grid-cols-3 gap-3">
-
-        <!-- Venta -->
-        <div
-        class="bg-[#1F2A33] rounded-[22px] p-4 h-[140px]
-                flex flex-col justify-between
-                shadow-[0_12px_28px_rgba(0,0,0,0.22)]
-                active:scale-[0.97] transition"
-        (click)="goTo('sell')"
-        >
+      <!-- Venta -->
+      <div
+        class="bg-[#1F2A33] rounded-[22px] p-4 h-[140px] flex flex-col justify-between shadow-[0_12px_28px_rgba(0,0,0,0.22)] active:scale-[0.97] transition"
+        (click)="openDrawer()"
+      >
         <i class="fas fa-chart-line text-yellow-400 text-lg"></i>
 
         <p class="text-white text-sm font-medium leading-tight">
-            Registrar<br />Venta
-        </p>
-        </div>
-
-        <!-- Gasto -->
-        <div
-        class="bg-white rounded-[22px] p-4 h-[140px]
-                flex flex-col justify-between
-                shadow-[0_10px_24px_rgba(0,0,0,0.14)]
-                active:scale-[0.97] transition"
-        (click)="goTo('movements')"
-        >
-        <i class="fas fa-chart-line-down text-yellow-400 text-lg"></i>
-
-        <p class="text-gray-900 text-sm font-medium leading-tight">
-            Registrar<br />Gasto
-        </p>
-        </div>
-
-        <!-- Inventario -->
-        <div
-        class="bg-white rounded-[22px] p-4 h-[140px]
-                flex flex-col justify-between
-                shadow-[0_10px_24px_rgba(0,0,0,0.14)]
-                active:scale-[0.97] transition"
-        (click)="goTo('inventory')"
-        >
-        <i class="fas fa-box text-gray-900 text-lg"></i>
-
-        <p class="text-gray-900 text-sm font-medium leading-tight">
-            Ver<br />Inventario
-        </p>
-        </div>
-
-    </div>
-    </section>
-
-
-
-    <!-- Banner planes -->
-    <section
-    class="w-full bg-[#2C5A5A] rounded-3xl p-5 flex items-center justify-between"
-    >
-    <!-- Texto -->
-    <div class="flex-1 pr-3">
-        <h2 class="text-white text-xl font-semibold leading-tight">
-        ¡Gestiona tus empleados!
-        </h2>
-
-        <p class="text-white/90 text-sm mt-2">
-        Con el Plan Básico o Pro organiza tu operación.
-        </p>
-
-        <button
-        class="mt-4 bg-[#E6FFFF] text-[#2C5A5A] font-semibold text-sm px-5 py-2.5 rounded-xl"
-        >
-        Explorar planes
-        </button>
-    </div>
-
-    <!-- Imagen -->
-    <img
-        src="assets/images/plan-empleados.png"
-        alt="Planes"
-        class="w-20 h-20 object-contain"
-    />
-    </section>
-
-
-    <!-- Sugeridos -->
-<section class="mt-6">
-  <h3 class="text-xl font-semibold text-gray-900 mb-4">
-    Sugeridos para ti
-  </h3>
-
-  <div class="bg-white rounded-[28px] p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-    <div class="grid grid-cols-2 gap-5">
-
-      <!-- Empleados -->
-      <div
-        class="group bg-gradient-to-br from-blue-50 to-blue-100 
-               rounded-2xl p-5 flex flex-col items-center 
-               active:scale-95 transition"
-      >
-        <div
-          class="w-14 h-14 rounded-2xl  
-                 flex items-center justify-center bg-blue-600 
-                 shadow-md" 
-        >
-          <img src="./assets/home/users.png" alt="">
-        </div>
-
-        <p class="mt-3 text-base font-semibold text-gray-900">
-          Empleados
+          Registrar<br />Venta
         </p>
       </div>
 
-      <!-- Proveedores -->
+      <!-- Gasto -->
       <div
-        class="group bg-gradient-to-br from-orange-50 to-orange-100 
-               rounded-2xl p-5 flex flex-col items-center 
-               active:scale-95 transition"
+        class="bg-white rounded-[22px] p-4 h-[140px] flex flex-col justify-between shadow-[0_10px_24px_rgba(0,0,0,0.14)] active:scale-[0.97] transition"
+        (click)="goToPage('movements')"
       >
-        <div
-          class="w-14 h-14 rounded-2xl bg-orange-500 
-                 flex items-center justify-center 
-                 shadow-md"
-        >
-          <img src="./assets/home/car.png" alt="">
-        </div>
+        <i class="fas fa-chart-line-down text-yellow-400 text-lg"></i>
 
-        <p class="mt-3 text-base font-semibold text-gray-900">
-          Proveedores
+        <p class="text-gray-900 text-sm font-medium leading-tight">
+          Registrar<br />Gasto
         </p>
       </div>
 
       <!-- Inventario -->
       <div
-        class="group bg-gradient-to-br from-green-50 to-green-100 
-               rounded-2xl p-5 flex flex-col items-center 
-               active:scale-95 transition"
+        class="bg-white rounded-[22px] p-4 h-[140px] flex flex-col justify-between shadow-[0_10px_24px_rgba(0,0,0,0.14)] active:scale-[0.97] transition"
+        (click)="goToPage('inventory')"
       >
-        <div
-          class="w-14 h-14 rounded-2xl bg-green-600 
-                 flex items-center justify-center 
-                 shadow-md"
-        >
-          <img src="./assets/home/invetory.png" alt="">
-        </div>
+        <i class="fas fa-box text-gray-900 text-lg"></i>
 
-        <p class="mt-3 text-base font-semibold text-gray-900">
-          Inventario
+        <p class="text-gray-900 text-sm font-medium leading-tight">
+          Ver<br />Inventario
         </p>
       </div>
+    </div>
+  </section>
 
-      <!-- Movimientos -->
-      <div
-        class="group bg-gradient-to-br from-purple-50 to-purple-100 
-               rounded-2xl p-5 flex flex-col items-center 
-               active:scale-95 transition"
+  <!-- Banner planes -->
+  <section
+    class="w-full bg-[#2C5A5A] rounded-3xl p-5 flex items-center justify-between"
+  >
+    <!-- Texto -->
+    <div class="flex-1 pr-3">
+      <h2 class="text-white text-xl font-semibold leading-tight">
+        ¡Gestiona tus empleados!
+      </h2>
+
+      <p class="text-white/90 text-sm mt-2">
+        Con el Plan Básico o Pro organiza tu operación.
+      </p>
+
+      <button
+        class="mt-4 bg-[#E6FFFF] text-[#2C5A5A] font-semibold text-sm px-5 py-2.5 rounded-xl"
       >
+        Explorar planes
+      </button>
+    </div>
+
+    <!-- Imagen -->
+    <img
+      src="assets/images/plan-empleados.png"
+      alt="Planes"
+      class="w-20 h-20 object-contain"
+    />
+  </section>
+
+  <!-- Sugeridos -->
+  <section class="mt-6">
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">Sugeridos para ti</h3>
+
+    <div
+      class="bg-white rounded-[28px] p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)]"
+    >
+      <div class="grid grid-cols-2 gap-5">
+        <!-- Empleados -->
         <div
-          class="w-14 h-14 rounded-2xl bg-purple-600 
-                 flex items-center justify-center 
-                 shadow-md"
+          class="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-5 flex flex-col items-center active:scale-95 transition"
+          (click)="goToPage('/employees')"
         >
-          <img src="./assets/home/movements.png" alt="">
+          <div
+            class="w-14 h-14 rounded-2xl flex items-center justify-center bg-blue-600 shadow-md"
+          >
+            <img src="./assets/home/users.png" alt="" />
+          </div>
+
+          <p class="mt-3 text-base font-semibold text-gray-900">Empleados</p>
         </div>
 
-        <p class="mt-3 text-base font-semibold text-gray-900">
-          Movimientos
+        <!-- Proveedores -->
+        <div
+          class="group bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-5 flex flex-col items-center active:scale-95 transition"
+        >
+          <div
+            class="w-14 h-14 rounded-2xl bg-orange-500 flex items-center justify-center shadow-md"
+            (click)="goToPage('/suppliers')"
+          >
+            <img src="./assets/home/car.png" alt="" />
+          </div>
+
+          <p class="mt-3 text-base font-semibold text-gray-900">Proveedores</p>
+        </div>
+
+        <!-- Inventario -->
+        <div
+          class="group bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-5 flex flex-col items-center active:scale-95 transition"
+          (click)="goToPage('/inventory')"
+        >
+          <div
+            class="w-14 h-14 rounded-2xl bg-green-600 flex items-center justify-center shadow-md"
+          >
+            <img src="./assets/home/invetory.png" alt="" />
+          </div>
+
+          <p class="mt-3 text-base font-semibold text-gray-900">Inventario</p>
+        </div>
+
+        <!-- Movimientos -->
+        <div
+          class="group bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-5 flex flex-col items-center active:scale-95 transition"
+          (click)="goToPage('/movements')"
+        >
+          <div
+            class="w-14 h-14 rounded-2xl bg-purple-600 flex items-center justify-center shadow-md"
+          >
+            <img src="./assets/home/movements.png" alt="" />
+          </div>
+
+          <p class="mt-3 text-base font-semibold text-gray-900">Movimientos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Overlay -->
+<div
+  *ngIf="open"
+  class="fixed inset-0 bg-black/40 z-40"
+  (click)="open = false"
+></div>
+
+<!-- Bottom sheet -->
+<div
+  *ngIf="open"
+  class="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl px-6 pt-6 pb-8 animate-slide-up"
+>
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-gray-800">Nueva venta</h2>
+    <button
+      (click)="open = false"
+      class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100"
+    >
+      ✕
+    </button>
+  </div>
+
+  <p class="text-gray-500 mb-6">
+    Selecciona el tipo de venta que quieres hacer.
+  </p>
+
+  <!-- Opciones -->
+  <div class="space-y-4">
+    <!-- Venta de productos -->
+    <div
+      class="flex items-center gap-4 p-4 border rounded-2xl cursor-pointer hover:bg-gray-50 transition" (click)="goToPage('sell')"
+    >
+      <div class="bg-yellow-100 p-3 rounded-xl text-2xl">🛒</div>
+      <div class="flex-1">
+        <p class="font-semibold text-gray-800">Venta de productos</p>
+        <p class="text-sm text-gray-500">
+          Registra una venta seleccionando los productos de tu inventario.
         </p>
       </div>
+      <span class="text-gray-400 text-xl">›</span>
+    </div>
 
+    <!-- Venta libre -->
+    <div
+      class="flex items-center gap-4 p-4 border rounded-2xl cursor-pointer hover:bg-gray-50 transition"
+    >
+      <div class="bg-green-100 p-3 rounded-xl text-2xl">💵</div>
+      <div class="flex-1">
+        <p class="font-semibold text-gray-800">Venta libre</p>
+        <p class="text-sm text-gray-500">
+          Registra un ingreso sin seleccionar productos.
+        </p>
+      </div>
+      <span class="text-gray-400 text-xl">›</span>
     </div>
   </div>
-</section>
-
 </div>

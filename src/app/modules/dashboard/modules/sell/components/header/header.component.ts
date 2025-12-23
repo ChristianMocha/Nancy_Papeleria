@@ -176,4 +176,9 @@ export class HeaderComponent {
       this.productsEmmit.emit(res);
     });
   }
+
+  erase(){
+    this.searchTerm = '';
+    this.filterProducts();
+  }
 }
