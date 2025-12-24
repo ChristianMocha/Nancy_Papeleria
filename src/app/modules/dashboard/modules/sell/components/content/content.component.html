@@ -185,12 +185,13 @@
 
   <!-- FOOTER MOBILE -->
   <div
+    *ngIf="!openCartMobile"
     class="fixed bottom-1 left-1/2 -translate-x-1/2 w-[92%] bg-[#1E2630] text-white rounded-2xl shadow-xl px-4 py-3 flex items-center justify-between lg:hidden z-[9999] pointer-events-auto"
     [ngClass]="{
       'cursor-pointer': selectedProducts.length > 0,
       'bg-gray-500 opacity-100': selectedProducts.length === 0
     }"
-    (click)="selectedProducts.length > 0 && showModalPurchase()"
+    (click)="selectedProducts.length > 0 && openCart()"
   >
     <!-- IZQUIERDA -->
     <div class="flex items-center gap-3">
@@ -213,13 +214,23 @@
   </div>
 
   <div
-    class="bg-white rounded-2xl shadow-lg p-4 flex flex-col h-[90vh] hidden lg:flex"
+    *ngIf="openCartMobile || !isMobile()"
+    class="bg-white rounded-2xl shadow-lg p-4 flex flex-col h-screen w-full fixed inset-0 z-50 lg:static lg:h-[90vh] lg:w-auto lg:rounded-2xl lg:flex"
   >
     <div class="flex justify-between items-center mb-4 flex-shrink-0">
       <h2 class="text-xl font-bold">Productos</h2>
       <!-- <button class="text-blue-600 underline" (click)="clearBasket()">
         Vaciar canasta
       </button> -->
+
+      <button
+        *ngIf="isMobile()"
+        (click)="openCartMobile = false"
+        class="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 active:scale-95 transition"
+        aria-label="Cerrar"
+      >
+        ✕
+      </button>
     </div>
 
     <div class="flex-1 overflow-y-auto pr-2">
@@ -274,7 +285,7 @@
             (click)="removeProduct(item)"
             class="border border-red-400 text-red-500 p-2 rounded-xl hover:bg-red-100 transition"
           >
-            🗑️
+            <i class="fa-solid fa-trash text-lg"></i>
           </button>
         </div>
 
@@ -321,7 +332,7 @@
     </div>
 
     <div
-      class="sticky bottom-0 left-0 bg-[#1E2630] text-white rounded-2xl mt-2 flex items-center justify-between p-3 shadow-lg flex-shrink-0 cursor-pointer"
+      class="bg-[#1E2630] text-white rounded-2xl mt-2 flex items-center justify-between p-3 shadow-lg flex-shrink-0 cursor-pointer fixed bottom-2 left-1/2 -translate-x-1/2 w-[92%] z-[9999] lg:static lg:w-auto lg:translate-x-0 lg:z-auto"
       (click)="showModalPurchase()"
     >
       <div class="flex items-center gap-2">

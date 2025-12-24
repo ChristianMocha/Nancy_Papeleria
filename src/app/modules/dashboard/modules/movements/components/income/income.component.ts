@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, input, output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ShoppingCartService } from '../../../../../../service/shopping-cart.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-income',
@@ -18,6 +19,7 @@ export class IncomeComponent {
   public selectedDate = input<string>(
     new Date().toISOString().substring(0, 10)
   );
+  public router = inject(Router);
   public inputType = input<any>();
   public searchShopping = input<any>();
 
@@ -156,29 +158,28 @@ export class IncomeComponent {
     this.updatePagination();
   }
 
- convertToDate(value: any): Date | null {
-  if (!value) return null;
+  convertToDate(value: any): Date | null {
+    if (!value) return null;
 
-  // Caso 1: Timestamp (Firebase)
-  if (value.toDate) {
-    try {
-      return value.toDate();
-    } catch {
-      return null;
+    // Caso 1: Timestamp (Firebase)
+    if (value.toDate) {
+      try {
+        return value.toDate();
+      } catch {
+        return null;
+      }
     }
+
+    // Caso 2: Fecha en formato YYYY-MM-DD => parse manual
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day); // 👈 crea fecha local sin UTC
+    }
+
+    // Caso 3: Otros formatos
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
   }
-
-  // Caso 2: Fecha en formato YYYY-MM-DD => parse manual
-  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const [year, month, day] = value.split('-').map(Number);
-    return new Date(year, month - 1, day); // 👈 crea fecha local sin UTC
-  }
-
-  // Caso 3: Otros formatos
-  const date = new Date(value);
-  return isNaN(date.getTime()) ? null : date;
-}
-
 
   printFactura(ser: any) {
     const rows = ser.shop_products
@@ -337,5 +338,9 @@ export class IncomeComponent {
       second: '2-digit',
       hour12: true,
     });
+  }
+
+  goToPage(route: string) {
+    this.router.navigate([route]);
   }
 }

@@ -40,6 +40,7 @@ export class ContentComponent {
   public showButtonMore: boolean = false;
 
   public shopDate: string = '';
+  public openCartMobile = false;
 
   ngOnInit() {
     this.shopDate = this.dateService.getDate();
@@ -560,6 +561,18 @@ export class ContentComponent {
       this.selectedProducts = this.selectedProducts.filter(
         (p) => p.prod_id !== acc.prod_id
       );
+    }
+  }
+
+  isMobile(): boolean {
+    return window.innerWidth < 1024; // breakpoint lg
+  }
+
+  openCart() {
+    if (this.isMobile()) {
+      this.openCartMobile = true; // 👉 abre como página en mobile
+    } else {
+      this.showModalPurchase(); // 👉 funcionamiento normal en desktop
     }
   }
 }

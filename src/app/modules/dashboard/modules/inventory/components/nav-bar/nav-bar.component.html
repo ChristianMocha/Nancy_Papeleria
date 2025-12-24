@@ -1,10 +1,16 @@
 <div class="flex items-center justify-between border-b border-green-600 pb-2">
-  <!-- Título -->
-  <h2 class="text-xl font-bold text-gray-900">Inventario</h2>
+  <div class="flex items-center gap-2 shrink-0">
+    <button
+      type="button"
+      onclick="history.back()"
+      class="flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 transition"
+    >
+      <i class="fas fa-arrow-left text-gray-600"></i>
+    </button>
+    <h2 class="text-xl font-bold text-gray-900">Inventario</h2>
+  </div>
 
-  <!-- Botones -->
-  <div class="flex gap-3">
-    <!-- Botón Categorías -->
+  <div class="flex gap-3 hidden lg:flex">
     <button
       (click)="showModalCategories()"
       [disabled]="!(authService.isAdmin() || authService.isEmployee())"
@@ -14,7 +20,6 @@
       <span>Categorías</span>
     </button>
 
-    <!-- Botón Crear productos -->
     <button
       (click)="addProduct()"
       class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2 rounded-xl shadow hover:bg-gray-800 transition"

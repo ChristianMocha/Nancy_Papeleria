@@ -4,11 +4,13 @@
 </div>
 
 <div
-  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4 sm:px-6"
   *ngIf="openModal"
 >
   <!-- Contenido del modal -->
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+  <div
+    class="bg-white rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-4 sm:p-6 relative overflow-y-auto max-h-[90vh]"
+  >
     <!-- Botón de cerrar -->
     <button
       type="button"
@@ -18,57 +20,65 @@
       ✕
     </button>
 
-    <form [formGroup]="suppliersForm" (ngSubmit)="onSubmit()">
-      <label class="block mb-1 font-medium text-gray-700">Nombre</label>
-      <input
-        type="text"
-        formControlName="supp_full_name"
-        placeholder="Ej: Juan"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
-      <div
-        *ngIf="
-          suppliersForm.get('supp_full_name')?.touched &&
-          suppliersForm.get('supp_full_name')?.invalid
-        "
-        class="text-red-500 text-sm mb-2"
-      >
-        Ingrese un nombre.
+    <form [formGroup]="suppliersForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Nombre -->
+      <div>
+        <label class="block mb-1 font-medium text-gray-700">Nombre</label>
+        <input
+          type="text"
+          formControlName="supp_full_name"
+          placeholder="Ej: Juan"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <div
+          *ngIf="
+            suppliersForm.get('supp_full_name')?.touched &&
+            suppliersForm.get('supp_full_name')?.invalid
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Ingrese un nombre.
+        </div>
       </div>
 
-      <label class="block mb-1 font-medium text-gray-700">Teléfono</label>
-      <input
-        type="text"
-        formControlName="supp_phone"
-        placeholder="Ej: 0998765432"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
-      <div
-        *ngIf="
-          suppliersForm.get('supp_phone')?.touched &&
-          suppliersForm.get('supp_phone')?.invalid
-        "
-        class="text-red-500 text-sm mb-2"
-      >
-        El número debe iniciar con 09 y tener 10 dígitos.
+      <!-- Teléfono -->
+      <div>
+        <label class="block mb-1 font-medium text-gray-700">Teléfono</label>
+        <input
+          type="text"
+          formControlName="supp_phone"
+          placeholder="Ej: 0998765432"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <div
+          *ngIf="
+            suppliersForm.get('supp_phone')?.touched &&
+            suppliersForm.get('supp_phone')?.invalid
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          El número debe iniciar con 09 y tener 10 dígitos.
+        </div>
       </div>
 
       <!-- Cédula / RUC -->
-      <label class="block mb-1 font-medium text-gray-700">Cédula o RUC</label>
-      <input
-        type="text"
-        formControlName="supp_identification_document"
-        placeholder="Ej: 0102030405 o 0102030405001"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
-      <div
-        *ngIf="
-          suppliersForm.get('supp_identification_document')?.touched &&
-          suppliersForm.get('supp_identification_document')?.invalid
-        "
-        class="text-red-500 text-sm mb-2"
-      >
-        Debe ingresar una cédula (10 dígitos) o un RUC (13 dígitos).
+      <div>
+        <label class="block mb-1 font-medium text-gray-700">Cédula o RUC</label>
+        <input
+          type="text"
+          formControlName="supp_identification_document"
+          placeholder="Ej: 0102030405 o 0102030405001"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <div
+          *ngIf="
+            suppliersForm.get('supp_identification_document')?.touched &&
+            suppliersForm.get('supp_identification_document')?.invalid
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Debe ingresar una cédula (10 dígitos) o un RUC (13 dígitos).
+        </div>
       </div>
 
       <!-- Botón Guardar -->
@@ -76,7 +86,7 @@
         <button
           [disabled]="!(authService.isAdmin() || authService.isEmployee())"
           type="submit"
-          class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
+          class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
         >
           <app-loading *ngIf="loading"></app-loading>
           <span *ngIf="!loading"> Crear proveedor </span>
@@ -85,3 +95,4 @@
     </form>
   </div>
 </div>
+
