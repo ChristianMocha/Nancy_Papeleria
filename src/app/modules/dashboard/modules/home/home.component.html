@@ -41,7 +41,7 @@
       <!-- Gasto -->
       <div
         class="bg-white rounded-[22px] p-4 h-[140px] flex flex-col justify-between shadow-[0_10px_24px_rgba(0,0,0,0.14)] active:scale-[0.97] transition"
-        (click)="goToPage('movements')"
+         (click)="isOpenBills = true"
       >
         <i class="fas fa-chart-line-down text-yellow-400 text-lg"></i>
 
@@ -192,7 +192,8 @@
   <div class="space-y-4">
     <!-- Venta de productos -->
     <div
-      class="flex items-center gap-4 p-4 border rounded-2xl cursor-pointer hover:bg-gray-50 transition" (click)="goToPage('sell')"
+      class="flex items-center gap-4 p-4 border rounded-2xl cursor-pointer hover:bg-gray-50 transition"
+      (click)="goToPage('sell')"
     >
       <div class="bg-yellow-100 p-3 rounded-xl text-2xl">🛒</div>
       <div class="flex-1">
@@ -206,6 +207,7 @@
 
     <!-- Venta libre -->
     <div
+     
       class="flex items-center gap-4 p-4 border rounded-2xl cursor-pointer hover:bg-gray-50 transition"
     >
       <div class="bg-green-100 p-3 rounded-xl text-2xl">💵</div>
@@ -218,4 +220,101 @@
       <span class="text-gray-400 text-xl">›</span>
     </div>
   </div>
+</div>
+
+<!-- FULL PAGE MOBILE ONLY -->
+<div
+  class="fixed inset-0 w-full h-full bg-white z-50 p-6 md:hidden transition-transform duration-300"
+  [ngClass]="{ 'translate-x-0': isOpenBills, 'translate-x-full': !isOpenBills }"
+  (click)="$event.stopPropagation()"
+>
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-bold">Nuevo Gasto</h2>
+
+    <button
+      (click)="closeDrawerNewBills()"
+      class="text-gray-600 hover:text-black text-2xl"
+    >
+      ✕
+    </button>
+  </div>
+
+  <hr class="border border-gray-200 my-4" />
+
+  <form
+    [formGroup]="formBills"
+    class="space-y-5 flex flex-col h-full"
+    (ngSubmit)="submitBills()"
+  >
+    <!-- Fecha -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium">Fecha de la venta *</label>
+      <input
+        type="date"
+        formControlName="bills_date"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="
+          formBills.get('bills_date')?.touched &&
+          formBills.get('bills_date')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
+        La fecha es obligatoria.
+      </p>
+    </div>
+
+    <!-- Valor -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium">Costo del gasto *</label>
+      <input
+        type="number"
+        formControlName="bills_total"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="
+          formBills.get('bills_total')?.touched &&
+          formBills.get('bills_total')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
+        El valor es obligatorio.
+      </p>
+    </div>
+
+    <!-- Concepto -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium">Concepto del gasto *</label>
+      <input
+        type="text"
+        formControlName="bills_concept"
+        placeholder="Ej: Venta de celular"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="
+          formBills.get('bills_concept')?.touched &&
+          formBills.get('bills_concept')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
+        El concepto es obligatorio.
+      </p>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      [disabled]="!(authService.isAdmin() || authService.isEmployee())"
+      class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-auto hover:bg-green-700 transition"
+    >
+      <app-loading *ngIf="loading"></app-loading>
+      <span *ngIf="!loading">Crear Venta</span>
+    </button>
+  </form>
 </div>

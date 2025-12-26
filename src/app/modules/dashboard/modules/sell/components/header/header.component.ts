@@ -21,7 +21,7 @@ import { AuthService } from '../../../../../../service/auth.service';
 })
 export class HeaderComponent {
   public readonly productService = inject(ProductService);
-    public readonly authService = inject(AuthService);
+  public readonly authService = inject(AuthService);
 
   private readonly fb = inject(FormBuilder);
   public form: FormGroup = this.fb.group({});
@@ -43,11 +43,11 @@ export class HeaderComponent {
   public shopDate: string = '';
 
   ngOnInit() {
-     const now = new Date();
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  
-  // Para input type="date"
-  this.shopDate = now.toISOString().split('T')[0];
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+    // Para input type="date"
+    this.shopDate = now.toISOString().split('T')[0];
 
     this.form = this.fb.group({
       shop_date: [this.shopDate, Validators.required],
@@ -177,7 +177,7 @@ export class HeaderComponent {
     });
   }
 
-  erase(){
+  erase() {
     this.searchTerm = '';
     this.filterProducts();
   }

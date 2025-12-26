@@ -1,5 +1,31 @@
 <div class="pt-6">
   <!-- ROW 1: Buscador y acciones -->
+  <div class="grid grid-cols-2 gap-4 mb-6 md:hidden">
+    <!-- Crear categoría -->
+    <div
+      (click)="showModal = true"
+      class="bg-[#1F2A33] rounded-2xl p-4 h-[150px] flex flex-col items-center justify-center gap-3 shadow-[0_14px_30px_rgba(0,0,0,0.28)] hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 cursor-pointer"
+    >
+      <i class="fas fa-folder-plus text-yellow-400 text-2xl"></i>
+
+      <p class="text-white text-sm font-semibold text-center leading-tight">
+        Crear Categoría
+      </p>
+    </div>
+
+    <!-- Crear producto -->
+    <div
+    (click)="goToPage('product/add')"
+      class="bg-white rounded-2xl p-4 h-[150px] flex flex-col items-center justify-center gap-3 shadow-[0_12px_26px_rgba(0,0,0,0.16)] hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 cursor-pointer"
+    >
+      <i class="fas fa-box-open text-blue-500 text-2xl"></i>
+
+      <p class="text-gray-900 text-sm font-semibold text-center leading-tight">
+        Crear Producto
+      </p>
+    </div>
+  </div>
+
   <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
     <select
       class="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm shadow-lg text-gray-700 hover:bg-gray-50 cursor-pointer"
@@ -57,15 +83,14 @@
   <div class="bg-white rounded-xl overflow-hidden">
     <!-- 🔍 Buscador -->
     <div class="flex items-center justify-between mb-4">
-  <input
-    type="text"
-    placeholder="Buscar producto..."
-    [(ngModel)]="searchTerm"
-    (ngModelChange)="onSearchChange()"
-    class="w-70 lg:w-1/3 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-  />
-</div>
-
+      <input
+        type="text"
+        placeholder="Buscar producto..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        class="w-70 lg:w-1/3 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      />
+    </div>
 
     <!-- 📋 Tabla -->
     <div class="w-full overflow-x-auto rounded-lg">
@@ -161,7 +186,24 @@
                 "
                 class="flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200"
               >
-                ✏️ <span class="text-sm font-medium">Editar</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M16.862 3.487l3.651 3.651M4.5 19.5l5.651-1.414
+         a2 2 0 0 0 .894-.512l9.317-9.317a2 2 0 0 0 0-2.828L17.69 2.59
+         a2 2 0 0 0-2.828 0L5.545 11.91a2 2 0 0 0-.512.894L3.62 18.455
+         A1 1 0 0 0 4.5 19.5z"
+                  />
+                </svg>
+                <span class="text-sm font-medium">Editar</span>
               </button>
 
               <button
@@ -171,7 +213,21 @@
                 "
                 class="flex items-center gap-2 px-3 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200"
               >
-                🗑️ <span class="text-sm font-medium">Eliminar</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M6 7h12m-9 3v6m6-6v6M9 4h6l1 2H8l1-2zM6 7l1 13h10l1-13"
+                  />
+                </svg>
+                <span class="text-sm font-medium">Eliminar</span>
               </button>
             </td>
           </tr>
@@ -226,8 +282,62 @@
   </div>
 </div>
 
-<div class="block lg:hidden">
-  <br><br><br><br>
+<div class="block lg:hidden"><br /><br /><br /><br /></div>
+
+<!-- Fondo oscuro -->
+<div 
+  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 md:hidden"
+  *ngIf="showModal"
+>
+  <!-- Contenedor con margen lateral -->
+  <div class="w-full px-4">
+    
+    <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6 mx-auto relative">
+      
+      <!-- Botón de cerrar -->
+      <button
+        type="button"
+        (click)="onClose()"
+        class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+      >
+        ✕
+      </button>
+
+      <!-- Título -->
+      <h2 class="text-lg font-bold text-gray-800 mb-4">
+        Nombre de la categoría <span class="text-red-600">*</span>
+      </h2>
+
+      <!-- Input -->
+      <input
+        type="text"
+        [(ngModel)]="categoryName"
+        placeholder="Celulares, Audífonos, Cables, Accesorios..."
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4
+               focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-2">
+        <button
+          (click)="onClose()"
+          class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100"
+        >
+          Cancelar
+        </button>
+
+        <button
+          [disabled]="!(authService.isAdmin() || authService.isEmployee())"
+          (click)="onSave()"
+          class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-500 disabled:opacity-60"
+        >
+          <span *ngIf="!loading">Guardar</span>
+          <app-loading *ngIf="loading"></app-loading>
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 

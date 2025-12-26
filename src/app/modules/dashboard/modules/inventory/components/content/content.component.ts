@@ -9,10 +9,11 @@ import { SearchPipe } from '../../../../../shared/pipe/search.pipe';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../../service/auth.service';
+import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-content',
-  imports: [CommonModule, FormsModule, SearchPipe],
+  imports: [CommonModule, FormsModule, SearchPipe, LoadingComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss',
 })
@@ -28,10 +29,14 @@ export class ContentComponent {
   public totalInventoryCostClient: number = 0;
 
   public searchTerm: string = '';
+  public categoryName: string = '';
+
   public currentPage: number = 1;
   public itemsPerPage: number = 4;
   public paginatedProducts: any[] = [];
   public selectedImage: string | null = null;
+  public showModal: boolean = false;
+  public loading: boolean = false;
 
   ngOnInit() {
     this.getAllCategories();
@@ -190,5 +195,35 @@ export class ContentComponent {
 
   closeImageModal() {
     this.selectedImage = null;
+  }
+  onClose() {
+    this.showModal = false;
+  }
+
+  async onSave() {
+    this.loading = true;
+
+    if (!this.categoryName) {
+      this.loading = false;
+      this.showModal = false;
+      return alert('La categoría debe estar llenada');
+    }
+
+    try {
+      const docRef = await this.categoryService.addCategory({
+        cat_name: this.categoryName,
+        is_active: true,
+      });
+      this.loading = false;
+      this.showModal = false;
+    } catch (err) {
+      this.loading = false;
+      this.showModal = false;
+      console.error('❌ error:', err);
+    }
+  }
+
+  goToPage(route: string){
+    this.router.navigate([route]);
   }
 }
