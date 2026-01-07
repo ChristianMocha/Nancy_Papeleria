@@ -29,7 +29,7 @@
   <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
     <select
       class="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm shadow-lg text-gray-700 hover:bg-gray-50 cursor-pointer"
-      (change)="onCategoryChange($event)"
+      (change)="selectCategory($event)"
     >
       <option value="">Ver todas las categorías</option>
       <option *ngFor="let cat of lstCategories" [value]="cat.cat_id">
@@ -37,12 +37,12 @@
       </option>
     </select>
 
-    <button
+    <!-- <button
       class="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm shadow-lg text-gray-700 hover:bg-gray-50"
     >
       <i class="fas fa-qrcode"></i>
       Catálogo virtual
-    </button>
+    </button> -->
 
     <button
       class="flex items-center gap-2 px-4 py-2 bg-[rgb(29,39,49)] hover:bg-blue-700 rounded-lg text-sm shadow-lg text-white"
@@ -51,18 +51,18 @@
       Registrar compras
     </button>
 
-    <button
+    <!-- <button
       class="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm shadow-lg text-gray-700 hover:bg-gray-50"
     >
       <i class="fas fa-chart-line"></i>
       Estadísticas
-    </button>
+    </button> -->
   </div>
 
   <!-- ROW 2: Totales -->
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
     <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center">
-      <p class="text-lg font-bold text-gray-700">{{ lstProducts.length }}</p>
+      <p class="text-lg font-bold text-gray-700">{{ filteredProducts.length }}</p>
       <p class="text-xs text-gray-400">Total de referencias</p>
     </div>
     <div class="bg-white px-4 py-5 rounded-lg shadow-lg text-center">

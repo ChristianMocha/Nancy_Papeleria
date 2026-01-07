@@ -28,36 +28,36 @@
     <div class="grid grid-cols-3 gap-3">
       <!-- Venta -->
       <div
-        class="bg-[#1F2A33] rounded-[22px] p-4 h-[140px] flex flex-col justify-between shadow-[0_12px_28px_rgba(0,0,0,0.22)] active:scale-[0.97] transition"
+        class="bg-[#1F2A33] rounded-[22px] p-4 h-[140px] flex flex-col items-center justify-between shadow-[0_12px_28px_rgba(0,0,0,0.22)] active:scale-[0.97] transition"
         (click)="openDrawer()"
       >
-        <i class="fas fa-chart-line text-yellow-400 text-lg"></i>
+        <i class="fas fa-cash-register text-green-400 text-5xl"></i>
 
-        <p class="text-white text-sm font-medium leading-tight">
+        <p class="text-white text-sm font-medium text-center leading-tight">
           Registrar<br />Venta
         </p>
       </div>
 
       <!-- Gasto -->
       <div
-        class="bg-white rounded-[22px] p-4 h-[140px] flex flex-col justify-between shadow-[0_10px_24px_rgba(0,0,0,0.14)] active:scale-[0.97] transition"
-         (click)="isOpenBills = true"
+        class="bg-white rounded-[22px] p-4 h-[140px] flex flex-col items-center justify-between shadow-[0_10px_24px_rgba(0,0,0,0.14)] active:scale-[0.97] transition"
+        (click)="isOpenBills = true"
       >
-        <i class="fas fa-chart-line-down text-yellow-400 text-lg"></i>
+        <i class="fas fa-money-bill-wave text-red-500 text-5xl"></i>
 
-        <p class="text-gray-900 text-sm font-medium leading-tight">
+        <p class="text-gray-900 text-sm font-medium text-center leading-tight">
           Registrar<br />Gasto
         </p>
       </div>
 
       <!-- Inventario -->
       <div
-        class="bg-white rounded-[22px] p-4 h-[140px] flex flex-col justify-between shadow-[0_10px_24px_rgba(0,0,0,0.14)] active:scale-[0.97] transition"
+        class="bg-white rounded-[22px] p-4 h-[140px] flex flex-col items-center justify-between shadow-[0_10px_24px_rgba(0,0,0,0.14)] active:scale-[0.97] transition"
         (click)="goToPage('inventory')"
       >
-        <i class="fas fa-box text-gray-900 text-lg"></i>
+        <i class="fas fa-boxes-stacked text-blue-600 text-5xl"></i>
 
-        <p class="text-gray-900 text-sm font-medium leading-tight">
+        <p class="text-gray-900 text-sm font-medium text-center leading-tight">
           Ver<br />Inventario
         </p>
       </div>
@@ -70,27 +70,10 @@
   >
     <!-- Texto -->
     <div class="flex-1 pr-3">
-      <h2 class="text-white text-xl font-semibold leading-tight">
+      <h2 class="text-white text-xl font-semibold leading-tight text-center">
         ¡Gestiona tus empleados!
       </h2>
-
-      <p class="text-white/90 text-sm mt-2">
-        Con el Plan Básico o Pro organiza tu operación.
-      </p>
-
-      <button
-        class="mt-4 bg-[#E6FFFF] text-[#2C5A5A] font-semibold text-sm px-5 py-2.5 rounded-xl"
-      >
-        Explorar planes
-      </button>
     </div>
-
-    <!-- Imagen -->
-    <img
-      src="assets/images/plan-empleados.png"
-      alt="Planes"
-      class="w-20 h-20 object-contain"
-    />
   </section>
 
   <!-- Sugeridos -->
@@ -195,7 +178,15 @@
       class="flex items-center gap-4 p-4 border rounded-2xl cursor-pointer hover:bg-gray-50 transition"
       (click)="goToPage('sell')"
     >
-      <div class="bg-yellow-100 p-3 rounded-xl text-2xl">🛒</div>
+      <div
+        class="bg-green-100 p-3 rounded-xl text-2xl flex items-center justify-center"
+      >
+        <img
+          class="w-16 h-auto"
+          src="./assets/home/venta_productos.png"
+          alt=""
+        />
+      </div>
       <div class="flex-1">
         <p class="font-semibold text-gray-800">Venta de productos</p>
         <p class="text-sm text-gray-500">
@@ -207,11 +198,15 @@
 
     <!-- Venta libre -->
     <div
-     
       class="flex items-center gap-4 p-4 border rounded-2xl cursor-pointer hover:bg-gray-50 transition"
     >
-      <div class="bg-green-100 p-3 rounded-xl text-2xl">💵</div>
-      <div class="flex-1">
+      <div
+        class="bg-green-100 p-3 rounded-xl text-2xl flex items-center justify-center"
+      >
+        <img src="./assets/home/venta_libre.webp" alt="" class="w-16 h-auto" />
+      </div>
+
+      <div class="flex-1" (click)="openDrawerSell()">
         <p class="font-semibold text-gray-800">Venta libre</p>
         <p class="text-sm text-gray-500">
           Registra un ingreso sin seleccionar productos.
@@ -221,6 +216,8 @@
     </div>
   </div>
 </div>
+
+<!-- GASTO -->
 
 <!-- FULL PAGE MOBILE ONLY -->
 <div
@@ -248,11 +245,11 @@
   >
     <!-- Fecha -->
     <div class="space-y-1">
-      <label class="text-sm font-medium">Fecha de la venta *</label>
+      <label class="text-sm font-medium">Fecha del gasto *</label>
       <input
         type="date"
         formControlName="bills_date"
-        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+        class="w-full p-3 border border-gray-300 rounded-xl appearance-none focus:outline-none focus:border-green-600"
       />
 
       <p
@@ -314,7 +311,126 @@
       class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-auto hover:bg-green-700 transition"
     >
       <app-loading *ngIf="loading"></app-loading>
-      <span *ngIf="!loading">Crear Venta</span>
+      <span *ngIf="!loading">Crear Gasto</span>
+    </button>
+  </form>
+</div>
+
+<!-- VENTA -->
+
+<!-- Drawer lateral -->
+
+<div
+  class="fixed inset-0 w-full h-full bg-white z-50 p-6 md:hidden transition-transform duration-300"
+  [ngClass]="{ 'translate-x-0': isOpen, 'translate-x-full': !isOpen }"
+  (click)="$event.stopPropagation()"
+>
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-bold">Crear Venta</h2>
+    <button (click)="closeDrawerSell()" class="text-gray-600 hover:text-black">
+      ✕
+    </button>
+  </div>
+
+  <hr class="border border-gray-200 my-4" />
+
+  <form
+    [formGroup]="form"
+    class="space-y-5 flex flex-col h-full"
+    (ngSubmit)="submit()"
+  >
+    <!-- Fecha -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium">Fecha de la venta *</label>
+      <input
+        type="date"
+        formControlName="shop_date"
+        class="block w-full min-w-0 p-3 pr-10 border border-gray-300 rounded-xl box-border appearance-none focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="form.get('shop_date')?.touched && form.get('shop_date')?.invalid"
+        class="text-red-600 text-sm"
+      >
+        La fecha es obligatoria.
+      </p>
+    </div>
+
+    <!-- Valor -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium">Valor *</label>
+      <input
+        type="number"
+        formControlName="shop_total"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="
+          form.get('shop_total')?.touched && form.get('shop_total')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
+        El valor es obligatorio.
+      </p>
+    </div>
+
+    <!-- Valor -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium">¿Con cuánto paga tu cliente? *</label>
+      <input
+        type="number"
+        formControlName="shop_payment"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="
+          form.get('shop_payment')?.touched && form.get('shop_payment')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
+        El valor es obligatorio.
+      </p>
+
+      <div class="flex justify-between items-center mb-6">
+        <span class="text-gray-600 font-medium">Valor a devolver:</span>
+        <span class="text-2xl font-bold text-green-600">
+          {{ form.get("shop_change")?.value | currency : "USD" }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Concepto -->
+    <div class="space-y-1">
+      <label class="text-sm font-medium">Concepto de la venta *</label>
+      <input
+        type="text"
+        formControlName="shop_concept"
+        placeholder="Ej: Venta de celular"
+        class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-green-600"
+      />
+
+      <p
+        *ngIf="
+          form.get('shop_concept')?.touched && form.get('shop_concept')?.invalid
+        "
+        class="text-red-600 text-sm"
+      >
+        El concepto es obligatorio.
+      </p>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      [disabled]="
+        form.invalid || !(authService.isAdmin() || authService.isEmployee())
+      "
+      class="w-full bg-green-600 disabled:bg-gray-400 text-white p-3 rounded-xl text-center font-semibold mt-4 hover:bg-green-700 transition"
+    >
+      <app-loading *ngIf="loading"></app-loading>
+      <span *ngIf="!loading"> Crear Venta </span>
     </button>
   </form>
 </div>

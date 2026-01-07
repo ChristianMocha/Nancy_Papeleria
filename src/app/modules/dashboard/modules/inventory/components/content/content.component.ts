@@ -34,15 +34,21 @@ export class ContentComponent {
   public currentPage: number = 1;
   public itemsPerPage: number = 4;
   public paginatedProducts: any[] = [];
+  public filteredList: any[] = [];
   public selectedImage: string | null = null;
   public showModal: boolean = false;
   public loading: boolean = false;
+
+  public selectedCategory: any;
+  public showButtonMore: boolean = false;
+  public products: any;
 
   ngOnInit() {
     this.getAllCategories();
     this.getAllPorducts();
     this.getAllProductsCostTotal();
     this.getAllProductsCostTotalClient();
+    this.getCategories();
   }
 
   async getAllCategories() {
@@ -62,6 +68,9 @@ export class ContentComponent {
             ? prod.prod_start_date.toDate()
             : prod.prod_start_date,
         }));
+
+        console.log(this.lstProducts);
+        this.filteredList = [...this.lstProducts];
 
         this.updatePaginatedProducts();
       },
@@ -94,15 +103,7 @@ export class ContentComponent {
     const selectedCategoryId = (event.target as HTMLSelectElement).value;
     if (!selectedCategoryId) return this.getAllPorducts();
 
-    this.productService.getProductsByCategory(selectedCategoryId);
-
-    try {
-      this.lstProducts = await firstValueFrom(
-        this.productService.getProductsByCategory(selectedCategoryId)
-      );
-    } catch (error) {
-      console.error('Error al cargar los productos:', error);
-    }
+    console.log(selectedCategoryId);
   }
 
   get totalPages(): number {
@@ -111,9 +112,9 @@ export class ContentComponent {
 
   // 🔹 Filtro de productos según el término de búsqueda
   get filteredProducts(): any[] {
-    if (!this.searchTerm) return this.lstProducts;
+    if (!this.searchTerm) return this.filteredList;
     const term = this.searchTerm.toLowerCase();
-    return this.lstProducts.filter(
+    return this.filteredList.filter(
       (p) =>
         p.prod_name.toLowerCase().includes(term) ||
         p.prod_code.toLowerCase().includes(term)
@@ -122,6 +123,7 @@ export class ContentComponent {
 
   // 🔹 Actualiza los productos visibles según la página actual
   updatePaginatedProducts() {
+    console.log('entranodo 1');
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
@@ -223,7 +225,34 @@ export class ContentComponent {
     }
   }
 
-  goToPage(route: string){
+  goToPage(route: string) {
     this.router.navigate([route]);
+  }
+
+  async getCategories() {
+    try {
+      this.lstCategories = await firstValueFrom(
+        this.categoryService.getCategories()
+      );
+    } catch (error) {
+      console.error('Error al cargar empleados:', error);
+    }
+  }
+
+  async selectCategory(event: any) {
+    const selectedCategoryId = (event.target as HTMLSelectElement).value;
+    if (!selectedCategoryId) return this.getAllPorducts();
+
+    if (selectedCategoryId === 'all') {
+      this.filteredList = [...this.lstProducts];
+    } else {
+      this.filteredList = this.lstProducts.filter(
+        (p) => p.prod_category_id === selectedCategoryId
+      );
+      console.log(this.filteredList);
+    }
+
+    this.currentPage = 1; // reset página
+    this.updatePaginatedProducts(); // repaginar
   }
 }

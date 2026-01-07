@@ -24,8 +24,10 @@ export class HomeComponent {
   public readonly authService = inject(AuthService);
 
   public open = false;
+  public isOpen: boolean = false;
   public isOpenBills: boolean = false;
   private readonly fb = inject(FormBuilder);
+  public form: FormGroup = this.fb.group({});
   public formBills: FormGroup = this.fb.group({});
   public shopDate: string = '';
   public loading: boolean = false;
@@ -34,6 +36,32 @@ export class HomeComponent {
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.shopDate = now.toISOString().split('T')[0];
+
+    this.form = this.fb.group({
+      shop_date: [this.shopDate, Validators.required],
+      shop_total: ['', Validators.required],
+      shop_concept: ['', Validators.required],
+      total_earnings: [''],
+      shop_change: [''],
+      shop_payment: ['', Validators.required],
+
+      is_active: [true, Validators.required],
+      created_by: [''],
+      created_at: [''],
+      updated_by: [''],
+      updated_at: [''],
+    });
+
+    this.form.valueChanges.subscribe((val) => {
+      const total = Number(val.shop_total) || 0;
+      const payment = Number(val.shop_payment) || 0;
+      const change = payment - total;
+
+      this.form.patchValue(
+        { shop_change: change > 0 ? change : 0 },
+        { emitEvent: false }
+      );
+    });
 
     this.formBills = this.fb.group({
       bills_date: [this.shopDate, Validators.required],
@@ -86,6 +114,37 @@ export class HomeComponent {
       this.closeDrawerNewBills();
       this.loading = false;
       this.router.navigate(['movements']);
+    });
+  }
+
+   openDrawerSell() {
+    this.isOpen = true;
+    this.open = false;
+    console.log(this.isOpen);
+  }
+
+  closeDrawerSell() {
+    this.isOpen = false;
+  }
+
+  submit() {
+    this.loading = true;
+    if (!this.form.valid) {
+      return;
+    }
+
+    this.form
+      .get('total_earnings')
+      ?.setValue(this.form.get('shop_total')?.value);
+
+    // shop_crea_date
+    this.shoppingCartService.savePurchase(this.form.value).then((res) => {
+      this.form.reset({
+        is_active: true,
+        shop_date: this.shopDate,
+      });
+      this.closeDrawerSell();
+      this.loading = false;
     });
   }
 }
