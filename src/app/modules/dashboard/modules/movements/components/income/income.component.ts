@@ -34,7 +34,7 @@ export class IncomeComponent {
   public totalEarnings: number = 0;
   public billsAmount: number = 0;
 
-  public itemsPerPage = 2;
+  public itemsPerPage = 10;
   public currentPage = 1;
   public totalPages = 1;
 

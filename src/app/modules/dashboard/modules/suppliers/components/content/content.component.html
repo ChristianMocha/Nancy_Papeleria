@@ -112,7 +112,7 @@
           </span>
           <span>{{ item.supp_total_to_pay | currency : "USD" : "symbol" }}</span>
         </td>
-        <td class="p-3">{{ item.created_by || "Sin información" }}</td>
+        <td class="p-3">{{ item.created_by.emp_name || "Sin información" }}</td>
         <td class="p-3">
           {{
             item.created_at

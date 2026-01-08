@@ -29,7 +29,7 @@ export class ContentComponent {
 
   public suppliers: Supplier[] = [];
   public filteredSupplier: Supplier[] = [];
-  public paginatedSuppliers: Supplier[] = [];
+  public paginatedSuppliers: any[] = [];
   public productsService: any[] = [];
 
   ngOnInit() {
@@ -64,6 +64,7 @@ export class ContentComponent {
             s.supp_total_to_pay = total; // ✔ ahora sí es número
           });
       });
+      console.log(this.suppliers);
       this.filteredSupplier = [...this.suppliers];
       this.totalPages = Math.ceil(this.suppliers.length / this.pageSize);
       this.calcularResumen();

@@ -28,7 +28,7 @@ export class BillsComponent {
   public totalEarnings: number = 0;
   public inputTypeIn: any;
 
-  public itemsPerPage = 2;
+  public itemsPerPage = 10;
   public currentPage = 1;
   public totalPages = 1;
 
