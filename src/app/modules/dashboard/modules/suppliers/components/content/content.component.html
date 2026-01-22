@@ -85,7 +85,7 @@
         <th class="p-3">Nombre</th>
         <th class="p-3">Celular</th>
         <th class="p-3">Documento</th>
-        <th class="p-3">Total por pagar</th>
+        <!-- <th class="p-3">Total por pagar</th> -->
         <th class="p-3">Creado por</th>
         <th class="p-3">Creado el</th>
         <th class="p-3">Estado</th>
@@ -97,7 +97,7 @@
         <td class="p-3">{{ item.supp_full_name }}</td>
         <td class="p-3">{{ item.supp_phone }}</td>
         <td class="p-3">{{ item.supp_identification_document }}</td>
-        <td class="p-3 flex items-center space-x-2">
+        <!-- <td class="p-3 flex items-center space-x-2">
           <span
             *ngIf="item.supp_total_to_pay === 0"
             class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600"
@@ -111,7 +111,7 @@
             %
           </span>
           <span>{{ item.supp_total_to_pay | currency : "USD" : "symbol" }}</span>
-        </td>
+        </td> -->
         <td class="p-3">{{ item.created_by.emp_name || "Sin información" }}</td>
         <td class="p-3">
           {{

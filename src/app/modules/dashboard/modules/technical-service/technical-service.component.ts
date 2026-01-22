@@ -89,13 +89,16 @@ export class TechnicalServiceComponent {
   async onSubmit() {
     this.loading = true;
     try {
-      if (!this.serviceForm.valid) {
+      console.log(this.serviceForm.value);
+      if (!this.serviceForm.value) {
         this.serviceForm.markAllAsTouched();
         this.loading = false;
+        console.log('entrando 1');
         return;
       }
 
       if (this.serviceForm.value.ser_id) {
+        console.log('entrando 2');
         this.serviceForm
           .get('ser_update_date')
           ?.setValue(this.dateService.getDate());
@@ -103,14 +106,30 @@ export class TechnicalServiceComponent {
         this.technicalServiceService
           .updateService(this.serviceForm.value.ser_id, this.serviceForm.value)
           .then((res) => {
-            this.print(this.serviceForm.value);
-            this.finishSave();
-            this.serviceForm.reset({
-              ser_status: true,
-              ser_team_state: this.serviceForm.value.ser_team_state,
+            Swal.fire({
+              title: '¿Desea imprimir Recibo?',
+              showDenyButton: true,
+              showCancelButton: false,
+              confirmButtonText: 'Si',
+              denyButtonText: `No`,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.print(this.serviceForm.value);
+                this.finishSave();
+                this.serviceForm.reset({
+                  ser_status: true,
+                  ser_team_state: this.serviceForm.value.ser_team_state,
+                });
+              }
+              this.finishSave();
+              this.serviceForm.reset({
+                ser_status: true,
+                ser_team_state: this.serviceForm.value.ser_team_state,
+              });
             });
           });
       } else {
+        console.log('entrando 3');
         this.serviceForm
           .get('ser_start_date')
           ?.setValue(this.dateService.getDate());
@@ -123,15 +142,31 @@ export class TechnicalServiceComponent {
         this.technicalServiceService
           .addService(this.serviceForm.value)
           .then((res) => {
-            this.print(this.serviceForm.value);
-            this.finishSave();
-            this.serviceForm.reset({
-              ser_status: true,
-              ser_team_state: true,
+              Swal.fire({
+              title: '¿Desea imprimir Recibo?',
+              showDenyButton: true,
+              showCancelButton: false,
+              confirmButtonText: 'Si',
+              denyButtonText: `No`,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.print(this.serviceForm.value);
+                this.finishSave();
+                this.serviceForm.reset({
+                  ser_status: true,
+                  ser_team_state: true,
+                });
+              }
+              this.finishSave();
+              this.serviceForm.reset({
+                ser_status: true,
+                ser_team_state: true,
+              });
             });
           });
       }
     } catch (err) {
+      console.log('entrando 4');
       this.loading = false;
     }
   }
@@ -276,28 +311,71 @@ export class TechnicalServiceComponent {
     <html>
       <head>
         <title>Impresión de Servicio</title>
-        <style>
+       <style>
           @media print {
-            @page { margin: 0; }
-            body { margin: 0; padding: 10px; width: 100%; }
-            .card { width: 100%; box-sizing: border-box; margin-bottom: 20px; }
+            @page { 
+              margin: 0;
+              size: 58mm auto; 
+            }
+        
+            body { 
+              margin: 0;
+              padding: 10px;
+              width: 58mm !important
+            }
           }
-
-          body { font-family: Arial; padding: 10px; width: 100%; }
-          h2 { text-align: center; margin-bottom: 20px; }
-          .item { font-size: 16px; margin-bottom: 12px; }
-          .label { font-weight: bold; }
+        
+          body { 
+            font-family: Arial; 
+            padding: 10px;
+            width: 58mm !important
+            margin: 0 auto;
+          }
+        
+          h2 { 
+            text-align: center; 
+            margin-bottom: 20px; 
+          }
+        
+          .item { 
+            font-size: 13px; 
+            margin-bottom: 10px; 
+          }
+        
+          .label { 
+            font-weight: bold; 
+          }
+        
           .card {
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 40px;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
             width: 100%;
             box-sizing: border-box;
           }
-          .page-break { page-break-before: always; }
-          .qr-placeholder { width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; margin: 10px 0; }
-          .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; }
-          .alert { color: red; font-weight: bold; margin-top: 15px; }
+        
+          .page-break { 
+            page-break-before: always; 
+          }
+        
+          .qr-placeholder { 
+            width: 130px; 
+            height: 130px; 
+            margin: 10px auto;
+          }
+        
+          .qr-placeholder img {
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain;
+          }
+        
+          .alert { 
+            color: red; 
+            font-weight: bold; 
+            margin-top: 15px; 
+            font-size: 12px;
+          }
         </style>
       </head>
       <body>
@@ -315,9 +393,9 @@ export class TechnicalServiceComponent {
           <div class="item"><span class="label">Precio:</span> $${
             ser.ser_price
           }</div>
-          <div class="item"><span class="label">Fecha ingreso:</span> ${
-            ser.created_at.toDate().toLocaleDateString('es-EC')
-          }</div>
+          <div class="item"><span class="label">Fecha ingreso:</span> ${ser.created_at
+            .toDate()
+            .toLocaleDateString('es-EC')}</div>
           <div class="item">
             <span 
               class="label"
@@ -348,9 +426,9 @@ export class TechnicalServiceComponent {
           <div class="item"><span class="label">Cliente:</span> ${
             ser.ser_name
           }</div>
-          <div class="item"><span class="label">Fecha ingreso:</span> ${
-            ser.created_at.toDate().toLocaleDateString('es-EC')
-          }</div>
+          <div class="item"><span class="label">Fecha ingreso:</span> ${ser.created_at
+            .toDate()
+            .toLocaleDateString('es-EC')}</div>
           <hr style="margin: 15px 0;">
           <div class="item"><span class="label">Empresa:</span> CrTecnologia</div>
           <div class="item"><span class="label">Teléfono:</span> 0983922706</div>

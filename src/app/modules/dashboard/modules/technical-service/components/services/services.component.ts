@@ -22,7 +22,7 @@ export class ServicesComponent {
   public filteredService: any[] = [];
 
   public currentPage = 1;
-  public pageSize = 10;
+  public pageSize = 3;
   public totalPages = 1;
 
   public searchTerm: string = '';
@@ -48,7 +48,6 @@ export class ServicesComponent {
         this.updatePage();
         this.getTotal();
         this.total = 0;
-
       });
   }
 
@@ -71,14 +70,14 @@ export class ServicesComponent {
   getTotal() {
     this.totalPrice = this.lstService.reduce(
       (sum: any, item: any) => sum + (Number(item.ser_price) || 0),
-      0
+      0,
     );
   }
 
   getTotalReturn() {
     this.totalPriceReturn = this.lstService.reduce(
       (sum: any, item: any) => sum + (Number(item.ser_cost_spare_part) || 0),
-      0
+      0,
     );
   }
 
@@ -125,7 +124,6 @@ export class ServicesComponent {
     }
 
     if (ser.ser_cost_spare_part <= 0) {
-      
       Swal.fire({
         title: 'Precio del repuesto',
         text: 'Ingrese el costo del repuesto antes de continuar.',
@@ -150,28 +148,26 @@ export class ServicesComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           const pricesRes = Number(result.value); // 👈 Valor ingresado
-  
+
           ser.ser_cost_spare_part = pricesRes;
           this.emit(ser);
-  
-        }else{
+        } else {
           this.changeTab(this.activeTab);
         }
       });
-    }else{
+    } else {
       this.emit(ser);
     }
-
   }
 
-  emit(ser: any){
+  emit(ser: any) {
     ser.ser_team_state = !ser.ser_team_state;
-        ser.ser_status = !ser.ser_team_state;
-        const data = {
-          ser: ser,
-          state: this.activeTab,
-        };
-        this.toggle.emit(data);
+    ser.ser_status = !ser.ser_team_state;
+    const data = {
+      ser: ser,
+      state: this.activeTab,
+    };
+    this.toggle.emit(data);
   }
 
   filterService() {
@@ -183,7 +179,7 @@ export class ServicesComponent {
       this.filteredService = this.lstService.filter(
         (ser) =>
           ser.name?.toLowerCase().includes(term) ||
-          ser.ser_description?.toLowerCase().includes(term)
+          ser.ser_description?.toLowerCase().includes(term),
       );
     }
 
@@ -212,7 +208,7 @@ export class ServicesComponent {
           Swal.fire(
             'Eliminado',
             'El registro fue eliminado correctamente.',
-            'success'
+            'success',
           );
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -331,71 +327,71 @@ export class ServicesComponent {
       <head>
         <title>Impresión de Servicio</title>
         <style>
-  @media print {
-    @page { 
-      margin: 0;
-      size: 58mm auto; /* 👈 Ajusta a 58mm si deseas más pequeño */
-    }
-
-    body { 
-      margin: 0;
-      padding: 10px;
-      width: 58mm !important; /* 👈 Tamaño de impresora térmica */
-    }
-  }
-
-  body { 
-    font-family: Arial; 
-    padding: 10px;
-    width: 58mm !important; /* 👈 también fuera del print */
-    margin: 0 auto;
-  }
-
-  h2 { 
-    text-align: center; 
-    margin-bottom: 20px; 
-  }
-
-  .item { 
-    font-size: 13px; 
-    margin-bottom: 10px; 
-  }
-
-  .label { 
-    font-weight: bold; 
-  }
-
-  .card {
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .page-break { 
-    page-break-before: always; 
-  }
-
-  .qr-placeholder { 
-    width: 100px; 
-    height: 100px; 
-    margin: 10px auto;
-  }
-
-  .qr-placeholder img {
-    width: 100%; 
-    height: 100%; 
-    object-fit: contain;
-  }
-
-  .alert { 
-    color: red; 
-    font-weight: bold; 
-    margin-top: 15px; 
-    font-size: 12px;
-  }
-</style>
+          @media print {
+            @page { 
+              margin: 0;
+              size: 58mm auto; /* 👈 Ajusta a 58mm si deseas más pequeño */
+            }
+        
+            body { 
+              margin: 0;
+              padding: 10px;
+              width: 58mm !important; /* 👈 Tamaño de impresora térmica */
+            }
+          }
+        
+          body { 
+            font-family: Arial; 
+            padding: 10px;
+            width: 58mm !important; /* 👈 también fuera del print */
+            margin: 0 auto;
+          }
+        
+          h2 { 
+            text-align: center; 
+            margin-bottom: 20px; 
+          }
+        
+          .item { 
+            font-size: 13px; 
+            margin-bottom: 10px; 
+          }
+        
+          .label { 
+            font-weight: bold; 
+          }
+        
+          .card {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+        
+          .page-break { 
+            page-break-before: always; 
+          }
+        
+          .qr-placeholder { 
+            width: 130px; 
+            height: 130px; 
+            margin: 10px auto;
+          }
+        
+          .qr-placeholder img {
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain;
+          }
+        
+          .alert { 
+            color: red; 
+            font-weight: bold; 
+            margin-top: 15px; 
+            font-size: 12px;
+          }
+        </style>
 
       </head>
       <body>
@@ -413,10 +409,9 @@ export class ServicesComponent {
           <div class="item"><span class="label">Precio:</span> $${
             ser.ser_price
           }</div>
-          <div class="item"><span class="label">Fecha ingreso:</span> ${
-           ser.created_at.toDate().toLocaleDateString('es-EC')
-
-          }</div>
+          <div class="item"><span class="label">Fecha ingreso:</span> ${ser.created_at
+            .toDate()
+            .toLocaleDateString('es-EC')}</div>
           <div class="item">
             <span 
               class="label"
@@ -447,10 +442,9 @@ export class ServicesComponent {
           <div class="item"><span class="label">Cliente:</span> ${
             ser.ser_name
           }</div>
-          <div class="item"><span class="label">Fecha ingreso:</span> ${
-            ser.created_at.toDate().toLocaleDateString('es-EC')
-
-          }</div>
+          <div class="item"><span class="label">Fecha ingreso:</span> ${ser.created_at
+            .toDate()
+            .toLocaleDateString('es-EC')}</div>
           <hr style="margin: 15px 0;">
           <div class="item"><span class="label">Empresa:</span> CrTecnologia</div>
           <div class="item"><span class="label">Teléfono:</span> 0983922706</div>
