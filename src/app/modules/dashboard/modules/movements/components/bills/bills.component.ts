@@ -16,7 +16,7 @@ export class BillsComponent {
   public totalEarningsEmit = output<number>();
   public totalSalesEmit = output<number>();
   public selectedDate = input<string>(
-    new Date().toISOString().substring(0, 10)
+    new Date().toISOString().substring(0, 10),
   );
   public inputType = input<any>();
 
@@ -46,7 +46,6 @@ export class BillsComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.selectedDate());
     this.inputTypeIn = this.inputType();
     if (this.inputType() === 'date') {
       this.inputTypeIn = 'day';
@@ -61,22 +60,23 @@ export class BillsComponent {
   }
 
   getBillsByDate() {
-    console.log(this.inputType());
     this.isLoading = true;
-    this.shoppingCartService.getBillsByRange(this.inputTypeIn, this.selectedDate()).then((res) => {
-      this.lstBills = res;
-      console.log(this.lstBills);
-      this.getTotalPrice();
-      this.getTotalEarnings();
-      this.isLoading = false;
-      this.updatePagination();
-    });
+    this.shoppingCartService
+      .getBillsByRange(this.inputTypeIn, this.selectedDate())
+      .then((res) => {
+        this.lstBills = res;
+
+        this.getTotalPrice();
+        this.getTotalEarnings();
+        this.isLoading = false;
+        this.updatePagination();
+      });
   }
 
   getTotalPrice() {
     this.totalSales = this.lstBills.reduce(
       (acc, purchase) => acc + (purchase.shop_total || 0),
-      0
+      0,
     );
     this.totalSalesEmit.emit(this.totalSales);
   }
@@ -84,7 +84,7 @@ export class BillsComponent {
   getTotalEarnings() {
     this.totalEarnings = this.lstBills.reduce(
       (acc, purchase) => acc + (purchase.total_earnings || 0),
-      0
+      0,
     );
     this.totalEarningsEmit.emit(this.totalEarnings);
   }

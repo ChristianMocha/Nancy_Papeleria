@@ -64,7 +64,6 @@ export class ContentComponent {
             s.supp_total_to_pay = total; // ✔ ahora sí es número
           });
       });
-      console.log(this.suppliers);
       this.filteredSupplier = [...this.suppliers];
       this.totalPages = Math.ceil(this.suppliers.length / this.pageSize);
       this.calcularResumen();

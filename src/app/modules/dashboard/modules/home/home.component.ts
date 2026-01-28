@@ -120,7 +120,6 @@ export class HomeComponent {
    openDrawerSell() {
     this.isOpen = true;
     this.open = false;
-    console.log(this.isOpen);
   }
 
   closeDrawerSell() {

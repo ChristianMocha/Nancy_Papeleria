@@ -42,14 +42,12 @@ export class LoginComponent {
         .login(this.loginForm.value.email, this.loginForm.value.password)
         .then((data) => {
           this.employeeService.getEmployeeById(data.user.uid).then((res) => {
-            console.log(res);
             localStorage.setItem('currentUser', JSON.stringify(res));
             this.router.navigate(['/']);
             this.loading = false;
           });
         })
         .catch((error) => {
-          console.log('Error login:', error);
           switch (error.code) {
             case 'auth/invalid-email':
               this.alertService.showAlert('El correo no es válido.', 'error');

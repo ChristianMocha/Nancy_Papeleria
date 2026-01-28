@@ -89,16 +89,13 @@ export class TechnicalServiceComponent {
   async onSubmit() {
     this.loading = true;
     try {
-      console.log(this.serviceForm.value);
       if (!this.serviceForm.value) {
         this.serviceForm.markAllAsTouched();
         this.loading = false;
-        console.log('entrando 1');
         return;
       }
 
       if (this.serviceForm.value.ser_id) {
-        console.log('entrando 2');
         this.serviceForm
           .get('ser_update_date')
           ?.setValue(this.dateService.getDate());
@@ -129,7 +126,6 @@ export class TechnicalServiceComponent {
             });
           });
       } else {
-        console.log('entrando 3');
         this.serviceForm
           .get('ser_start_date')
           ?.setValue(this.dateService.getDate());
@@ -166,7 +162,6 @@ export class TechnicalServiceComponent {
           });
       }
     } catch (err) {
-      console.log('entrando 4');
       this.loading = false;
     }
   }

@@ -37,14 +37,14 @@ export class ProductService {
 
   addProductToCategory(categoryId: string, product: any) {
     const productRef = doc(
-      collection(this.firestore, `category/${categoryId}/products`)
+      collection(this.firestore, `category/${categoryId}/products`),
     );
 
     product.prod_id = productRef.id;
     product.prod_status = true;
     product.prod_start_date = this.dateService.getDate();
     product.created_at = Timestamp.fromDate(
-      this.dateService.getDateTimeStamp()
+      this.dateService.getDateTimeStamp(),
     );
     product.created_by = this.authService.getUserLocalStorage();
     return setDoc(productRef, product);
@@ -55,9 +55,22 @@ export class ProductService {
     return collectionData(productsRef, { idField: 'prod_id' });
   }
 
+  getProductsWinners(limitCount: number = 10) {
+    const productsRef = collectionGroup(this.firestore, 'products');
+
+    const q = query(
+      productsRef,
+      where('prod_sold_pount', '>', 0),
+      orderBy('prod_sold_pount', 'desc'),
+      limit(limitCount),
+    );
+
+    return collectionData(q, { idField: 'prod_id' });
+  }
+
   async getProductsPaginated(
     pageSize: number = 10,
-    nextPage: boolean = false
+    nextPage: boolean = false,
   ): Promise<any[]> {
     const productsRef = collectionGroup(this.firestore, 'products');
 
@@ -67,13 +80,13 @@ export class ProductService {
         productsRef,
         orderBy('prod_start_date', 'desc'),
         startAfter(this.lastVisible),
-        limit(pageSize)
+        limit(pageSize),
       );
     } else {
       q = query(
         productsRef,
         orderBy('prod_start_date', 'desc'),
-        limit(pageSize)
+        limit(pageSize),
       );
     }
 
@@ -96,7 +109,7 @@ export class ProductService {
   getProductById(categoryId: string, productId: string): Observable<any> {
     const productRef = doc(
       this.firestore,
-      `category/${categoryId}/products/${productId}`
+      `category/${categoryId}/products/${productId}`,
     );
     return docData(productRef, { idField: 'id' });
   }
@@ -104,10 +117,10 @@ export class ProductService {
   updateProduct(categoryId: string, productId: string, data: any) {
     const productRef = doc(
       this.firestore,
-      `category/${categoryId}/products/${productId}`
+      `category/${categoryId}/products/${productId}`,
     );
     data['updated_at'] = Timestamp.fromDate(
-      this.dateService.getDateTimeStamp()
+      this.dateService.getDateTimeStamp(),
     );
     data['updated_by'] = this.authService.getUserLocalStorage();
     data.prod_update_date = this.dateService.getDate();
@@ -117,7 +130,7 @@ export class ProductService {
   deleteProduct(categoryId: string, productId: string) {
     const docRef = doc(
       this.firestore,
-      `category/${categoryId}/products/${productId}`
+      `category/${categoryId}/products/${productId}`,
     );
     return deleteDoc(docRef);
   }
@@ -162,7 +175,7 @@ export class ProductService {
   getProductsByCategory(categoryId: string): Observable<any[]> {
     const productsRef = collection(
       this.firestore,
-      `category/${categoryId}/products`
+      `category/${categoryId}/products`,
     );
     return collectionData(productsRef, { idField: 'prod_id' });
   }
@@ -172,7 +185,7 @@ export class ProductService {
 
     const termLower = term.toLowerCase();
     const allProductsSnap = await getDocs(
-      collectionGroup(this.firestore, 'products')
+      collectionGroup(this.firestore, 'products'),
     );
     const allProducts = allProductsSnap.docs.map((d) => ({
       prod_id: d.id,

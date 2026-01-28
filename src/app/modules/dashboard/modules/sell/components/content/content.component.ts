@@ -57,11 +57,9 @@ export class ContentComponent {
   async getCategories() {
     try {
       this.lstCategories = await firstValueFrom(
-        this.categoryService.getCategories()
+        this.categoryService.getCategories(),
       );
-    } catch (error) {
-      console.error('Error al cargar empleados:', error);
-    }
+    } catch (error) {}
   }
 
   selectCategory(categoryId: any) {
@@ -81,7 +79,7 @@ export class ContentComponent {
     this.loading = true;
     this.lstProducts = await this.productService.getProductsPaginated(
       10,
-      nextPage
+      nextPage,
     );
 
     if (nextPage) {
@@ -118,19 +116,20 @@ export class ContentComponent {
 
   addToSelection(product: any) {
     if (product.prod_quantity_available <= 0) return;
+    if (product.prod_sold_pount == null || isNaN(product.prod_sold_pount)) {
+      product.prod_sold_pount = 0;
+    }
 
-    // SIEMPRE RESTAR SOBRE EL MISMO OBJETO
     product.prod_quantity_available--;
 
     const existing = this.selectedProducts.find(
-      (p) => p.prod_code === product.prod_code
+      (p) => p.prod_code === product.prod_code,
     );
 
     if (existing) {
       existing.pod_selectedQty += 1;
       this.updatePrice(existing);
     } else {
-      // NO HAGAS COPIA... reusa el MISMO objeto
       product.pod_selectedQty = 1;
       product.pro_price_unit =
         product.prod_discount_price ?? product.prod_sale_price;
@@ -138,9 +137,10 @@ export class ContentComponent {
       this.selectedProducts.push(product);
     }
 
-    // También actualiza referencias en selectedProductsUpdate
+    product.prod_sold_pount += 1;
+
     const existingUpdate = this.selectedProductsUpdate.find(
-      (p) => p.prod_code === product.prod_code
+      (p) => p.prod_code === product.prod_code,
     );
 
     if (existingUpdate) {
@@ -155,6 +155,8 @@ export class ContentComponent {
       item.pod_selectedQty++;
       item.prod_quantity_available--;
 
+      item.prod_sold_pount += 1;
+
       this.updatePrice(item);
 
       this.updateProductStock(item.prod_code, item.prod_quantity_available);
@@ -166,6 +168,7 @@ export class ContentComponent {
       item.pod_selectedQty--;
       item.prod_quantity_available++;
 
+      item.prod_sold_pount -= 1;
       this.updatePrice(item);
 
       this.updateProductStock(item.prod_code, item.prod_quantity_available);
@@ -174,8 +177,9 @@ export class ContentComponent {
 
   removeProduct(item: any) {
     item.prod_quantity_available += item.pod_selectedQty;
+    item.prod_sold_pount -= item.pod_selectedQty;
     this.selectedProducts = this.selectedProducts.filter(
-      (p) => p.prod_code !== item.prod_code
+      (p) => p.prod_code !== item.prod_code,
     );
 
     this.updateProductStock(item.prod_code, item.prod_quantity_available);
@@ -200,29 +204,29 @@ export class ContentComponent {
   updateProductStock(
     prodCode: string,
     newQty: number,
-    removeFromUpdate: boolean = false
+    removeFromUpdate: boolean = false,
   ) {
     const productInList = this.lstProducts.find(
-      (p) => p.prod_code === prodCode
+      (p) => p.prod_code === prodCode,
     );
     if (productInList) {
       productInList.prod_quantity_available = newQty;
     }
 
     const productInFiltered = this.filteredProducts.find(
-      (p) => p.prod_code === prodCode
+      (p) => p.prod_code === prodCode,
     );
     if (productInFiltered) {
       productInFiltered.prod_quantity_available = newQty;
     }
 
     const productInUpdate = this.selectedProductsUpdate.find(
-      (p) => p.prod_code === prodCode
+      (p) => p.prod_code === prodCode,
     );
 
     if (removeFromUpdate) {
       this.selectedProductsUpdate = this.selectedProductsUpdate.filter(
-        (p) => p.prod_code !== prodCode
+        (p) => p.prod_code !== prodCode,
       );
     } else if (productInUpdate) {
       productInUpdate.prod_quantity_available = newQty;
@@ -240,7 +244,7 @@ export class ContentComponent {
   getTotalPrice(): number {
     return this.selectedProducts.reduce(
       (acc, item) => acc + (item.pro_price_unit || 0),
-      0
+      0,
     );
   }
 
@@ -261,21 +265,21 @@ export class ContentComponent {
       if (result.isConfirmed) {
         this.selectedProducts.forEach((item) => {
           const productInList = this.lstProducts.find(
-            (p) => p.prod_code === item.prod_code
+            (p) => p.prod_code === item.prod_code,
           );
           if (productInList) {
             productInList.prod_quantity_available += item.pod_selectedQty;
           }
 
           const productInFiltered = this.filteredProducts.find(
-            (p) => p.prod_code === item.prod_code
+            (p) => p.prod_code === item.prod_code,
           );
           if (productInFiltered) {
             productInFiltered.prod_quantity_available += item.pod_selectedQty;
           }
 
           const productInUpdate = this.selectedProductsUpdate.find(
-            (p) => p.prod_code === item.prod_code
+            (p) => p.prod_code === item.prod_code,
           );
           if (productInUpdate) {
             productInUpdate.prod_quantity_available += item.pod_selectedQty;
@@ -386,7 +390,7 @@ export class ContentComponent {
         ).toFixed(2)}
       </td>
     </tr>
-  `
+  `,
       )
       .join('');
 
@@ -426,7 +430,7 @@ export class ContentComponent {
       <br>
 
       <div><span class="bold">Fecha emisión:</span> ${this.formatFechaCompleta(
-        ser.shop_date
+        ser.shop_date,
       )}</div>
 
 
@@ -488,7 +492,7 @@ export class ContentComponent {
       Number(partes[2]),
       ahora.getHours(),
       ahora.getMinutes(),
-      ahora.getSeconds()
+      ahora.getSeconds(),
     );
 
     return f.toLocaleString('es-EC', {
@@ -505,7 +509,7 @@ export class ContentComponent {
   syncStockWithCart() {
     this.filteredProducts.forEach((prod) => {
       const cartItem = this.selectedProducts.find(
-        (p) => p.prod_code === prod.prod_code
+        (p) => p.prod_code === prod.prod_code,
       );
       if (cartItem) {
         prod.prod_quantity_available =
@@ -532,7 +536,6 @@ export class ContentComponent {
     acc.pod_selectedQty += 1;
     acc.prod_quantity_available -= 1;
 
-    // Si manejas carrito:
     this.syncCart(acc);
   }
   decreaseMobile(acc: any) {
@@ -541,7 +544,6 @@ export class ContentComponent {
     acc.pod_selectedQty -= 1;
     acc.prod_quantity_available += 1;
 
-    // Limpia cuando llega a 0
     if (acc.pod_selectedQty === 0) {
       acc.pod_selectedQty = 0;
     }
@@ -559,20 +561,20 @@ export class ContentComponent {
       }
     } else {
       this.selectedProducts = this.selectedProducts.filter(
-        (p) => p.prod_id !== acc.prod_id
+        (p) => p.prod_id !== acc.prod_id,
       );
     }
   }
 
   isMobile(): boolean {
-    return window.innerWidth < 1024; // breakpoint lg
+    return window.innerWidth < 1024;
   }
 
   openCart() {
     if (this.isMobile()) {
-      this.openCartMobile = true; // 👉 abre como página en mobile
+      this.openCartMobile = true;
     } else {
-      this.showModalPurchase(); // 👉 funcionamiento normal en desktop
+      this.showModalPurchase();
     }
   }
 }

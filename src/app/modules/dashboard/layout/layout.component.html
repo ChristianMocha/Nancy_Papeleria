@@ -46,7 +46,7 @@
         (click)="goToPage('sell')"
         [ngClass]="{
           'bg-yellow-100 text-yellow-700 font-bold': currentPage === 'sell',
-          'text-gray-700 hover:bg-gray-100': currentPage !== 'sell'
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'sell',
         }"
         class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors"
       >
@@ -58,7 +58,7 @@
         [ngClass]="{
           'bg-yellow-100 text-yellow-700 font-bold':
             currentPage === 'movements',
-          'text-gray-700 hover:bg-gray-100': currentPage !== 'movements'
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'movements',
         }"
         class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors"
       >
@@ -85,7 +85,7 @@
         [ngClass]="{
           'bg-yellow-100 text-yellow-700 font-bold':
             currentPage === 'inventory',
-          'text-gray-700 hover:bg-gray-100': currentPage !== 'inventory'
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'inventory',
         }"
         class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors"
       >
@@ -93,22 +93,27 @@
       </a>
 
       <a
-        (click)="goToPage('employees')"
+        (click)="goToPage('winners')"
+        class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors"
         [ngClass]="{
           'bg-yellow-100 text-yellow-700 font-bold':
-            currentPage === 'employees',
-          'text-gray-700 hover:bg-gray-100': currentPage !== 'employees'
+            currentPage === 'winners',
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'winners',
         }"
-        class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors"
       >
-        <i class="fas fa-users"></i> Empleados
+        <span class="flex items-center gap-3">
+          <i class="fas fa-trophy"></i>
+          Productos Ganadores
+        </span>
+
+        <i class="fas fa-crown text-yellow-500 text-xs"></i>
       </a>
 
       <a
         (click)="goToPage('service')"
         [ngClass]="{
           'bg-yellow-100 text-yellow-700 font-bold': currentPage === 'service',
-          'text-gray-700 hover:bg-gray-100': currentPage !== 'service'
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'service',
         }"
         class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors"
       >
@@ -137,13 +142,25 @@
         [ngClass]="{
           'bg-yellow-100 text-yellow-700 font-bold':
             currentPage === 'suppliers',
-          'text-gray-700 hover:bg-gray-100': currentPage !== 'suppliers'
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'suppliers',
         }"
         class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors"
       >
         <span class="flex items-center gap-3"
           ><i class="fas fa-truck"></i> Proveedores</span
         >
+      </a>
+
+      <a
+        (click)="goToPage('employees')"
+        [ngClass]="{
+          'bg-yellow-100 text-yellow-700 font-bold':
+            currentPage === 'employees',
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'employees',
+        }"
+        class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors"
+      >
+        <i class="fas fa-users"></i> Empleados
       </a>
     </nav>
 

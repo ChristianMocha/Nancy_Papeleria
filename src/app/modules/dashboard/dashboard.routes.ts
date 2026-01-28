@@ -111,6 +111,13 @@ const DashboardRoute: Routes = [
           ).then((m) => m.ProductComponent),
       },
       {
+        path: 'winners',
+        loadComponent: () =>
+          import(
+            './modules/winning-products/winning-products.component'
+          ).then((m) => m.WinningProductsComponent),
+      },
+      {
         path: 'home',
         canMatch: [mobileOnlyGuard],
         loadComponent: () =>

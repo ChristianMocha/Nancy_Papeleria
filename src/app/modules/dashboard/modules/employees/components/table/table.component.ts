@@ -30,9 +30,7 @@ export class TableComponent {
   }
 
   async getEmployees() {
-    console.log('entrano el metodo de traer empleados');
     this.employeeService.getEmployees().subscribe((res) => {
-      console.log(res);
       this.lstEmployees = res;
       this.filteredEmployees = [...this.lstEmployees];
       this.totalPages = Math.ceil(this.lstEmployees.length / this.pageSize);
@@ -85,7 +83,7 @@ export class TableComponent {
       this.filteredEmployees = this.lstEmployees.filter(
         (emp) =>
           emp.emp_name?.toLowerCase().includes(term) ||
-          emp.emp_email?.toLowerCase().includes(term)
+          emp.emp_email?.toLowerCase().includes(term),
       );
     }
 

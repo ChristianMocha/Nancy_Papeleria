@@ -63,6 +63,7 @@ export class ProductComponent {
       prod_supplier_id: ['', Validators.required],
       prod_description: [''],
       prod_image: [''],
+      prod_sold_pount: [0],
 
       is_active: [true, Validators.required],
       created_by: [''],
@@ -84,7 +85,7 @@ export class ProductComponent {
     try {
       // 👇 Espera al primer valor del observable
       this.categories = await firstValueFrom(
-        this.categoryService.getCategories()
+        this.categoryService.getCategories(),
       );
     } catch (error) {
       console.error('Error al cargar empleados:', error);
@@ -95,7 +96,7 @@ export class ProductComponent {
     try {
       // 👇 Espera al primer valor del observable
       this.suppliers = await firstValueFrom(
-        this.suppliersService.getSuppliersActive()
+        this.suppliersService.getSuppliersActive(),
       );
     } catch (error) {
       console.error('Error al cargar proveedores:', error);
@@ -116,7 +117,7 @@ export class ProductComponent {
         const data = await this.productService.updateProduct(
           this.idCategory,
           this.idProduct,
-          this.formProd.value
+          this.formProd.value,
         );
         this.formProd.reset({
           is_active: this.formProd.value.is_active,
@@ -147,7 +148,7 @@ export class ProductComponent {
 
             const data = await this.productService.addProductToCategory(
               this.formProd.value.prod_category_id,
-              this.formProd.value
+              this.formProd.value,
             );
             this.loading = false;
 
@@ -166,7 +167,7 @@ export class ProductComponent {
           this.loading = false;
           this.alertService.showAlert(
             `Error al cargar empleados ${err}`,
-            'error'
+            'error',
           );
         });
     }
@@ -177,10 +178,6 @@ export class ProductComponent {
 
     const compressed = await this.compressImage(file, 0.6); // 60% calidad
     this.files.push(compressed);
-
-    console.log('Original:', file.size / 1024 / 1024, 'MB');
-    console.log('Comprimida:', compressed.size / 1024 / 1024, 'MB');
-    console.log(this.files[0]);
   }
 
   onRemove(event: any) {
@@ -224,7 +221,7 @@ export class ProductComponent {
             resolve(compressedFile);
           },
           'image/jpeg',
-          quality // valor entre 0 y 1 (0 = más compresión)
+          quality, // valor entre 0 y 1 (0 = más compresión)
         );
       };
     });

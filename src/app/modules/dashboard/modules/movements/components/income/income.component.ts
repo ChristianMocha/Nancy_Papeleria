@@ -91,13 +91,11 @@ export class IncomeComponent {
   }
 
   getTotalBillsAmount() {
-    console.log(this.inputTypeIn);
     this.isLoading = true;
     this.shoppingCartService
       .getTotalBillsAmount(this.selectedDate(), this.inputTypeIn)
       .then((res) => {
         this.billsAmount = res;
-        console.log(this.billsAmount);
         this.billsAmountEmit.emit(this.billsAmount);
       });
   }

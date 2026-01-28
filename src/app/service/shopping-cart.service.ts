@@ -75,7 +75,6 @@ export class ShoppingCartService {
   }
 
   async getData(date: string, rangeType: 'day' | 'week' | 'month' | 'year') {
-    console.log(rangeType);
     switch (rangeType) {
       case 'day': {
         return this.getPurchasesByDate(date);
@@ -107,7 +106,6 @@ export class ShoppingCartService {
     type: 'day' | 'week' | 'month' | 'year',
     date?: string
   ) {
-    console.log(type);
     const finalDate = date ?? new Date().toISOString().slice(0, 10);
     switch (type) {
       case 'day': {
@@ -149,7 +147,6 @@ export class ShoppingCartService {
   }
 
   async getBillsByWeek(date: string) {
-    console.log('Fecha recibida:', date);
 
     const purchasesRef = collection(this.firestore, 'bills');
 
@@ -176,7 +173,6 @@ export class ShoppingCartService {
     const startDate = monday.toISOString().slice(0, 10);
     const endDate = sunday.toISOString().slice(0, 10);
 
-    console.log('Rango semana:', startDate, '→', endDate);
 
     const q = query(
       purchasesRef,
@@ -251,12 +247,7 @@ export class ShoppingCartService {
     date: string,
     rangeType: 'day' | 'week' | 'month' | 'year'
   ): Promise<number> {
-    console.log('=============');
-    console.log(rangeType);
     const { startDate, endDate } = this.getDateRange(date, rangeType);
-    console.log(startDate);
-    console.log(endDate);
-    console.log('=============');
 
     const toLocalISODate = (d: Date) => {
       const year = d.getFullYear();

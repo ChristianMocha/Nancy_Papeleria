@@ -15,10 +15,11 @@ import { LoadingComponent } from '../../../../../shared/components/loading/loadi
   selector: 'app-content',
   imports: [CommonModule, FormsModule, SearchPipe, LoadingComponent],
   templateUrl: './content.component.html',
-  styleUrl: './content.component.scss',
+  styleUrl: './content.component.scss'
 })
 export class ContentComponent {
-  private readonly categoryService = inject(CategoryService);
+
+private readonly categoryService = inject(CategoryService);
   public readonly authService = inject(AuthService);
   public readonly productService = inject(ProductService);
   public router = inject(Router);
@@ -59,14 +60,11 @@ export class ContentComponent {
   }
 
   async getAllPorducts() {
-    this.productService.getAllProducts().subscribe({
+    this.productService.getProductsWinners().subscribe({
       next: (res) => {
         this.lstProducts = res;
         this.lstProducts = res.map((prod) => ({
           ...prod,
-          prod_start_date: prod.prod_start_date?.toDate
-            ? prod.prod_start_date.toDate()
-            : prod.prod_start_date,
         }));
 
         this.filteredList = [...this.lstProducts];
@@ -252,3 +250,4 @@ export class ContentComponent {
     this.updatePaginatedProducts(); // repaginar
   }
 }
+

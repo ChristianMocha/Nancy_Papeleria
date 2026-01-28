@@ -41,7 +41,6 @@ export class ContentComponent {
   }
 
   billsAmountEmit(data: any) {
-    console.log(data);
     this.billsAmount = data;
     this.calculateBalance();
   }
@@ -51,7 +50,6 @@ export class ContentComponent {
   }
 
   onRangeChange() {
-    console.log('entrando para el filtro de fechas');
     const now = new Date();
 
     switch (this.selectedRange) {
