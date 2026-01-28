@@ -268,7 +268,7 @@ export class IncomeComponent {
 
     <h3>Nancy</h3>
     <div>Tel: 0992522312</div>
-    <div>Dirección: Av. Ricardo Duran - Cuatro Esquinas</div>
+    <div>Dirección: Av. Ricardo Duran</div>
 
     <br>
 

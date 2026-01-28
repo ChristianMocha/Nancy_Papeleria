@@ -425,7 +425,7 @@ export class ContentComponent {
 
       <h3>Nancy</h3>
       <div class="left">Tel: 0992522312</div>
-      <div class="left">Dirección: Av. Ricardo Duran - Cuatro Esquinas</div>
+      <div class="left">Dirección: Av. Ricardo Duran</div>
 
       <br>
 
