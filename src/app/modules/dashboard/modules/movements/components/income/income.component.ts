@@ -257,8 +257,8 @@ export class IncomeComponent {
 
   <body>
 
-    <h3>CRTECNOLOGIA</h3>
-    <div>Tel: 0983922706</div>
+    <h3>Nancy</h3>
+    <div>Tel: 0992522312</div>
     <div>Dirección: Av. Ricardo Duran - Cuatro Esquinas</div>
 
     <br>

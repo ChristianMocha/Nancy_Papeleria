@@ -425,8 +425,8 @@ export class TechnicalServiceComponent {
             .toDate()
             .toLocaleDateString('es-EC')}</div>
           <hr style="margin: 15px 0;">
-          <div class="item"><span class="label">Empresa:</span> CrTecnologia</div>
-          <div class="item"><span class="label">Teléfono:</span> 0983922706</div>
+          <div class="item"><span class="label">Empresa:</span> Nancy</div>
+          <div class="item"><span class="label">Teléfono:</span> 0992522312</div>
           <div class="item"><span class="label">Dirección:</span> Av. Ricardo duran - Cuatro esquinas</div>
           <div class="item">
             <span class="label">QR:</span>

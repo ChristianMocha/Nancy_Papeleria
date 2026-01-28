@@ -5,7 +5,7 @@ import { NavBarComponent } from "../inventory/components/nav-bar/nav-bar.compone
 
 @Component({
   selector: 'app-winning-products',
-  imports: [NavbarComponent, ContentComponent, NavBarComponent],
+  imports: [NavbarComponent, ContentComponent],
   templateUrl: './winning-products.component.html',
   styleUrl: './winning-products.component.scss'
 })

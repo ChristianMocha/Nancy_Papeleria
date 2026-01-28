@@ -5,8 +5,8 @@ import axios from 'axios';
   providedIn: 'root'
 })
 export class UploadService {
-  private cloudName = 'ddhsie3ya'; // 👈 tu Cloud Name
-  private uploadPreset = 'CrTecnologia'; // 👈 el nombre del preset (no el PID)
+  private cloudName = 'dchngmhud'; // 👈 tu Cloud Name
+  private uploadPreset = 'NancyPapeleria'; // 👈 el nombre del preset (no el PID)
 
   async uploadImage(file: File): Promise<string> {
     const url = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
