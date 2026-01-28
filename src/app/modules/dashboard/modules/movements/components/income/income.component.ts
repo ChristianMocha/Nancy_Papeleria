@@ -17,7 +17,7 @@ export class IncomeComponent {
   public totalSalesEmit = output<number>();
   public billsAmountEmit = output<number>();
   public selectedDate = input<string>(
-    new Date().toISOString().substring(0, 10)
+    new Date().toISOString().substring(0, 10),
   );
   public router = inject(Router);
   public inputType = input<any>();
@@ -103,7 +103,7 @@ export class IncomeComponent {
   getTotalPrice() {
     this.totalSales = this.lstPurchases.reduce(
       (acc, purchase) => acc + (purchase.shop_total || 0),
-      0
+      0,
     );
     this.totalSalesEmit.emit(this.totalSales);
   }
@@ -111,7 +111,7 @@ export class IncomeComponent {
   getTotalEarnings() {
     this.totalEarnings = this.lstPurchases.reduce(
       (acc, purchase) => acc + (purchase.total_earnings || 0),
-      0
+      0,
     );
     this.totalEarningsEmit.emit(this.totalEarnings);
   }
@@ -149,7 +149,7 @@ export class IncomeComponent {
     const filtered = this.allPurchases.filter(
       (purchase) =>
         purchase.shop_concept?.toLowerCase().includes(term) ||
-        purchase.shop_total?.toString().includes(term)
+        purchase.shop_total?.toString().includes(term),
     );
 
     this.lstPurchases = filtered;
@@ -180,22 +180,22 @@ export class IncomeComponent {
   }
 
   printFactura(ser: any) {
-    const rows = ser.shop_products
-      .map(
-        (prod: any) => `
+    let rows = '';
+
+    if (Array.isArray(ser.shop_products) && ser.shop_products.length > 0) {
+      rows = ser.shop_products
+        .map(
+          (prod: any) => `
       <tr>
-        <td>
-          ${prod.shop_pod_selectedQty}<br>
-        </td>
+        <td>${prod.shop_pod_selectedQty}</td>
         <td>${prod.shop_prod_name}</td>
         <td class="col-unit">
           ${
             prod.shop_prod_discount_price > 0
               ? prod.shop_prod_discount_price
               : prod.shop_prod_sale_price
-          } 
+          }
         </td>
-        
         <td class="col-total">
           ${(
             (prod.shop_prod_discount_price > 0
@@ -203,11 +203,20 @@ export class IncomeComponent {
               : prod.shop_prod_sale_price) * prod.shop_pod_selectedQty
           ).toFixed(2)}
         </td>
-
       </tr>
-    `
-      )
-      .join('');
+    `,
+        )
+        .join('');
+    } else {
+      rows = `
+    <tr>
+      <td>1</td>
+      <td>${ser.shop_concept ?? 'Producto'}</td>
+      <td class="col-unit">${ser.shop_total.toFixed(2)}</td>
+      <td class="col-total">${ser.shop_total.toFixed(2)}</td>
+    </tr>
+  `;
+    }
 
     const html = `
   <html>
@@ -264,7 +273,7 @@ export class IncomeComponent {
     <br>
 
     <div><span class="bold">Fecha emisión:</span> ${this.formatFechaCompleta(
-      ser.shop_date
+      ser.shop_date,
     )}</div>
 
     <br>
@@ -324,7 +333,7 @@ export class IncomeComponent {
       Number(partes[2]),
       ahora.getHours(),
       ahora.getMinutes(),
-      ahora.getSeconds()
+      ahora.getSeconds(),
     );
 
     return f.toLocaleString('es-EC', {
