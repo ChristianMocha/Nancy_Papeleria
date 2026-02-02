@@ -266,9 +266,8 @@ export class IncomeComponent {
 
   <body>
 
-    <h3>Nancy</h3>
-    <div>Tel: 0992522312</div>
-    <div>Dirección: Av. Ricardo Duran</div>
+    <h3>Papelería regalazo</h3>
+    <div>Dirección: Av Ricardo Durán y 8 de septiembre</div>
 
     <br>
 

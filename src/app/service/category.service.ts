@@ -10,6 +10,7 @@ import {
   Query,
   setDoc,
   Timestamp,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Category } from '../modules/shared/models/category';
@@ -43,7 +44,8 @@ export class CategoryService {
     >;
   }
 
-  deleteCategory(idCategory: string) {
+  deleteCategory(idCategory: any) {
+    console.log(idCategory);
     const docRef = doc(this.firestore, `category/${idCategory}`);
     return deleteDoc(docRef);
   }
@@ -51,5 +53,14 @@ export class CategoryService {
   getCategoryById(id: string): Observable<any> {
     const docRef = doc(this.firestore, `category/${id}`);
     return docData(docRef, { idField: 'id' });
+  }
+
+  updateCategory(id: string, data: any) {
+    data['updated_at'] = Timestamp.fromDate(
+      this.dateService.getDateTimeStamp()
+    );
+    data['updated_by'] = this.authService.getUserLocalStorage();
+    const employeeRef = doc(this.firestore, `category/${id}`);
+    return updateDoc(employeeRef, data);
   }
 }

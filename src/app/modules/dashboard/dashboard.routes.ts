@@ -1,7 +1,13 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '../shared/guards/auth.guard';
-import { isDesktopGuard, isMobileGuard } from '../shared/guards/initial-redirect.guard';
-import { desktopOnlyGuard, mobileOnlyGuard } from '../shared/guards/mobile-only.guard';
+import {
+  isDesktopGuard,
+  isMobileGuard,
+} from '../shared/guards/initial-redirect.guard';
+import {
+  desktopOnlyGuard,
+  mobileOnlyGuard,
+} from '../shared/guards/mobile-only.guard';
 
 const DashboardRoute: Routes = [
   {
@@ -31,97 +37,104 @@ const DashboardRoute: Routes = [
         path: 'inventory',
         loadComponent: () =>
           import('./modules/inventory/inventory.component').then(
-            (m) => m.InventoryComponent
+            (m) => m.InventoryComponent,
           ),
       },
       {
         path: 'sell',
         loadComponent: () =>
           import('./modules/sell/sell.component').then((m) => m.SellComponent),
-        data: { hideNavbar: true }
+        data: { hideNavbar: true },
       },
       {
         path: 'employees',
         loadComponent: () =>
           import('./modules/employees/employees.component').then(
-            (m) => m.EmployeesComponent
+            (m) => m.EmployeesComponent,
           ),
       },
       {
         path: 'service',
         loadComponent: () =>
-          import(
-            './modules/technical-service/technical-service.component'
-          ).then((m) => m.TechnicalServiceComponent),
+          import('./modules/technical-service/technical-service.component').then(
+            (m) => m.TechnicalServiceComponent,
+          ),
       },
       {
         path: 'movements',
         loadComponent: () =>
           import('./modules/movements/movements.component').then(
-            (m) => m.MovementsComponent
+            (m) => m.MovementsComponent,
           ),
       },
       {
         path: 'statistics',
         loadComponent: () =>
           import('./modules/statistics/statistics.component').then(
-            (m) => m.StatisticsComponent
+            (m) => m.StatisticsComponent,
           ),
       },
       {
         path: 'clients',
         loadComponent: () =>
           import('./modules/clients/clients.component').then(
-            (m) => m.ClientsComponent
+            (m) => m.ClientsComponent,
           ),
       },
       {
         path: 'suppliers',
         loadComponent: () =>
           import('./modules/suppliers/suppliers.component').then(
-            (m) => m.SuppliersComponent
+            (m) => m.SuppliersComponent,
           ),
       },
       {
         path: 'product/add',
         loadComponent: () =>
-          import(
-            './modules/inventory/components/product/product.component'
-          ).then((m) => m.ProductComponent),
+          import('./modules/inventory/components/product/product.component').then(
+            (m) => m.ProductComponent,
+          ),
       },
       {
         path: 'product/add/:idCategory',
         loadComponent: () =>
-          import(
-            './modules/inventory/components/product/product.component'
-          ).then((m) => m.ProductComponent),
+          import('./modules/inventory/components/product/product.component').then(
+            (m) => m.ProductComponent,
+          ),
       },
       {
         path: 'product/edit/:idCategory/:idProduct',
         loadComponent: () =>
-          import(
-            './modules/inventory/components/product/product.component'
-          ).then((m) => m.ProductComponent),
+          import('./modules/inventory/components/product/product.component').then(
+            (m) => m.ProductComponent,
+          ),
       },
       {
         path: 'product/edit/:idCategory/:id',
         loadComponent: () =>
-          import(
-            './modules/inventory/components/product/product.component'
-          ).then((m) => m.ProductComponent),
+          import('./modules/inventory/components/product/product.component').then(
+            (m) => m.ProductComponent,
+          ),
       },
       {
         path: 'winners',
         loadComponent: () =>
-          import(
-            './modules/winning-products/winning-products.component'
-          ).then((m) => m.WinningProductsComponent),
+          import('./modules/winning-products/winning-products.component').then(
+            (m) => m.WinningProductsComponent,
+          ),
       },
       {
         path: 'home',
         canMatch: [mobileOnlyGuard],
         loadComponent: () =>
           import('./modules/home/home.component').then((m) => m.HomeComponent),
+      },
+      {
+        path: 'category',
+        loadComponent: () =>
+          import('./modules/category/category.component').then(
+            (m) => m.CategoryComponent,
+          ),
       },
 
       {

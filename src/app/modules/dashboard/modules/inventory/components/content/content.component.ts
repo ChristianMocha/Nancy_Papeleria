@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../../../service/auth.service';
 import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
+import { SuppliersService } from '../../../../../../service/suppliers.service';
 
 @Component({
   selector: 'app-content',
@@ -21,20 +22,26 @@ export class ContentComponent {
   private readonly categoryService = inject(CategoryService);
   public readonly authService = inject(AuthService);
   public readonly productService = inject(ProductService);
+  public readonly suppliersService = inject(SuppliersService);
   public router = inject(Router);
 
   public lstCategories: Category[] = [];
   public lstProducts: any[] = [];
-  public totalInventoryCost: number = 0;
-  public totalInventoryCostClient: number = 0;
+  public lstSuppliers: any[] = [];
 
   public searchTerm: string = '';
   public categoryName: string = '';
 
+  public totalInventoryCost: number = 0;
+  public totalInventoryCostClient: number = 0;
   public currentPage: number = 1;
   public itemsPerPage: number = 4;
+  public totalCliente = 0;
+  public totalProveedor = 0;
+
   public paginatedProducts: any[] = [];
   public filteredList: any[] = [];
+
   public selectedImage: string | null = null;
   public showModal: boolean = false;
   public loading: boolean = false;
@@ -46,8 +53,9 @@ export class ContentComponent {
   ngOnInit() {
     this.getAllCategories();
     this.getAllPorducts();
-    this.getAllProductsCostTotal();
-    this.getAllProductsCostTotalClient();
+    this.getSuppliers();
+    // this.getAllProductsCostTotal();
+    // this.getAllProductsCostTotalClient();
     this.getCategories();
   }
 
@@ -70,8 +78,10 @@ export class ContentComponent {
         }));
 
         this.filteredList = [...this.lstProducts];
+        console.log(this.lstProducts);
 
         this.updatePaginatedProducts();
+        this.calculateCustomer();
       },
       error: (err) => console.error('❌ Error:', err),
     });
@@ -101,7 +111,6 @@ export class ContentComponent {
   async onCategoryChange(event: any) {
     const selectedCategoryId = (event.target as HTMLSelectElement).value;
     if (!selectedCategoryId) return this.getAllPorducts();
-
   }
 
   get totalPages(): number {
@@ -115,7 +124,7 @@ export class ContentComponent {
     return this.filteredList.filter(
       (p) =>
         p.prod_name.toLowerCase().includes(term) ||
-        p.prod_code.toLowerCase().includes(term)
+        p.prod_code.toLowerCase().includes(term),
     );
   }
 
@@ -145,6 +154,7 @@ export class ContentComponent {
   onSearchChange() {
     this.currentPage = 1;
     this.updatePaginatedProducts();
+    this.calculateCustomer();
   }
 
   editProduct(prod: any) {
@@ -182,7 +192,7 @@ export class ContentComponent {
         Swal.fire(
           'Eliminado',
           'El registro fue eliminado correctamente.',
-          'success'
+          'success',
         );
       });
   }
@@ -229,7 +239,7 @@ export class ContentComponent {
   async getCategories() {
     try {
       this.lstCategories = await firstValueFrom(
-        this.categoryService.getCategories()
+        this.categoryService.getCategories(),
       );
     } catch (error) {
       console.error('Error al cargar empleados:', error);
@@ -244,11 +254,62 @@ export class ContentComponent {
       this.filteredList = [...this.lstProducts];
     } else {
       this.filteredList = this.lstProducts.filter(
-        (p) => p.prod_category_id === selectedCategoryId
+        (p) => p.prod_category_id === selectedCategoryId,
       );
     }
 
     this.currentPage = 1; // reset página
     this.updatePaginatedProducts(); // repaginar
+    this.calculateCustomer();
+  }
+
+  calculateCustomer() {
+    const list = this.filteredProducts ?? [];
+
+    this.totalCliente = list.reduce((sum, p) => {
+      const price = Number(p.prod_sale_price) || 0;
+      const qty = Number(p.prod_quantity_available) || 0;
+      return sum + price * qty;
+    }, 0);
+
+    this.totalProveedor = list.reduce((sum, p) => {
+      const cost = Number(p.prod_purchase_cost) || 0;
+      const qty = Number(p.prod_quantity_available) || 0;
+      return sum + cost * qty;
+    }, 0);
+
+    console.log('Total cliente:', this.totalCliente);
+    console.log('Total proveedor:', this.totalProveedor);
+  }
+
+  goToSell() {
+    this.router.navigate(['sell']);
+  }
+
+  async getSuppliers() {
+    try {
+      this.lstSuppliers = await firstValueFrom(
+        this.suppliersService.getSuppliers(),
+      );
+    } catch (error) {
+      console.error('Error al cargar empleados:', error);
+    }
+  }
+
+  async selectSupplier(event: any) {
+    const selectedSupplierId = (event.target as HTMLSelectElement).value;
+    if (!selectedSupplierId) return this.getAllPorducts();
+
+    if (selectedSupplierId === 'all') {
+      this.filteredList = [...this.lstProducts];
+    } else {
+      this.filteredList = this.lstProducts.filter(
+        (p) => p.prod_supplier_id === selectedSupplierId,
+      );
+    }
+
+    this.currentPage = 1; 
+    this.updatePaginatedProducts();
+    this.calculateCustomer();
   }
 }

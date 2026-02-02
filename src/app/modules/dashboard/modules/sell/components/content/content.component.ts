@@ -423,9 +423,8 @@ export class ContentComponent {
 
     <body>
 
-      <h3>Nancy</h3>
-      <div class="left">Tel: 0992522312</div>
-      <div class="left">Dirección: Av. Ricardo Duran</div>
+      <h3>Papelería regalazo</h3>
+      <div class="left">Dirección: Av Ricardo Durán y 8 de septiembre</div>
 
       <br>
 

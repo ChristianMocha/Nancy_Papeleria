@@ -88,11 +88,21 @@
       </a>
 
       <a
+        (click)="goToPage('category')"
+        [ngClass]="{
+          'bg-yellow-100 text-yellow-700 font-bold': currentPage === 'category',
+          'text-gray-700 hover:bg-gray-100': currentPage !== 'category',
+        }"
+        class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors"
+      >
+        <i class="fas fa-layer-group"></i> Categorías
+      </a>
+
+      <a
         (click)="goToPage('winners')"
         class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors"
         [ngClass]="{
-          'bg-yellow-100 text-yellow-700 font-bold':
-            currentPage === 'winners',
+          'bg-yellow-100 text-yellow-700 font-bold': currentPage === 'winners',
           'text-gray-700 hover:bg-gray-100': currentPage !== 'winners',
         }"
       >
