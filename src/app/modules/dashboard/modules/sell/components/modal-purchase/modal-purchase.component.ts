@@ -8,10 +8,10 @@ import { AuthService } from '../../../../../../service/auth.service';
   selector: 'app-modal-purchase',
   imports: [CommonModule, FormsModule, LoadingComponent],
   templateUrl: './modal-purchase.component.html',
-  styleUrl: './modal-purchase.component.scss'
+  styleUrl: './modal-purchase.component.scss',
 })
 export class ModalPurchaseComponent {
-      public readonly authService = inject(AuthService);
+  public readonly authService = inject(AuthService);
 
   public totalSale = input<number>(0);
   public close = output<any>();
@@ -20,9 +20,24 @@ export class ModalPurchaseComponent {
   public customerPayment: any;
   public changeAmount: number = 0;
   public loading: boolean = false;
+  public viewMasssageError: boolean = false;
 
   calculateChange() {
     this.changeAmount = Math.max(this.customerPayment - this.totalSale(), 0);
+   if (
+      this.customerPayment != null ||
+      this.customerPayment >= 0.01 ||
+      this.customerPayment >= this.totalSale()
+    ) {
+      this.viewMasssageError = false;
+    } 
+    if (
+      this.customerPayment == null ||
+      this.customerPayment < 0.01 ||
+      this.customerPayment < this.totalSale()
+    )  {
+      this.viewMasssageError = true;
+    }
   }
 
   handleClose() {
@@ -31,15 +46,22 @@ export class ModalPurchaseComponent {
 
   handleConfirm() {
     this.loading = true;
-    if(this.customerPayment < 0 || this.customerPayment < this.totalSale() ) {
+    if (
+      this.customerPayment == null ||
+      this.customerPayment < 0.01 ||
+      this.customerPayment < this.totalSale()
+    ) {
       this.loading = false;
+      this.viewMasssageError = true;
       return;
-    };
+    }
 
     this.confirmSale.emit({
       payment: this.customerPayment,
       change: this.changeAmount
     });
+    this.loading = false;
+    this.viewMasssageError = false;
+    this.handleClose();
   }
-
 }

@@ -114,8 +114,7 @@ export class ProductComponent {
 
     if (this.idCategory && this.idProduct) {
       try {
-        const data = await this.productService.updateProduct(
-          this.idCategory,
+        const data = await this.productService.updateProductGlobal(
           this.idProduct,
           this.formProd.value,
         );
@@ -123,6 +122,7 @@ export class ProductComponent {
           is_active: this.formProd.value.is_active,
         });
         this.loading = false;
+        this.router.navigate([`/inventory`]);
 
         this.alertService.showAlert('Producto editado', 'success');
       } catch (error) {
@@ -184,18 +184,35 @@ export class ProductComponent {
     this.files.splice(this.files.indexOf(event), 1);
   }
 
-  getProductById() {
-    if (!this.idProduct || !this.idCategory) return;
+  async getProductById() {
+    if (!this.idProduct) return;
 
-    this.productService
-      .getProductById(this.idCategory, this.idProduct)
-      .subscribe({
-        next: (res) => {
-          this.formProd.patchValue(res);
-        },
-        error: (err) => console.error('❌ Error:', err),
-      });
+    const product = await this.productService.getProductByIdGlobal(
+      this.idProduct,
+    );
+
+    if (product) {
+      this.formProd.patchValue(product);
+    }
   }
+
+  // getProductById() {
+  //   if (!this.idProduct || !this.idCategory) return;
+  //   console.log('category', this.idCategory);
+  //   console.log('rpoduct', this.idProduct);
+
+  //   this.productService.getProductByIdGlobal(this.idProduct).then((res) => {
+  //     console.log(res);
+  //     // this.formProd.patchValue(res);
+  //   });
+  //   // .subscribe({
+  //   //   next: (res) => {
+  //   //     console.log(res);
+  //   //     this.formProd.patchValue(res);
+  //   //   },
+  //   //   error: (err) => console.error('❌ Error:', err),
+  //   // });
+  // }
 
   compressImage(file: File, quality: number = 0.7): Promise<File> {
     return new Promise((resolve) => {

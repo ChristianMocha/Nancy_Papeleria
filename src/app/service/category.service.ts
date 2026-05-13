@@ -11,8 +11,9 @@ import {
   setDoc,
   Timestamp,
   updateDoc,
+  getCountFromServer,
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { from, Observable, switchMap } from 'rxjs';
 import { Category } from '../modules/shared/models/category';
 import { DateService } from './date.service';
 import { AuthService } from './auth.service';
@@ -37,15 +38,31 @@ export class CategoryService {
     return setDoc(newDocRef, category);
   }
 
-  getCategories(): Observable<Category[]> {
-    const catsRef = collection(this.firestore, 'category') as Query<Category>;
-    return collectionData(catsRef, { idField: 'cat_id' }) as Observable<
-      Category[]
-    >;
-  }
+  getCategories(): Observable<any[]> {
+  const catsRef = collection(this.firestore, 'category');
+
+  return collectionData(catsRef, { idField: 'cat_id' }).pipe(
+    switchMap((categories: any[]) => {
+      const promises = categories.map(async (cat) => {
+        const productsRef = collection(
+          this.firestore,
+          `category/${cat.cat_id}/products`
+        );
+
+        const snapshot = await getCountFromServer(productsRef);
+
+        return {
+          ...cat,
+          productCount: snapshot.data().count,
+        };
+      });
+
+      return from(Promise.all(promises));
+    })
+  );
+}
 
   deleteCategory(idCategory: any) {
-    console.log(idCategory);
     const docRef = doc(this.firestore, `category/${idCategory}`);
     return deleteDoc(docRef);
   }

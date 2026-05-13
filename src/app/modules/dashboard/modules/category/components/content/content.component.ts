@@ -74,11 +74,19 @@ export class ContentComponent {
   }
 
   editCategory(cat: any) {
-    console.log('Editar categoría:', cat);
     this.category.emit(cat);
   }
 
   confirmDelete(cat: any) {
+    if (cat.productCount > 0) {
+      
+      Swal.fire(
+            'Error',
+            'No puede eliminar esta categoría porque tiene productos asociados.',
+            'error',
+          );
+      return;
+    }
     Swal.fire({
       title: '¿Eliminar categoría?',
       text: `Categoría: ${cat.cat_name}`,
@@ -96,7 +104,6 @@ export class ContentComponent {
             'success',
           );
         });
-        console.log('Eliminar:', cat);
         this.getCategories();
       }
     });

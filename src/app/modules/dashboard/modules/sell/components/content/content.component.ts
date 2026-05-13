@@ -342,6 +342,13 @@ export class ContentComponent {
           this.showModal = false;
           this.deleteSearchTerm.emit('');
           this.getAllPorducts();
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Productos vendidos exitosamente",
+            showConfirmButton: false,
+            timer: 1500
+          });
         });
 
       Swal.fire({

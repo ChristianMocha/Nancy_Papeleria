@@ -78,7 +78,6 @@ export class ContentComponent {
         }));
 
         this.filteredList = [...this.lstProducts];
-        console.log(this.lstProducts);
 
         this.updatePaginatedProducts();
         this.calculateCustomer();
@@ -187,7 +186,7 @@ export class ContentComponent {
 
   deleteProduct(prod: any) {
     this.productService
-      .deleteProduct(prod.prod_category_id, prod.prod_id)
+      .deleteProductGlobal(prod.prod_id)
       .then((res) => {
         Swal.fire(
           'Eliminado',
@@ -278,8 +277,6 @@ export class ContentComponent {
       return sum + cost * qty;
     }, 0);
 
-    console.log('Total cliente:', this.totalCliente);
-    console.log('Total proveedor:', this.totalProveedor);
   }
 
   goToSell() {

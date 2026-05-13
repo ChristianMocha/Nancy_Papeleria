@@ -18,6 +18,7 @@
     <table class="min-w-full text-sm text-gray-700 border">
       <thead class="bg-gray-100 border-b border-gray-300">
         <tr>
+          <th class="py-3 px-4 text-left font-semibold">id</th>
           <th class="py-3 px-4 text-left font-semibold">Concepto</th>
           <th class="py-3 px-4 text-left font-semibold">Valor</th>
           <th class="py-3 px-4 text-left font-semibold">Ganancias</th>
@@ -37,6 +38,9 @@
           *ngFor="let purchase of paginatedProducts"
           class="border-b hover:bg-gray-50 transition-all"
         >
+          <td class="py-3 px-4 font-medium text-gray-800">
+            {{ purchase.shop_id }}
+          </td>
           <td class="py-3 px-4 font-medium text-gray-800">
             {{ purchase.shop_concept }}
           </td>

@@ -29,7 +29,6 @@ export class CategoryComponent {
   public cat_id: any;
 
   ngOnInit() {
-    console.log(this.authService.isAdmin());
   }
 
   showModalCategories() {
@@ -79,7 +78,6 @@ export class CategoryComponent {
   }
 
   category(data: any) {
-    console.log(data);
     this.cat_id = data.cat_id;
     this.categoryName = data.cat_name;
     this.showModal = true;

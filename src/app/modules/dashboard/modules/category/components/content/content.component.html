@@ -4,20 +4,19 @@
 </div>
 
 <!-- BUSCADOR -->
-<div class="mb-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+<div
+  class="mb-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between"
+>
   <div class="w-full sm:max-w-sm">
     <input
       type="text"
       [(ngModel)]="searchTerm"
       (input)="onSearch()"
       placeholder="Buscar por nombre..."
-      class="w-full rounded-lg border border-gray-300 px-4 py-2
-             text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
-             focus:border-blue-500"
+      class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
     />
   </div>
 </div>
-
 
 <!-- TABLE (Desktop + Mobile con scroll) -->
 <div *ngIf="!loading" class="bg-white rounded-xl shadow overflow-hidden">
@@ -27,6 +26,7 @@
         <tr>
           <th class="p-3 whitespace-nowrap">Nombre</th>
           <th class="p-3 whitespace-nowrap">Fecha</th>
+          <th class="p-3 whitespace-nowrap">Cantidad de productos</th>
           <th class="p-3 whitespace-nowrap text-center">Opciones</th>
         </tr>
       </thead>
@@ -41,14 +41,20 @@
             {{ cat.cat_name }}
           </td>
 
-
           <!-- Fecha -->
           <td class="p-3 whitespace-nowrap text-gray-600">
             {{
               cat.created_at?.toDate
-                ? (cat.created_at.toDate() | date: 'dd/MM/yyyy HH:mm:ss')
-                : '-'
+                ? (cat.created_at.toDate() | date: "dd/MM/yyyy HH:mm:ss")
+                : "-"
             }}
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            <span
+              class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700"
+            >
+              {{ cat.productCount }} productos
+            </span>
           </td>
 
           <!-- Opciones -->
@@ -79,8 +85,7 @@
     <button
       (click)="prevPage()"
       [disabled]="currentPage === 1"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300
-             disabled:opacity-50 disabled:cursor-not-allowed"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       Anterior
     </button>
@@ -92,8 +97,7 @@
     <button
       (click)="nextPage()"
       [disabled]="currentPage === totalPages"
-      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300
-             disabled:opacity-50 disabled:cursor-not-allowed"
+      class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       Siguiente
     </button>

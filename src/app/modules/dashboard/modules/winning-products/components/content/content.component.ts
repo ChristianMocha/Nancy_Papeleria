@@ -175,7 +175,7 @@ private readonly categoryService = inject(CategoryService);
 
   deleteProduct(prod: any) {
     this.productService
-      .deleteProduct(prod.prod_category_id, prod.prod_id)
+      .deleteProductGlobal(prod.prod_id)
       .then((res) => {
         Swal.fire(
           'Eliminado',

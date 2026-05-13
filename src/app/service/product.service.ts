@@ -106,33 +106,83 @@ export class ProductService {
     this.lastVisible = null;
   }
 
-  getProductById(categoryId: string, productId: string): Observable<any> {
-    const productRef = doc(
-      this.firestore,
-      `category/${categoryId}/products/${productId}`,
+  // getProductById(categoryId: string, productId: string): Observable<any> {
+  //   const productRef = doc(
+  //     this.firestore,
+  //     `category/${categoryId}/products/${productId}`,
+  //   );
+  //   return docData(productRef, { idField: 'id' });
+  // }
+
+  async getProductByIdGlobal(productId: string) {
+    const q = query(
+      collectionGroup(this.firestore, 'products'),
+      where('prod_id', '==', productId),
     );
-    return docData(productRef, { idField: 'id' });
+
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      return { id: doc.id, ...doc.data() };
+    }
+
+    return null;
   }
 
-  updateProduct(categoryId: string, productId: string, data: any) {
-    const productRef = doc(
-      this.firestore,
-      `category/${categoryId}/products/${productId}`,
+  // updateProduct(categoryId: string, productId: string, data: any) {
+  //   const productRef = doc(
+  //     this.firestore,
+  //     `category/${categoryId}/products/${productId}`,
+  //   );
+  //   data['updated_at'] = Timestamp.fromDate(
+  //     this.dateService.getDateTimeStamp(),
+  //   );
+  //   data['updated_by'] = this.authService.getUserLocalStorage();
+  //   data.prod_update_date = this.dateService.getDate();
+  //   return updateDoc(productRef, data);
+  // }
+
+  async updateProductGlobal(productId: string, data: any) {
+    const q = query(
+      collectionGroup(this.firestore, 'products'),
+      where('prod_id', '==', productId),
     );
+
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      throw new Error('Producto no encontrado');
+    }
+
+    const docSnap = snapshot.docs[0];
+
+    const productRef = docSnap.ref;
+
     data['updated_at'] = Timestamp.fromDate(
       this.dateService.getDateTimeStamp(),
     );
     data['updated_by'] = this.authService.getUserLocalStorage();
-    data.prod_update_date = this.dateService.getDate();
+    data['prod_update_date'] = this.dateService.getDate();
+
     return updateDoc(productRef, data);
   }
 
-  deleteProduct(categoryId: string, productId: string) {
-    const docRef = doc(
-      this.firestore,
-      `category/${categoryId}/products/${productId}`,
+  async deleteProductGlobal(productId: string) {
+    const q = query(
+      collectionGroup(this.firestore, 'products'),
+      where('prod_id', '==', productId),
     );
-    return deleteDoc(docRef);
+
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      throw new Error('Producto no encontrado');
+    }
+
+    const docSnap = snapshot.docs[0];
+
+    return deleteDoc(docSnap.ref);
   }
 
   async getAllProductsCostTotal(): Promise<number> {
