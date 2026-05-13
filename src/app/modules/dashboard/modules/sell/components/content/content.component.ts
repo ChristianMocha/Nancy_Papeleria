@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { ShoppingCartService } from '../../../../../../service/shopping-cart.service';
 import { ModalPurchaseComponent } from '../modal-purchase/modal-purchase.component';
 import { DateService } from '../../../../../../service/date.service';
+import { ToastService } from '../../../../../../service/toast.service';
 
 @Component({
   selector: 'app-content',
@@ -21,6 +22,7 @@ export class ContentComponent {
   public lstProductsSearch = input<any[]>([]);
   public searchTerm = input<any>();
   public deleteSearchTerm = output<any>();
+  private readonly toastService = inject(ToastService);
 
   private readonly categoryService = inject(CategoryService);
   public readonly productService = inject(ProductService);
@@ -38,6 +40,7 @@ export class ContentComponent {
   public showModal: boolean = false;
   public loading: boolean = false;
   public showButtonMore: boolean = false;
+  public loadingVenta: boolean = false;
 
   public shopDate: string = '';
   public openCartMobile = false;
@@ -333,40 +336,51 @@ export class ContentComponent {
       })),
     };
 
-    this.shoppingCartService.savePurchase(formattedData).then((res) => {
-      this.shoppingCartService
-        .updateMultipleProducts(this.selectedProductsUpdate)
-        .then((res) => {
-          this.selectedProducts = [];
-          this.selectedProductsUpdate = [];
-          this.showModal = false;
-          this.deleteSearchTerm.emit('');
-          this.getAllPorducts();
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Productos vendidos exitosamente",
-            showConfirmButton: false,
-            timer: 1500
+    this.shoppingCartService
+      .savePurchase(formattedData)
+      .then((res) => {
+        this.shoppingCartService
+          .updateMultipleProducts(this.selectedProductsUpdate)
+          .then((res) => {
+            this.selectedProducts = [];
+            this.selectedProductsUpdate = [];
+            this.showModal = false;
+            this.deleteSearchTerm.emit('');
+            this.getAllPorducts();
+            // Swal.fire({
+            //   position: 'top-end',
+            //   icon: 'success',
+            //   title: 'Productos vendidos exitosamente',
+            //   showConfirmButton: false,
+            //   timer: 1500,
+            // });
+            this.loadingVenta = true;
+            this.toastService.showSuccess('Productos vendidos exitosamente');
           });
-        });
 
-      Swal.fire({
-        title: '¿Desea imprimir Recibo?',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: 'Si',
-        denyButtonText: `No`,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.printFactura(formattedData);
-        }
+        Swal.fire({
+          title: '¿Desea imprimir Recibo?',
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: 'Si',
+          denyButtonText: `No`,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.printFactura(formattedData);
+          }
+        });
+      })
+      .catch((err) => {
+        this.loadingVenta = true;
+        this.toastService.showError(err.message);
       });
-    });
   }
 
   showModalPurchase() {
-    if (this.getTotalPrice() > 0) this.showModal = true;
+    if (this.getTotalPrice() > 0) {
+      this.showModal = true;
+      this.loadingVenta = false;
+    }
   }
 
   printFactura(ser: any) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoadingComponent } from '../../../../../shared/components/loading/loading.component';
 import { AuthService } from '../../../../../../service/auth.service';
@@ -14,6 +14,8 @@ export class ModalPurchaseComponent {
   public readonly authService = inject(AuthService);
 
   public totalSale = input<number>(0);
+  public loadingVenta = input<boolean>(false);
+  public loadingVentaEmmit = output<boolean>();
   public close = output<any>();
   public confirmSale = output<any>();
 
@@ -22,20 +24,33 @@ export class ModalPurchaseComponent {
   public loading: boolean = false;
   public viewMasssageError: boolean = false;
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['loadingVenta']) {
+      if (this.loadingVenta() === true) {
+        this.loading = false;
+
+        setTimeout(() => {
+          this.handleClose();
+          this.loadingVentaEmmit.emit(false);
+        });
+      }
+    }
+  }
+
   calculateChange() {
     this.changeAmount = Math.max(this.customerPayment - this.totalSale(), 0);
-   if (
+    if (
       this.customerPayment != null ||
       this.customerPayment >= 0.01 ||
       this.customerPayment >= this.totalSale()
     ) {
       this.viewMasssageError = false;
-    } 
+    }
     if (
       this.customerPayment == null ||
       this.customerPayment < 0.01 ||
       this.customerPayment < this.totalSale()
-    )  {
+    ) {
       this.viewMasssageError = true;
     }
   }
@@ -58,10 +73,10 @@ export class ModalPurchaseComponent {
 
     this.confirmSale.emit({
       payment: this.customerPayment,
-      change: this.changeAmount
+      change: this.changeAmount,
     });
-    this.loading = false;
+    // this.loading = false;
     this.viewMasssageError = false;
-    this.handleClose();
+    // this.handleClose();
   }
 }
